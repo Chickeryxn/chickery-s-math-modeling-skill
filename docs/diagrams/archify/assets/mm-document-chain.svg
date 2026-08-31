@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1080 680" role="img" lang="zh-CN" aria-labelledby="archify-diagram-title archify-diagram-description" data-preset="classic" data-quality-profile="showcase">
+        <title id="archify-diagram-title">底层文档生成与冻结链（通用方案）</title>
+        <desc id="archify-diagram-description">由 Archify 生成的数据流图。</desc>
+        <!-- Definitions -->
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-default" />
+          </marker>
+          <marker id="arrowhead-emphasis" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-emphasis" />
+          </marker>
+          <marker id="arrowhead-security" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-security" />
+          </marker>
+          <marker id="arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-dashed" />
+          </marker>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" class="c-grid" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+
+        <!-- Background Grid -->
+        <rect width="100%" height="100%" fill="url(#grid)" />
+
+        <!-- Data Stages -->
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="stage" data-composition-frame-id="0" x="16" y="46" width="168" height="560" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="100" y="68" class="t-dim" font-size="9" font-weight="600" text-anchor="middle">01 / 原始输入</text>
+
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="stage" data-composition-frame-id="1" x="231" y="46" width="168" height="560" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="315" y="68" class="t-dim" font-size="9" font-weight="600" text-anchor="middle">02 / G1 问题理解</text>
+
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="stage" data-composition-frame-id="2" x="446" y="46" width="168" height="560" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="530" y="68" class="t-dim" font-size="9" font-weight="600" text-anchor="middle">03 / G2 方法</text>
+
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="stage" data-composition-frame-id="3" x="661" y="46" width="168" height="560" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="745" y="68" class="t-dim" font-size="9" font-weight="600" text-anchor="middle">04 / G3/G4 代码与冻结</text>
+
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="stage" data-composition-frame-id="4" x="876" y="46" width="168" height="560" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="960" y="68" class="t-dim" font-size="9" font-weight="600" text-anchor="middle">05 / G5/G6 论文交付</text>
+
+        <!-- Flow paths -->
+        <path data-edge-from="problem" data-edge-to="parse" data-edge-label="problem-parser" data-edge-key="0" data-composition-points="168,157;245,157" d="M 168 157 L 245 157" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="rawdata" data-edge-to="dataprof" data-edge-label="cleaner" data-edge-key="1" data-composition-points="168,385;245,385" d="M 168 385 L 245 385" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="parse" data-edge-to="methodcard" data-edge-label="method-selector" data-edge-key="2" data-composition-points="385,157;462,157" d="M 385 157 L 462 157" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="methodcard" data-edge-to="probe" data-edge-label="风险探针" data-edge-key="3" data-composition-points="530,186;530,242" d="M 530 186 L 530 242" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="probe" data-edge-to="decisions" data-edge-label="人类定方法" data-edge-key="4" data-composition-points="530,300;530,356" d="M 530 300 L 530 356" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="decisions" data-edge-to="code" data-edge-label="已批方法" data-edge-key="5" data-composition-points="600,385;638.5,385;638.5,157;677,157" d="M 600 385 L 638.5 385 L 638.5 157 L 677 157" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="code" data-edge-to="runsummary" data-edge-label="运行实验" data-edge-key="6" data-composition-points="745,186;745,242" d="M 745 186 L 745 242" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="runsummary" data-edge-to="frozen" data-edge-label="冻结" data-edge-key="7" data-composition-points="745,300;745,356" d="M 745 300 L 745 356" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="frozen" data-edge-to="sections" data-edge-label="论文数字" data-edge-key="8" data-composition-points="813,385;892,385" d="M 813 385 L 892 385" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="runsummary" data-edge-to="figures" data-edge-label="出图" data-edge-key="9" data-composition-points="815,271;892,271" d="M 815 271 L 892 271" class="a-dashed" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="figures" data-edge-to="sections" data-edge-label="已验图" data-edge-key="10" data-composition-points="960,300;960,356" d="M 960 300 L 960 356" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="sections" data-edge-to="audits" data-edge-label="三审计" data-edge-key="11" data-composition-points="960,414;960,470" d="M 960 414 L 960 470" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+
+        <!-- Nodes -->
+        <g id="node-problem" data-node-id="problem" data-node-label="problem.txt" tabindex="0" role="button" aria-label="聚焦problem.txt，赛题原文, 01 / 原始输入" aria-pressed="false" data-node-kind="external" data-node-sublabel="赛题原文" data-node-context="01 / 原始输入">
+          <title>problem.txt · 赛题原文 · 01 / 原始输入</title>
+          <rect x="32" y="128" width="136" height="58" rx="6" class="c-mask"/>
+          <rect x="32" y="128" width="136" height="58" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(38 134) scale(0.6875)">
+            <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
+            <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="100" y="149" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">problem.txt</text>
+          <text data-detail="context" x="100" y="165" class="t-muted" font-size="7" text-anchor="middle">赛题原文</text>
+        </g>
+
+        <g id="node-rawdata" data-node-id="rawdata" data-node-label="data_raw" tabindex="0" role="button" aria-label="聚焦data_raw，附件N 只读, 01 / 原始输入" aria-pressed="false" data-node-kind="database" data-node-sublabel="附件N 只读" data-node-context="01 / 原始输入">
+          <title>data_raw · 附件N 只读 · 01 / 原始输入</title>
+          <rect x="32" y="356" width="136" height="58" rx="6" class="c-mask"/>
+          <rect x="32" y="356" width="136" height="58" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(38 362) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="100" y="377" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">data_raw</text>
+          <text data-detail="context" x="100" y="393" class="t-muted" font-size="7" text-anchor="middle">附件N 只读</text>
+        </g>
+
+        <g id="node-parse" data-node-id="parse" data-node-label="problem_parse.json" tabindex="0" role="button" aria-label="聚焦problem_parse.json，子问题/目标/约束, 02 / G1 问题理解" aria-pressed="false" data-node-kind="database" data-node-sublabel="子问题/目标/约束" data-node-context="02 / G1 问题理解">
+          <title>problem_parse.json · 子问题/目标/约束 · 02 / G1 问题理解</title>
+          <rect x="245" y="128" width="140" height="58" rx="6" class="c-mask"/>
+          <rect x="245" y="128" width="140" height="58" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(251 134) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="315" y="149" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">problem_parse.json</text>
+          <text data-detail="context" x="315" y="165" class="t-muted" font-size="7" text-anchor="middle">子问题/目标/约束</text>
+        </g>
+
+        <g id="node-dataprof" data-node-id="dataprof" data-node-label="data_profile.json" tabindex="0" role="button" aria-label="聚焦data_profile.json，数据画像, 02 / G1 问题理解" aria-pressed="false" data-node-kind="database" data-node-sublabel="数据画像" data-node-context="02 / G1 问题理解">
+          <title>data_profile.json · 数据画像 · 02 / G1 问题理解</title>
+          <rect x="245" y="356" width="140" height="58" rx="6" class="c-mask"/>
+          <rect x="245" y="356" width="140" height="58" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(251 362) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="315" y="377" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">data_profile.json</text>
+          <text data-detail="context" x="315" y="393" class="t-muted" font-size="7" text-anchor="middle">数据画像</text>
+        </g>
+
+        <g id="node-methodcard" data-node-id="methodcard" data-node-label="qx_method_card.md" tabindex="0" role="button" aria-label="聚焦qx_method_card.md，主方法/基线/回退, 03 / G2 方法" aria-pressed="false" data-node-kind="database" data-node-sublabel="主方法/基线/回退" data-node-context="03 / G2 方法">
+          <title>qx_method_card.md · 主方法/基线/回退 · 03 / G2 方法</title>
+          <rect x="462" y="128" width="136" height="58" rx="6" class="c-mask"/>
+          <rect x="462" y="128" width="136" height="58" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(468 134) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="530" y="149" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">qx_method_card.md</text>
+          <text data-detail="context" x="530" y="165" class="t-muted" font-size="7" text-anchor="middle">主方法/基线/回退</text>
+        </g>
+
+        <g id="node-probe" data-node-id="probe" data-node-label="risk_probe.json" tabindex="0" role="button" aria-label="聚焦risk_probe.json，6 项探针, 03 / G2 方法" aria-pressed="false" data-node-kind="database" data-node-sublabel="6 项探针" data-node-context="03 / G2 方法">
+          <title>risk_probe.json · 6 项探针 · 03 / G2 方法</title>
+          <rect x="462" y="242" width="136" height="58" rx="6" class="c-mask"/>
+          <rect x="462" y="242" width="136" height="58" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(468 248) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="530" y="263" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">risk_probe.json</text>
+          <text data-detail="context" x="530" y="279" class="t-muted" font-size="7" text-anchor="middle">6 项探针</text>
+        </g>
+
+        <g id="node-decisions" data-node-id="decisions" data-node-label="qx_decisions.jsonl" tabindex="0" role="button" aria-label="聚焦qx_decisions.jsonl，人类 DECIDED, 03 / G2 方法" aria-pressed="false" data-node-kind="database" data-node-sublabel="人类 DECIDED" data-node-tag="human" data-node-context="03 / G2 方法">
+          <title>qx_decisions.jsonl · 人类 DECIDED · 03 / G2 方法 · human</title>
+          <rect x="460" y="356" width="140" height="58" rx="6" class="c-mask"/>
+          <rect x="460" y="356" width="140" height="58" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(466 362) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="530" y="377" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">qx_decisions.jsonl</text>
+          <text data-detail="context" x="530" y="393" class="t-muted" font-size="7" text-anchor="middle">人类 DECIDED</text>
+        <text data-detail="fine" x="530" y="403" class="t-database" font-size="7" text-anchor="middle">human</text>
+        </g>
+
+        <g id="node-code" data-node-id="code" data-node-label="code/Qx/*.py" tabindex="0" role="button" aria-label="聚焦code/Qx/*.py，主方法 + 基线, 04 / G3/G4 代码与冻结" aria-pressed="false" data-node-kind="backend" data-node-sublabel="主方法 + 基线" data-node-context="04 / G3/G4 代码与冻结">
+          <title>code/Qx/*.py · 主方法 + 基线 · 04 / G3/G4 代码与冻结</title>
+          <rect x="677" y="128" width="136" height="58" rx="6" class="c-mask"/>
+          <rect x="677" y="128" width="136" height="58" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(683 134) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="745" y="149" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">code/Qx/*.py</text>
+          <text data-detail="context" x="745" y="165" class="t-muted" font-size="7" text-anchor="middle">主方法 + 基线</text>
+        </g>
+
+        <g id="node-runsummary" data-node-id="runsummary" data-node-label="run_summary.json" tabindex="0" role="button" aria-label="聚焦run_summary.json，实验证据, 04 / G3/G4 代码与冻结" aria-pressed="false" data-node-kind="database" data-node-sublabel="实验证据" data-node-context="04 / G3/G4 代码与冻结">
+          <title>run_summary.json · 实验证据 · 04 / G3/G4 代码与冻结</title>
+          <rect x="675" y="242" width="140" height="58" rx="6" class="c-mask"/>
+          <rect x="675" y="242" width="140" height="58" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(681 248) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="745" y="263" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">run_summary.json</text>
+          <text data-detail="context" x="745" y="279" class="t-muted" font-size="7" text-anchor="middle">实验证据</text>
+        </g>
+
+        <g id="node-frozen" data-node-id="frozen" data-node-label="frozen_numbers" tabindex="0" role="button" aria-label="聚焦frozen_numbers，冻结（不可手改）, 04 / G3/G4 代码与冻结" aria-pressed="false" data-node-kind="database" data-node-sublabel="冻结（不可手改）" data-node-tag="immutable" data-node-context="04 / G3/G4 代码与冻结">
+          <title>frozen_numbers · 冻结（不可手改） · 04 / G3/G4 代码与冻结 · immutable</title>
+          <rect x="677" y="356" width="136" height="58" rx="6" class="c-mask"/>
+          <rect x="677" y="356" width="136" height="58" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(683 362) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="745" y="377" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">frozen_numbers</text>
+          <text data-detail="context" x="745" y="393" class="t-muted" font-size="7" text-anchor="middle">冻结（不可手改）</text>
+        <text data-detail="fine" x="745" y="403" class="t-database" font-size="7" text-anchor="middle">immutable</text>
+        </g>
+
+        <g id="node-figures" data-node-id="figures" data-node-label="paper/figures" tabindex="0" role="button" aria-label="聚焦paper/figures，渲染校验, 05 / G5/G6 论文交付" aria-pressed="false" data-node-kind="backend" data-node-sublabel="渲染校验" data-node-context="05 / G5/G6 论文交付">
+          <title>paper/figures · 渲染校验 · 05 / G5/G6 论文交付</title>
+          <rect x="892" y="242" width="136" height="58" rx="6" class="c-mask"/>
+          <rect x="892" y="242" width="136" height="58" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(898 248) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="960" y="263" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">paper/figures</text>
+          <text data-detail="context" x="960" y="279" class="t-muted" font-size="7" text-anchor="middle">渲染校验</text>
+        </g>
+
+        <g id="node-sections" data-node-id="sections" data-node-label="paper/sections" tabindex="0" role="button" aria-label="聚焦paper/sections，只读 solution package, 05 / G5/G6 论文交付" aria-pressed="false" data-node-kind="backend" data-node-sublabel="只读 solution package" data-node-context="05 / G5/G6 论文交付">
+          <title>paper/sections · 只读 solution package · 05 / G5/G6 论文交付</title>
+          <rect x="892" y="356" width="136" height="58" rx="6" class="c-mask"/>
+          <rect x="892" y="356" width="136" height="58" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(898 362) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="960" y="377" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">paper/sections</text>
+          <text data-detail="context" x="960" y="393" class="t-muted" font-size="7" text-anchor="middle">只读 solution package</text>
+        </g>
+
+        <g id="node-audits" data-node-id="audits" data-node-label="paper/audits" tabindex="0" role="button" aria-label="聚焦paper/audits，一致性/完整性/QA, 05 / G5/G6 论文交付" aria-pressed="false" data-node-kind="security" data-node-sublabel="一致性/完整性/QA" data-node-context="05 / G5/G6 论文交付">
+          <title>paper/audits · 一致性/完整性/QA · 05 / G5/G6 论文交付</title>
+          <rect x="890" y="470" width="140" height="58" rx="6" class="c-mask"/>
+          <rect x="890" y="470" width="140" height="58" rx="6" class="c-security" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(896 476) scale(0.6875)">
+            <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z"/>
+            <path d="m5.8 8 1.5 1.5 3-3"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="960" y="491" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">paper/audits</text>
+          <text data-detail="context" x="960" y="507" class="t-muted" font-size="7" text-anchor="middle">一致性/完整性/QA</text>
+        </g>
+
+        <!-- Flow labels -->
+        <g data-detail="context" data-edge-from="problem" data-edge-to="parse" data-edge-label="problem-parser" data-edge-key="0">
+          <rect x="166.2" y="113" width="80.6" height="16" rx="4" class="c-mask"/>
+          <text x="206.5" y="124" class="t-backend" font-size="8" text-anchor="middle">problem-parser</text>
+        </g>
+        <g data-detail="context" data-edge-from="rawdata" data-edge-to="dataprof" data-edge-label="cleaner" data-edge-key="1">
+          <rect x="183.35" y="364" width="46.3" height="16" rx="4" class="c-mask"/>
+          <text x="206.5" y="375" class="t-muted" font-size="8" text-anchor="middle">cleaner</text>
+        </g>
+        <g data-detail="context" data-edge-from="parse" data-edge-to="methodcard" data-edge-label="method-selector" data-edge-key="2">
+          <rect x="380.75" y="113" width="85.5" height="16" rx="4" class="c-mask"/>
+          <text x="423.5" y="124" class="t-muted" font-size="8" text-anchor="middle">method-selector</text>
+        </g>
+        <g data-detail="context" data-edge-from="methodcard" data-edge-to="probe" data-edge-label="风险探针" data-edge-key="3">
+          <rect x="549.4" y="113" width="51.2" height="16" rx="4" class="c-mask"/>
+          <text x="575" y="124" class="t-muted" font-size="8" text-anchor="middle">风险探针</text>
+        </g>
+        <g data-detail="context" data-edge-from="probe" data-edge-to="decisions" data-edge-label="人类定方法" data-edge-key="4">
+          <rect x="454.5" y="227" width="61" height="16" rx="4" class="c-mask"/>
+          <text x="485" y="238" class="t-security" font-size="8" text-anchor="middle">人类定方法</text>
+        </g>
+        <g data-detail="context" data-edge-from="decisions" data-edge-to="code" data-edge-label="已批方法" data-edge-key="5">
+          <rect x="612.9" y="250" width="51.2" height="16" rx="4" class="c-mask"/>
+          <text x="638.5" y="261" class="t-backend" font-size="8" text-anchor="middle">已批方法</text>
+        </g>
+        <g data-detail="context" data-edge-from="code" data-edge-to="runsummary" data-edge-label="运行实验" data-edge-key="6">
+          <rect x="764.4" y="113" width="51.2" height="16" rx="4" class="c-mask"/>
+          <text x="790" y="124" class="t-backend" font-size="8" text-anchor="middle">运行实验</text>
+        </g>
+        <g data-detail="context" data-edge-from="runsummary" data-edge-to="frozen" data-edge-label="冻结" data-edge-key="7">
+          <rect x="683" y="227" width="34" height="16" rx="4" class="c-mask"/>
+          <text x="700" y="238" class="t-backend" font-size="8" text-anchor="middle">冻结</text>
+        </g>
+        <g data-detail="context" data-edge-from="frozen" data-edge-to="sections" data-edge-label="论文数字" data-edge-key="8">
+          <rect x="826.9" y="341" width="51.2" height="16" rx="4" class="c-mask"/>
+          <text x="852.5" y="352" class="t-backend" font-size="8" text-anchor="middle">论文数字</text>
+        </g>
+        <g data-detail="context" data-edge-from="runsummary" data-edge-to="figures" data-edge-label="出图" data-edge-key="9">
+          <rect x="836.5" y="250" width="34" height="16" rx="4" class="c-mask"/>
+          <text x="853.5" y="261" class="t-messagebus" font-size="8" text-anchor="middle">出图</text>
+        </g>
+        <g data-detail="context" data-edge-from="figures" data-edge-to="sections" data-edge-label="已验图" data-edge-key="10">
+          <rect x="984.3" y="227" width="41.4" height="16" rx="4" class="c-mask"/>
+          <text x="1005" y="238" class="t-muted" font-size="8" text-anchor="middle">已验图</text>
+        </g>
+        <g data-detail="context" data-edge-from="sections" data-edge-to="audits" data-edge-label="三审计" data-edge-key="11">
+          <rect x="894.3" y="341" width="41.4" height="16" rx="4" class="c-mask"/>
+          <text x="915" y="352" class="t-security" font-size="8" text-anchor="middle">三审计</text>
+        </g>
+
+        <!-- Legend -->
+        <g data-legend="" data-legend-bridge="">
+          <text x="40" y="624" class="t-primary" font-size="12" font-weight="650">图例</text>
+          <g data-legend-semantic-kind="emphasis" data-legend-x="40" data-legend-baseline="644" data-legend-width="83">
+            <path d="M 40 641 L 74 641" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+            <text x="83" y="644" class="t-muted" font-size="10" font-weight="500">主要数据</text>
+          </g>
+          <g data-legend-semantic-kind="security" data-legend-x="145" data-legend-baseline="644" data-legend-width="93">
+            <path d="M 145 641 L 179 641" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+            <text x="188" y="644" class="t-muted" font-size="10" font-weight="500">策略 / PII</text>
+          </g>
+          <g data-legend-semantic-kind="dashed" data-legend-x="260" data-legend-baseline="644" data-legend-width="93">
+            <path d="M 260 641 L 294 641" class="a-dashed" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+            <text x="303" y="644" class="t-muted" font-size="10" font-weight="500">异步批处理</text>
+          </g>
+          <g data-legend-semantic-kind="database" data-legend-kind="database" data-legend-label="数据存储" data-legend-x="375" data-legend-baseline="644" data-legend-width="83">
+            <rect x="375" y="636" width="14" height="9" rx="2" class="c-database" stroke-width="1"/>
+            <text x="397" y="644" class="t-muted" font-size="10" font-weight="500">数据存储</text>
+          </g>
+          <g data-legend-semantic-kind="default" data-legend-x="480" data-legend-baseline="644" data-legend-width="73">
+            <path d="M 480 641 L 514 641" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+            <text x="523" y="644" class="t-muted" font-size="10" font-weight="500">数据流</text>
+          </g>
+        </g>
+      </svg>

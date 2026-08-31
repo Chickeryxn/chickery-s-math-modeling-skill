@@ -1,0 +1,57 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "数学建模门控流水线（通用方案 · G1→G6）",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "views": [
+      { "id": "main-path", "label": "子问题主路径", "focus": ["qx_g1","qx_g2","qx_g25","qx_g3","qx_g4","qx_g56"], "note": "任一子问题 Qx 走完整 G1→G6 门控链。" },
+      { "id": "human-chain", "label": "人类决策链", "focus": ["cc1","decide","cc2","judge"], "note": "筛选前卡片→定方法→首轮后卡片→判结果。" },
+      { "id": "lean-loop", "label": "lean 回环", "focus": ["qx_g3","qx_g4","qx_g56"], "note": "lean 在 G4 迭代，submission 才前进 G5/G6。" }
+    ]
+  },
+  "lanes": [
+    { "id": "qx", "label": "子问题 Qx" },
+    { "id": "human", "label": "人类模型师（决策）", "variant": "exception" },
+    { "id": "ai", "label": "AI 机械执行" }
+  ],
+  "phases": [
+    { "id": "p0", "label": "G1 问题建模", "fromCol": 0, "toCol": 0 },
+    { "id": "p1", "label": "G2 方法筛选", "fromCol": 1, "toCol": 1 },
+    { "id": "p2", "label": "G2.5 人类定方法", "fromCol": 2, "toCol": 2, "variant": "emphasis" },
+    { "id": "p3", "label": "G3 代码+实验", "fromCol": 3, "toCol": 3 },
+    { "id": "p4", "label": "G4 结果冻结", "fromCol": 4, "toCol": 4, "variant": "emphasis" },
+    { "id": "p5", "label": "G5/G6 论文终审", "fromCol": 5, "toCol": 5, "variant": "dashed" }
+  ],
+  "mainPath": ["qx_g1","qx_g2","qx_g25","qx_g3","qx_g4","qx_g56"],
+  "nodes": [
+    { "id": "qx_g1", "lane": "qx", "col": 0, "type": "backend", "label": "G1 建模", "width": 140 },
+    { "id": "qx_g2", "lane": "qx", "col": 1, "type": "backend", "label": "G2 筛选", "width": 140 },
+    { "id": "qx_g25", "lane": "qx", "col": 2, "type": "security", "label": "G2.5 定方法", "width": 140 },
+    { "id": "qx_g3", "lane": "qx", "col": 3, "type": "backend", "label": "G3 代码实验", "width": 140 },
+    { "id": "qx_g4", "lane": "qx", "col": 4, "type": "security", "label": "G4 冻结", "width": 140 },
+    { "id": "qx_g56", "lane": "qx", "col": 5, "type": "backend", "label": "G5/G6 终审", "width": 140 },
+    { "id": "cc1", "lane": "human", "col": 1, "type": "external", "label": "CC1 筛选前卡片", "sublabel": "输出/优先级/失败/预算", "width": 140 },
+    { "id": "decide", "lane": "human", "col": 2, "type": "security", "label": "人类定方法 G2.5", "sublabel": "DECIDED→账本", "width": 140 },
+    { "id": "cc2", "lane": "human", "col": 3, "type": "external", "label": "CC2 首轮后卡片", "sublabel": "继续/调整/回退", "width": 140 },
+    { "id": "judge", "lane": "human", "col": 4, "type": "security", "label": "人类判结果 G4", "sublabel": "accept/adjust/回退", "width": 140 },
+    { "id": "orch", "lane": "ai", "col": 0, "type": "messagebus", "label": "workflow-orchestrator", "sublabel": "门控调度器", "tag": "唯一调度", "width": 160 }
+  ],
+  "edges": [
+    { "id": "e-1", "from": "qx_g1", "to": "qx_g2" },
+    { "id": "e-2", "from": "qx_g2", "to": "qx_g25" },
+    { "id": "e-3", "from": "qx_g25", "to": "qx_g3", "label": "已定方法", "variant": "emphasis" },
+    { "id": "e-4", "from": "qx_g3", "to": "qx_g4" },
+    { "id": "e-sub", "from": "qx_g4", "to": "qx_g56", "label": "submission", "variant": "emphasis" },
+    { "id": "e-loop", "from": "qx_g4", "to": "qx_g3", "label": "adjust", "variant": "dashed", "role": "branch" },
+    { "id": "e-h1", "from": "cc1", "to": "decide", "label": "筛前" },
+    { "id": "e-h2", "from": "decide", "to": "cc2", "label": "已定方法" },
+    { "id": "e-h3", "from": "cc2", "to": "judge", "label": "首轮后" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "门控流程", "items": ["六道门 G1→G2→G2.5→G3→G4→G5/G6 顺序推进", "每个子问题 Qx 独立走此流程，多子题按 dependencies 并行"] },
+    { "dot": "rose", "title": "人类决策链", "items": ["human 泳道：CC1 筛选前→G2.5 定方法→CC2 首轮后→G4 判结果", "AI 只做机械执行，人类拥有建模判断权"] },
+    { "dot": "emerald", "title": "两档模式", "items": ["lean 在 G4 循环迭代；submission 前进 G5/G6 并跑三审计", "子问题数、类型、依赖均由 problem-classifier 判定"] }
+  ]
+}

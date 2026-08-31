@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "数学建模工作区系统架构（28 skills）",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "views": [
+      { "id": "main-path", "label": "主路径", "focus": ["human","framing","method","codegen","experiment","writing","audit","artifacts"], "note": "问题→方法→代码→实验→冻结→论文→审计→交付。" },
+      { "id": "ai-zone", "label": "AI 执行区", "focus": ["orchestrator","framing","method","codegen","experiment","writing","audit","artifacts"], "note": "orchestrator 调度各职责组，不亲自建模/写码/写论文。" }
+    ]
+  },
+  "components": [
+    { "id": "human", "type": "external", "label": "人类模型师", "sublabel": "choice cards / 决策账本", "tag": "决策边界外", "pos": [250, 310], "size": [180, 72] },
+    { "id": "orchestrator", "type": "backend", "label": "workflow-orchestrator", "sublabel": "门控调度器", "tag": "唯一调度", "pos": [40, 90], "size": [170, 64] },
+    { "id": "framing", "type": "backend", "label": "问题理解", "sublabel": "parser·classifier·symbol·assumptions", "pos": [260, 90], "size": [180, 64] },
+    { "id": "method", "type": "backend", "label": "方法筛选", "sublabel": "selector·decision·ledger", "pos": [490, 90], "size": [180, 64] },
+    { "id": "codegen", "type": "backend", "label": "代码生成/评审", "sublabel": "python·matlab·analyzer", "pos": [720, 90], "size": [180, 64] },
+    { "id": "experiment", "type": "backend", "label": "实验与结果", "sublabel": "auditor·robustness·report·figures", "pos": [950, 90], "size": [180, 64] },
+    { "id": "writing", "type": "backend", "label": "论文写作", "sublabel": "writer·polisher·explainer·reference", "pos": [950, 310], "size": [180, 64] },
+    { "id": "audit", "type": "security", "label": "审计与交付", "sublabel": "consistency·completeness·QA·package", "pos": [720, 310], "size": [180, 64] },
+    { "id": "artifacts", "type": "database", "label": "产物目录", "sublabel": "planning·methods·code·results·paper", "pos": [490, 310], "size": [190, 64] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "AI 机械执行区", "wraps": ["orchestrator", "framing", "method", "codegen", "experiment", "writing", "audit", "artifacts"] }
+  ],
+  "connections": [
+    { "id": "c-human-frame", "from": "human", "to": "framing", "label": "赛题+决策", "variant": "emphasis", "fromSide": "top", "toSide": "bottom" },
+    { "id": "c-orch-frame", "from": "orchestrator", "to": "framing", "label": "路由下一门", "variant": "dashed", "labelDy": 56 },
+    { "id": "c-frame-method", "from": "framing", "to": "method", "label": "方法卡" },
+    { "id": "c-method-code", "from": "method", "to": "codegen", "label": "已定方法" },
+    { "id": "c-code-exp", "from": "codegen", "to": "experiment", "label": "运行实验" },
+    { "id": "c-exp-write", "from": "experiment", "to": "writing", "label": "冻结结果", "fromSide": "bottom", "toSide": "top", "labelDy": 24 },
+    { "id": "c-write-audit", "from": "writing", "to": "audit", "label": "论文段" },
+    { "id": "c-audit-art", "from": "audit", "to": "artifacts", "label": "交付" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "主路径", "items": ["问题理解→方法筛选→代码生成→实验与结果→论文写作→审计与交付", "产物统一落盘 planning/methods/code/results/paper 等目录"] },
+    { "dot": "emerald", "title": "调度层", "items": ["workflow-orchestrator 是唯一门控调度器", "它不亲自建模、写码或写论文，只路由下一动作"] },
+    { "dot": "rose", "title": "人类决策区", "items": ["人类模型师位于信任边界外，拥有建模判断权", "28 个 skill 按职责分为七组 + 产物目录"] }
+  ]
+}
