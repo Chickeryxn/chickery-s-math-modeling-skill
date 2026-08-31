@@ -7,27 +7,45 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd -P)"
 SOURCE="$REPO_ROOT/.codex/skills"
 CLAUDE_SOURCE="$REPO_ROOT/.claude/skills"
 DESTINATION="$REPO_ROOT/plugins/mathmodeling-skills/skills"
+MARKETPLACE="$REPO_ROOT/.agents/plugins/marketplace.json"
 CHECK_ONLY=0
 
 read_version() {
   python3 -c 'import json, sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["version"])' "$1"
 }
 
-read_marketplace_version() {
-  python3 -c 'import json, sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["plugins"][0]["version"])' "$1"
-}
-
 check_versions() {
   local codex_version
   local claude_version
-  local marketplace_version
   codex_version="$(read_version "$REPO_ROOT/plugins/mathmodeling-skills/.codex-plugin/plugin.json")"
   claude_version="$(read_version "$REPO_ROOT/plugins/mathmodeling-skills/.claude-plugin/plugin.json")"
-  marketplace_version="$(read_marketplace_version "$REPO_ROOT/.claude-plugin/marketplace.json")"
-  if [ "$codex_version" != "$claude_version" ] || [ "$codex_version" != "$marketplace_version" ]; then
-    printf 'error: plugin versions differ (Codex=%s Claude=%s marketplace=%s)\n' "$codex_version" "$claude_version" "$marketplace_version" >&2
+  if [ "$codex_version" != "$claude_version" ]; then
+    printf 'error: plugin versions differ (Codex=%s Claude=%s)\n' "$codex_version" "$claude_version" >&2
     exit 1
   fi
+}
+
+check_marketplace() {
+  python3 - "$MARKETPLACE" "$REPO_ROOT/plugins/mathmodeling-skills" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+marketplace_path = Path(sys.argv[1])
+plugin_root = Path(sys.argv[2]).resolve()
+if not marketplace_path.is_file():
+    raise SystemExit(f"error: missing repo marketplace: {marketplace_path}")
+
+payload = json.loads(marketplace_path.read_text(encoding="utf-8"))
+if payload.get("name") != "chickery-s-math-modeling-skill":
+    raise SystemExit("error: unexpected marketplace name")
+entries = [item for item in payload.get("plugins", []) if item.get("name") == "mathmodeling-skills"]
+if len(entries) != 1:
+    raise SystemExit("error: marketplace must contain exactly one mathmodeling-skills entry")
+source = entries[0].get("source", {})
+if source.get("source") != "local" or source.get("path") != "./plugins/mathmodeling-skills":
+    raise SystemExit("error: marketplace plugin source must be ./plugins/mathmodeling-skills")
+PY
 }
 
 if [ "${1:-}" = "--check" ]; then
@@ -43,6 +61,7 @@ if ! diff -qr --exclude='.DS_Store' "$SOURCE" "$CLAUDE_SOURCE" >/dev/null; then
 fi
 
 check_versions
+check_marketplace
 
 if [ "$CHECK_ONLY" -eq 1 ]; then
   diff -qr --exclude='.DS_Store' "$SOURCE" "$DESTINATION"

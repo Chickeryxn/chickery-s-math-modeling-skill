@@ -1,0 +1,20 @@
+{
+  "name": "chickery-s-math-modeling-skill",
+  "interface": {
+    "displayName": "Chickery's Math Modeling Skill"
+  },
+  "plugins": [
+    {
+      "name": "mathmodeling-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/mathmodeling-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Education"
+    }
+  ]
+}

@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "description": "A gated mathematical-modeling contest workflow with human-owned modeling decisions, reproducible experiments, and submission audits.",
   "author": {
-    "name": "Zhijun Zhang",
-    "url": "https://github.com/zhnnky329"
+    "name": "Chickeryxn",
+    "url": "https://github.com/Chickeryxn"
   },
-  "homepage": "https://github.com/zhnnky329/MathModeling-skills",
-  "repository": "https://github.com/zhnnky329/MathModeling-skills",
+  "homepage": "https://github.com/Chickeryxn/chickery-s-math-modeling-skill",
+  "repository": "https://github.com/Chickeryxn/chickery-s-math-modeling-skill",
   "license": "MIT",
   "keywords": [
     "mathematical-modeling",
@@ -27,7 +27,7 @@
       "Analysis",
       "Write"
     ],
-    "websiteURL": "https://github.com/zhnnky329/MathModeling-skills",
+    "websiteURL": "https://github.com/Chickeryxn/chickery-s-math-modeling-skill",
     "defaultPrompt": [
       "Frame this modeling problem and route the next workflow gate.",
       "Audit this modeling workspace and identify the next action.",
