@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "底层文档生成与冻结链（通用方案）",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "viewBox": [1080, 680],
+    "views": [
+      { "id": "main-chain", "label": "主生成链", "focus": ["problem","parse","methodcard","code","runsummary","frozen","sections","audits"], "note": "赛题→解析→方法→代码→实验→冻结→论文→审计。" },
+      { "id": "human-gate", "label": "人类决策点", "focus": ["probe","decisions","frozen"], "note": "method_choice 与 package sign-off 由人类裁决。" },
+      { "id": "freeze-chain", "label": "冻结→论文", "focus": ["runsummary","frozen","sections"], "note": "数字流 code→results→freeze→paper，冻结后不可手改。" }
+    ]
+  },
+  "stages": [
+    { "label": "原始输入" },
+    { "label": "G1 问题理解" },
+    { "label": "G2 方法" },
+    { "label": "G3/G4 代码与冻结" },
+    { "label": "G5/G6 论文交付" }
+  ],
+  "nodes": [
+    { "id": "problem", "type": "external", "label": "problem.txt", "sublabel": "赛题原文", "stage": 0, "row": 0, "width": 136 },
+    { "id": "rawdata", "type": "database", "label": "data_raw", "sublabel": "附件N 只读", "stage": 0, "row": 2, "width": 136 },
+    { "id": "parse", "type": "database", "label": "problem_parse.json", "sublabel": "子问题/目标/约束", "stage": 1, "row": 0, "width": 140 },
+    { "id": "dataprof", "type": "database", "label": "data_profile.json", "sublabel": "数据画像", "stage": 1, "row": 2, "width": 140 },
+    { "id": "methodcard", "type": "database", "label": "qx_method_card.md", "sublabel": "主方法/基线/回退", "stage": 2, "row": 0, "width": 136 },
+    { "id": "probe", "type": "database", "label": "risk_probe.json", "sublabel": "6 项探针", "stage": 2, "row": 1, "width": 136 },
+    { "id": "decisions", "type": "database", "label": "qx_decisions.jsonl", "sublabel": "人类 DECIDED", "stage": 2, "row": 2, "width": 140, "tag": "human" },
+    { "id": "code", "type": "backend", "label": "code/Qx/*.py", "sublabel": "主方法 + 基线", "stage": 3, "row": 0, "width": 136 },
+    { "id": "runsummary", "type": "database", "label": "run_summary.json", "sublabel": "实验证据", "stage": 3, "row": 1, "width": 140 },
+    { "id": "frozen", "type": "database", "label": "frozen_numbers", "sublabel": "冻结（不可手改）", "stage": 3, "row": 2, "width": 136, "tag": "immutable" },
+    { "id": "figures", "type": "backend", "label": "paper/figures", "sublabel": "渲染校验", "stage": 4, "row": 1, "width": 136 },
+    { "id": "sections", "type": "backend", "label": "paper/sections", "sublabel": "只读 solution package", "stage": 4, "row": 2, "width": 136 },
+    { "id": "audits", "type": "security", "label": "paper/audits", "sublabel": "一致性/完整性/QA", "stage": 4, "row": 3, "width": 140 }
+  ],
+  "flows": [
+    { "from": "problem", "to": "parse", "label": "problem-parser", "variant": "emphasis", "labelDy": -23 },
+    { "from": "rawdata", "to": "dataprof", "label": "cleaner", "variant": "default" },
+    { "from": "parse", "to": "methodcard", "label": "method-selector", "variant": "default", "labelDy": -23 },
+    { "from": "methodcard", "to": "probe", "label": "风险探针", "variant": "default", "labelDy": -52, "labelDx": 45 },
+    { "from": "probe", "to": "decisions", "label": "人类定方法", "variant": "security", "labelDy": -52, "labelDx": -45 },
+    { "from": "decisions", "to": "code", "label": "已批方法", "variant": "emphasis" },
+    { "from": "code", "to": "runsummary", "label": "运行实验", "variant": "emphasis", "labelDy": -52, "labelDx": 45 },
+    { "from": "runsummary", "to": "frozen", "label": "冻结", "variant": "emphasis", "labelDy": -52, "labelDx": -45 },
+    { "from": "frozen", "to": "sections", "label": "论文数字", "variant": "emphasis", "labelDy": -23 },
+    { "from": "runsummary", "to": "figures", "label": "出图", "variant": "dashed" },
+    { "from": "figures", "to": "sections", "label": "已验图", "variant": "default", "labelDy": -52, "labelDx": 45 },
+    { "from": "sections", "to": "audits", "label": "三审计", "variant": "security", "labelDy": -52, "labelDx": -45 }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "文档生成链", "items": ["赛题→解析→方法卡→探针→代码→实验→冻结→论文→审计", "每份文档由上一级 skill 生成、下一级 skill 消费"] },
+    { "dot": "rose", "title": "人类决策点", "items": ["framing、method_choice、package sign-off 均由人类 DECIDED", "data_profile 与 framing 支撑方法卡（不直接连线，避免拥挤）"] },
+    { "dot": "emerald", "title": "冻结链", "items": ["数字流 code→results→freeze→paper", "frozen_numbers 不可手改，改值须解冻→重跑→重冻结"] }
+  ]
+}

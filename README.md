@@ -121,6 +121,14 @@ bash scripts/sync-plugin.sh --check
 
 ## 许可
 
+## 工作流可视化
+
+仓库附带由 [tt-a1i/archify](https://github.com/tt-a1i/archify) 生成的通用数学建模流程图：
+
+- [Archify 可视化说明](docs/diagrams/archify/README.md)
+- [交互式图示索引](docs/diagrams/archify/index.html)
+
+包含工作区架构、G1–G6 通用门控流水线、子问题生命周期和文档冻结链。
 本项目按 MIT License 发布，见根目录 `LICENSE`。
 
 ## 仓库分支

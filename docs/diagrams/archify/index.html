@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>数学建模流程可视化 · Archify</title>
+  <style>
+    :root{color-scheme:light;--bg:#f5f7fb;--panel:#fff;--ink:#172033;--muted:#596780;--line:#d8e0ec;--accent:#0891b2;--accent2:#0f766e;--shadow:0 14px 40px rgba(15,23,42,.09)}
+    *{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#f8fafc,#eef4fb);color:var(--ink);font:15px/1.6 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+    main{max-width:1320px;margin:0 auto;padding:48px 24px 64px}header{margin-bottom:30px}h1{margin:0 0 8px;font-size:clamp(28px,4vw,48px);letter-spacing:-.03em}header p{margin:0;max-width:820px;color:var(--muted);font-size:17px}.notice{margin-top:18px;padding:12px 16px;border-left:4px solid var(--accent);background:#ecfeff;color:#164e63;border-radius:8px}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.card{overflow:hidden;background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}.preview{padding:14px;background:#f8fafc;border-bottom:1px solid var(--line)}.preview img{display:block;width:100%;height:auto;border:1px solid #dfe7f1;border-radius:10px;background:#fff}.body{padding:20px}.body h2{margin:0 0 7px;font-size:21px}.body p{margin:0 0 16px;color:var(--muted)}.links{display:flex;flex-wrap:wrap;gap:9px}.links a{display:inline-block;padding:8px 12px;border:1px solid #b9d9e1;border-radius:8px;color:#075985;text-decoration:none;font-weight:600;background:#f0fdff}.links a:hover{background:#cffafe}.links a.secondary{border-color:#cbd5e1;color:#334155;background:#f8fafc}
+    footer{margin-top:30px;color:var(--muted);font-size:14px}footer a{color:#075985}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}main{padding:32px 16px 48px}}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>数学建模流程可视化</h1>
+    <p>由 <a href="https://github.com/tt-a1i/archify">Archify</a> 生成的通用工作流图：工作区架构、G1–G6 门控流水线、子问题生命周期和文档冻结链。</p>
+    <div class="notice">这是通用数学建模工作流说明，不包含具体竞赛题数据、旧题结果或论文结论。</div>
+  </header>
+  <section class="grid">
+    <article class="card">
+      <div class="preview"><img src="assets/mm-workspace-architecture.svg" alt="数学建模工作区系统架构"></div>
+      <div class="body"><h2>工作区系统架构</h2><p>展示 28 个 skills、工作流调度、人类模型师和产物目录之间的关系。</p><div class="links"><a href="interactive/mm-workspace-architecture.architecture.html">打开交互版</a><a class="secondary" href="sources/mm-workspace-architecture.architecture.json">JSON 源文件</a></div></div>
+    </article>
+    <article class="card">
+      <div class="preview"><img src="assets/mm-generic-workflow.svg" alt="数学建模通用门控流水线"></div>
+      <div class="body"><h2>通用门控流水线</h2><p>展示从问题理解到最终一致性、完整性和 QA 审计的 G1–G6 主流程。</p><div class="links"><a href="interactive/mm-generic-workflow.workflow.html">打开交互版</a><a class="secondary" href="sources/mm-generic-workflow.workflow.json">JSON 源文件</a></div></div>
+    </article>
+    <article class="card">
+      <div class="preview"><img src="assets/mm-gate-lifecycle.svg" alt="子问题门控生命周期"></div>
+      <div class="body"><h2>门控生命周期</h2><p>展示一个子问题通过 G1–G6 的状态变化，以及需要人类确认的等待点。</p><div class="links"><a href="interactive/mm-gate-lifecycle.lifecycle.html">打开交互版</a><a class="secondary" href="sources/mm-gate-lifecycle.lifecycle.json">JSON 源文件</a></div></div>
+    </article>
+    <article class="card">
+      <div class="preview"><img src="assets/mm-document-chain.svg" alt="数学建模文档生成与冻结链"></div>
+      <div class="body"><h2>文档生成与冻结链</h2><p>展示问题、方法、代码、实验、冻结数字、论文和审计之间的证据流转。</p><div class="links"><a href="interactive/mm-document-chain.dataflow.html">打开交互版</a><a class="secondary" href="sources/mm-document-chain.dataflow.json">JSON 源文件</a></div></div>
+    </article>
+  </section>
+  <footer>来源：<a href="https://github.com/tt-a1i/archify">tt-a1i/archify</a> · <a href="README.md">查看说明文档</a></footer>
+</main>
+</body>
+</html>

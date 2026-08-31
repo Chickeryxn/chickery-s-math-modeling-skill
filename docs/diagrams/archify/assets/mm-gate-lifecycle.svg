@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 980 660" role="img" lang="zh-CN" aria-labelledby="archify-diagram-title archify-diagram-description" data-preset="classic" data-quality-profile="showcase">
+        <title id="archify-diagram-title">子问题门控状态机（G1→G6）</title>
+        <desc id="archify-diagram-description">由 Archify 生成的生命周期图。</desc>
+        <!-- Definitions -->
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-default" />
+          </marker>
+          <marker id="arrowhead-emphasis" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-emphasis" />
+          </marker>
+          <marker id="arrowhead-security" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-security" />
+          </marker>
+          <marker id="arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-dashed" />
+          </marker>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" class="c-grid" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+
+        <!-- Background Grid -->
+        <rect width="100%" height="100%" fill="url(#grid)" />
+
+        <!-- Lifecycle bands -->
+        <path d="M 72 112 L 908 112" class="a-default" stroke-width="0.8" stroke-dasharray="3,8"/>
+        <text x="72" y="100" class="t-dim" font-size="10" font-weight="600">01 / 主流程状态</text>
+        <path d="M 72 264 L 908 264" class="a-default" stroke-width="0.8" stroke-dasharray="3,8"/>
+        <text x="72" y="252" class="t-dim" font-size="10" font-weight="600">02 / 等待 / 挂起</text>
+        <path d="M 72 436 L 908 436" class="a-default" stroke-width="0.8" stroke-dasharray="3,8"/>
+        <text x="72" y="424" class="t-dim" font-size="10" font-weight="600">03 / 终态</text>
+
+        <!-- Primary lifecycle rail -->
+        <path d="M 154 157 L 748 157" class="a-emphasis" stroke-width="2.2" marker-end="url(#arrowhead-emphasis)"/>
+
+        <!-- Transition paths -->
+        <path data-edge-from="unframed" data-edge-to="framed" data-edge-label="framing_done" data-edge-key="0" data-edge-id="t-framing" data-composition-points="153,157;189,157" d="M 153 157 L 189 157" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="framed" data-edge-to="screened" data-edge-label="probe_pass" data-edge-key="1" data-edge-id="t-probe" data-composition-points="307,157;343,157" d="M 307 157 L 343 157" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="screened" data-edge-to="awaiting_choice" data-edge-key="2" data-edge-id="t-await-choice" data-composition-points="402,188;402,233;402,233;402,278" d="M 402 188 L 402 233 L 402 233 L 402 278" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="awaiting_choice" data-edge-to="coding" data-edge-label="human_decided" data-edge-key="3" data-edge-id="t-decided" data-composition-points="402,278;402,233;556,233;556,188" d="M 402 278 L 402 243 Q 402 233 412 233 L 546 233 Q 556 233 556 223 L 556 188" class="a-emphasis" stroke-width="2" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="coding" data-edge-to="awaiting_judge" data-edge-key="4" data-edge-id="t-await-judge" data-composition-points="556,188;556,233;556,233;556,278" d="M 556 188 L 556 233 L 556 233 L 556 278" class="a-default" stroke-width="1.1" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="awaiting_judge" data-edge-to="frozen" data-edge-label="result_accepted" data-edge-key="5" data-edge-id="t-accept" data-composition-points="556,278;556,233;710,233;710,188" d="M 556 278 L 556 243 Q 556 233 566 233 L 700 233 Q 710 233 710 223 L 710 188" class="a-emphasis" stroke-width="2" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="awaiting_judge" data-edge-to="coding" data-edge-label="adjust" data-edge-key="6" data-edge-id="t-adjust" data-composition-points="556,278;556,188" d="M 556 278 L 556 188" class="a-dashed" stroke-width="1.1" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="coding" data-edge-to="screened" data-edge-label="fallback 回 G2" data-edge-key="7" data-edge-id="t-fallback" data-composition-points="497,157;461,157" d="M 497 157 L 461 157" class="a-security" stroke-width="1.1" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="frozen" data-edge-to="coding" data-edge-label="解冻重跑" data-edge-key="8" data-edge-id="t-thaw" data-composition-points="651,157;615,157" d="M 651 157 L 615 157" class="a-security" stroke-width="1.1" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="frozen" data-edge-to="audited" data-edge-label="audit_pass" data-edge-key="9" data-edge-id="t-audit" data-composition-points="710,188;710,400;402,400;402,450" d="M 710 188 L 710 390 Q 710 400 700 400 L 412 400 Q 402 400 402 410 L 402 450" class="a-emphasis" stroke-width="2" marker-end="url(#arrowhead-emphasis)"/>
+
+        <!-- States -->
+        <g id="node-unframed" data-node-id="unframed" data-node-label="未建模" tabindex="0" role="button" aria-label="聚焦未建模，入口, 主流程状态" aria-pressed="false" data-node-kind="start" data-node-sublabel="入口" data-node-context="主流程状态">
+          <title>未建模 · 入口 · 主流程状态</title>
+          <rect x="35" y="126" width="118" height="62" rx="7" class="c-mask"/>
+          <rect x="35" y="126" width="118" height="62" rx="7" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="start" class="semantic-sigil s-frontend" transform="translate(136 132) scale(0.6875)">
+            <circle cx="8" cy="8" r="5"/>
+            <path d="m7 5.4 3.6 2.6L7 10.6Z" class="sigil-fill"/>
+          </g>
+        <text data-detail="fine" x="45" y="140" class="t-frontend" font-size="7" font-weight="700">00</text>
+          <text data-node-label="" data-detail-anchor="" x="94" y="147" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">未建模</text>
+          <text data-detail="context" x="94" y="163" class="t-muted" font-size="7" text-anchor="middle">入口</text>
+        </g>
+
+        <g id="node-framed" data-node-id="framed" data-node-label="已建模 G1" tabindex="0" role="button" aria-label="聚焦已建模 G1，解析+分类+数据清单, 主流程状态" aria-pressed="false" data-node-kind="active" data-node-sublabel="解析+分类+数据清单" data-node-context="主流程状态">
+          <title>已建模 G1 · 解析+分类+数据清单 · 主流程状态</title>
+          <rect x="189" y="126" width="118" height="62" rx="7" class="c-mask"/>
+          <rect x="189" y="126" width="118" height="62" rx="7" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="active" class="semantic-sigil s-backend" transform="translate(290 132) scale(0.6875)">
+            <path d="M2 8h3l1.5-3.5L9 12l1.6-4H14"/>
+          </g>
+        <text data-detail="fine" x="199" y="140" class="t-backend" font-size="7" font-weight="700">01</text>
+          <text data-node-label="" data-detail-anchor="" x="248" y="147" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">已建模 G1</text>
+          <text data-detail="context" x="248" y="163" class="t-muted" font-size="7" text-anchor="middle">解析+分类+数据清单</text>
+        </g>
+
+        <g id="node-screened" data-node-id="screened" data-node-label="已筛方法 G2" tabindex="0" role="button" aria-label="聚焦已筛方法 G2，方法卡+风险探针, 主流程状态" aria-pressed="false" data-node-kind="active" data-node-sublabel="方法卡+风险探针" data-node-context="主流程状态">
+          <title>已筛方法 G2 · 方法卡+风险探针 · 主流程状态</title>
+          <rect x="343" y="126" width="118" height="62" rx="7" class="c-mask"/>
+          <rect x="343" y="126" width="118" height="62" rx="7" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="active" class="semantic-sigil s-backend" transform="translate(444 132) scale(0.6875)">
+            <path d="M2 8h3l1.5-3.5L9 12l1.6-4H14"/>
+          </g>
+        <text data-detail="fine" x="353" y="140" class="t-backend" font-size="7" font-weight="700">02</text>
+          <text data-node-label="" data-detail-anchor="" x="402" y="147" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">已筛方法 G2</text>
+          <text data-detail="context" x="402" y="163" class="t-muted" font-size="7" text-anchor="middle">方法卡+风险探针</text>
+        </g>
+
+        <g id="node-coding" data-node-id="coding" data-node-label="编码实验 G3" tabindex="0" role="button" aria-label="聚焦编码实验 G3，主方法+基线评审, 主流程状态" aria-pressed="false" data-node-kind="active" data-node-sublabel="主方法+基线评审" data-node-context="主流程状态">
+          <title>编码实验 G3 · 主方法+基线评审 · 主流程状态</title>
+          <rect x="497" y="126" width="118" height="62" rx="7" class="c-mask"/>
+          <rect x="497" y="126" width="118" height="62" rx="7" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="active" class="semantic-sigil s-backend" transform="translate(598 132) scale(0.6875)">
+            <path d="M2 8h3l1.5-3.5L9 12l1.6-4H14"/>
+          </g>
+        <text data-detail="fine" x="507" y="140" class="t-backend" font-size="7" font-weight="700">03</text>
+          <text data-node-label="" data-detail-anchor="" x="556" y="147" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">编码实验 G3</text>
+          <text data-detail="context" x="556" y="163" class="t-muted" font-size="7" text-anchor="middle">主方法+基线评审</text>
+        </g>
+
+        <g id="node-frozen" data-node-id="frozen" data-node-label="已冻结 G4" tabindex="0" role="button" aria-label="聚焦已冻结 G4，结果判定冻结, 主流程状态" aria-pressed="false" data-node-kind="success" data-node-sublabel="结果判定冻结" data-node-tag="当前" data-node-context="主流程状态">
+          <title>已冻结 G4 · 结果判定冻结 · 主流程状态 · 当前</title>
+          <rect x="651" y="126" width="118" height="62" rx="7" class="c-mask"/>
+          <rect x="651" y="126" width="118" height="62" rx="7" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="success" class="semantic-sigil s-database" transform="translate(752 132) scale(0.6875)">
+            <circle cx="8" cy="8" r="5.3"/>
+            <path d="m5.2 8 1.8 1.8 3.8-4"/>
+          </g>
+        <text data-detail="fine" x="661" y="140" class="t-database" font-size="7" font-weight="700">04</text>
+          <text data-node-label="" data-detail-anchor="" x="710" y="147" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">已冻结 G4</text>
+          <text data-detail="context" x="710" y="163" class="t-muted" font-size="7" text-anchor="middle">结果判定冻结</text>
+        <text data-detail="fine" x="710" y="177" class="t-database" font-size="7" text-anchor="middle">当前</text>
+        </g>
+
+        <g id="node-awaiting_choice" data-node-id="awaiting_choice" data-node-label="等待定方法 G2.5" tabindex="0" role="button" aria-label="聚焦等待定方法 G2.5，人类 DECIDED 前只允许数据准备, 等待 / 挂起" aria-pressed="false" data-node-kind="waiting" data-node-sublabel="人类 DECIDED 前只允许数据准备" data-node-tag="pause" data-node-context="等待 / 挂起">
+          <title>等待定方法 G2.5 · 人类 DECIDED 前只允许数据准备 · 等待 / 挂起 · pause</title>
+          <rect x="339" y="278" width="126" height="58" rx="7" class="c-mask"/>
+          <rect x="339" y="278" width="126" height="58" rx="7" class="c-cloud" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="waiting" class="semantic-sigil s-cloud" transform="translate(448 284) scale(0.6875)">
+            <path d="M4 2.5h8M4 13.5h8M5 3c0 2.8 2 3.2 3 5-1 1.8-3 2.2-3 5M11 3c0 2.8-2 3.2-3 5 1 1.8 3 2.2 3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="402" y="299" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">等待定方法 G2.5</text>
+          <text data-detail="context" x="402" y="315" class="t-muted" font-size="6.7" text-anchor="middle">人类 DECIDED 前只允许数据准备</text>
+        <text data-detail="fine" x="402" y="325" class="t-cloud" font-size="7" text-anchor="middle">pause</text>
+        </g>
+
+        <g id="node-awaiting_judge" data-node-id="awaiting_judge" data-node-label="等待判结果 G4" tabindex="0" role="button" aria-label="聚焦等待判结果 G4，accept/adjust/fallback, 等待 / 挂起" aria-pressed="false" data-node-kind="waiting" data-node-sublabel="accept/adjust/fallback" data-node-tag="wait" data-node-context="等待 / 挂起">
+          <title>等待判结果 G4 · accept/adjust/fallback · 等待 / 挂起 · wait</title>
+          <rect x="493" y="278" width="126" height="58" rx="7" class="c-mask"/>
+          <rect x="493" y="278" width="126" height="58" rx="7" class="c-cloud" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="waiting" class="semantic-sigil s-cloud" transform="translate(602 284) scale(0.6875)">
+            <path d="M4 2.5h8M4 13.5h8M5 3c0 2.8 2 3.2 3 5-1 1.8-3 2.2-3 5M11 3c0 2.8-2 3.2-3 5 1 1.8 3 2.2 3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="556" y="299" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">等待判结果 G4</text>
+          <text data-detail="context" x="556" y="315" class="t-muted" font-size="7" text-anchor="middle">accept/adjust/fallback</text>
+        <text data-detail="fine" x="556" y="325" class="t-cloud" font-size="7" text-anchor="middle">wait</text>
+        </g>
+
+        <g id="node-audited" data-node-id="audited" data-node-label="终审通过 G6" tabindex="0" role="button" aria-label="聚焦终审通过 G6，三审计全过, 终态" aria-pressed="false" data-node-kind="success" data-node-sublabel="三审计全过" data-node-tag="terminal" data-node-context="终态">
+          <title>终审通过 G6 · 三审计全过 · 终态 · terminal</title>
+          <rect x="343" y="450" width="118" height="58" rx="7" class="c-mask"/>
+          <rect x="343" y="450" width="118" height="58" rx="7" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="success" class="semantic-sigil s-database" transform="translate(444 456) scale(0.6875)">
+            <circle cx="8" cy="8" r="5.3"/>
+            <path d="m5.2 8 1.8 1.8 3.8-4"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="402" y="471" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">终审通过 G6</text>
+          <text data-detail="context" x="402" y="487" class="t-muted" font-size="7" text-anchor="middle">三审计全过</text>
+        <text data-detail="fine" x="402" y="497" class="t-database" font-size="7" text-anchor="middle">terminal</text>
+        </g>
+
+        <!-- Transition labels -->
+        <g data-detail="context" data-edge-from="unframed" data-edge-to="framed" data-edge-label="framing_done" data-edge-key="0" data-edge-id="t-framing">
+          <rect x="135.6" y="111" width="70.80000000000001" height="16" rx="4" class="c-mask"/>
+          <text x="171" y="122" class="t-muted" font-size="8" text-anchor="middle">framing_done</text>
+        </g>
+        <g data-detail="context" data-edge-from="framed" data-edge-to="screened" data-edge-label="probe_pass" data-edge-key="1" data-edge-id="t-probe">
+          <rect x="294.5" y="111" width="61" height="16" rx="4" class="c-mask"/>
+          <text x="325" y="122" class="t-muted" font-size="8" text-anchor="middle">probe_pass</text>
+        </g>
+
+        <g data-detail="context" data-edge-from="awaiting_choice" data-edge-to="coding" data-edge-label="human_decided" data-edge-key="3" data-edge-id="t-decided">
+          <rect x="441.15" y="212" width="75.7" height="16" rx="4" class="c-mask"/>
+          <text x="479" y="223" class="t-backend" font-size="8" text-anchor="middle">human_decided</text>
+        </g>
+
+        <g data-detail="context" data-edge-from="awaiting_judge" data-edge-to="frozen" data-edge-label="result_accepted" data-edge-key="5" data-edge-id="t-accept">
+          <rect x="590.25" y="212" width="85.5" height="16" rx="4" class="c-mask"/>
+          <text x="633" y="223" class="t-backend" font-size="8" text-anchor="middle">result_accepted</text>
+        </g>
+        <g data-detail="context" data-edge-from="awaiting_judge" data-edge-to="coding" data-edge-label="adjust" data-edge-key="6" data-edge-id="t-adjust">
+          <rect x="580.3" y="257" width="41.400000000000006" height="16" rx="4" class="c-mask"/>
+          <text x="601" y="268" class="t-messagebus" font-size="8" text-anchor="middle">adjust</text>
+        </g>
+        <g data-detail="context" data-edge-from="coding" data-edge-to="screened" data-edge-label="fallback 回 G2" data-edge-key="7" data-edge-id="t-fallback">
+          <rect x="438.7" y="111" width="80.60000000000001" height="16" rx="4" class="c-mask"/>
+          <text x="479" y="122" class="t-security" font-size="8" text-anchor="middle">fallback 回 G2</text>
+        </g>
+        <g data-detail="context" data-edge-from="frozen" data-edge-to="coding" data-edge-label="解冻重跑" data-edge-key="8" data-edge-id="t-thaw">
+          <rect x="607.4" y="111" width="51.2" height="16" rx="4" class="c-mask"/>
+          <text x="633" y="122" class="t-security" font-size="8" text-anchor="middle">解冻重跑</text>
+        </g>
+        <g data-detail="context" data-edge-from="frozen" data-edge-to="audited" data-edge-label="audit_pass" data-edge-key="9" data-edge-id="t-audit">
+          <rect x="525.5" y="379" width="61" height="16" rx="4" class="c-mask"/>
+          <text x="556" y="390" class="t-backend" font-size="8" text-anchor="middle">audit_pass</text>
+        </g>
+
+        <!-- Legend -->
+        <g data-legend="" data-legend-bridge="">
+          <text x="40" y="604" class="t-primary" font-size="12" font-weight="650">图例</text>
+          <g data-legend-semantic-kind="start" data-legend-kind="start" data-legend-label="开始" data-legend-x="40" data-legend-baseline="624" data-legend-width="63">
+            <rect x="40" y="616" width="14" height="9" rx="2" class="c-frontend" stroke-width="1"/>
+            <text x="62" y="624" class="t-muted" font-size="10" font-weight="500">开始</text>
+          </g>
+          <g data-legend-semantic-kind="active" data-legend-kind="active" data-legend-label="活动状态" data-legend-x="125" data-legend-baseline="624" data-legend-width="83">
+            <rect x="125" y="616" width="14" height="9" rx="2" class="c-backend" stroke-width="1"/>
+            <text x="147" y="624" class="t-muted" font-size="10" font-weight="500">活动状态</text>
+          </g>
+          <g data-legend-semantic-kind="waiting" data-legend-kind="waiting" data-legend-label="等待" data-legend-x="230" data-legend-baseline="624" data-legend-width="63">
+            <rect x="230" y="616" width="14" height="9" rx="2" class="c-cloud" stroke-width="1"/>
+            <text x="252" y="624" class="t-muted" font-size="10" font-weight="500">等待</text>
+          </g>
+          <g data-legend-semantic-kind="success" data-legend-kind="success" data-legend-label="成功终态" data-legend-x="315" data-legend-baseline="624" data-legend-width="83">
+            <rect x="315" y="616" width="14" height="9" rx="2" class="c-database" stroke-width="1"/>
+            <text x="337" y="624" class="t-muted" font-size="10" font-weight="500">成功终态</text>
+          </g>
+        </g>
+      </svg>

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "子问题门控状态机（G1→G6）",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "views": [
+      { "id": "main-rail", "label": "主流程", "focus": ["unframed","framed","screened","coding","frozen","audited"], "note": "从建模到终审的主状态推进。" },
+      { "id": "human-waits", "label": "人类等待点", "focus": ["awaiting_choice","awaiting_judge"], "note": "等待人类定方法与判结果的两个挂起点。" },
+      { "id": "recovery", "label": "回退与重试", "focus": ["coding","screened","frozen"], "note": "fallback 回 G2、解冻后重跑。" }
+    ]
+  },
+  "lanes": [
+    { "id": "main", "label": "主流程状态" },
+    { "id": "waiting", "label": "等待 / 挂起" },
+    { "id": "terminal", "label": "终态" }
+  ],
+  "states": [
+    { "id": "unframed", "type": "start", "label": "未建模", "sublabel": "入口", "lane": "main", "col": 0, "step": "00" },
+    { "id": "framed", "type": "active", "label": "已建模 G1", "sublabel": "解析+分类+数据清单", "lane": "main", "col": 1, "step": "01" },
+    { "id": "screened", "type": "active", "label": "已筛方法 G2", "sublabel": "方法卡+风险探针", "lane": "main", "col": 2, "step": "02" },
+    { "id": "coding", "type": "active", "label": "编码实验 G3", "sublabel": "主方法+基线评审", "lane": "main", "col": 3, "step": "03" },
+    { "id": "frozen", "type": "success", "label": "已冻结 G4", "sublabel": "结果判定冻结", "lane": "main", "col": 4, "step": "04", "tag": "当前" },
+    { "id": "awaiting_choice", "type": "waiting", "label": "等待定方法 G2.5", "sublabel": "人类 DECIDED 前只允许数据准备", "lane": "waiting", "col": 0, "tag": "pause" },
+    { "id": "awaiting_judge", "type": "waiting", "label": "等待判结果 G4", "sublabel": "accept/adjust/fallback", "lane": "waiting", "col": 1, "tag": "wait" },
+    { "id": "audited", "type": "success", "label": "终审通过 G6", "sublabel": "三审计全过", "lane": "terminal", "col": 0, "tag": "terminal" }
+  ],
+  "transitions": [
+    { "id": "t-framing", "from": "unframed", "to": "framed", "label": "framing_done", "labelDy": -25 },
+    { "id": "t-probe", "from": "framed", "to": "screened", "label": "probe_pass", "labelDy": -25 },
+    { "id": "t-await-choice", "from": "screened", "to": "awaiting_choice", "route": "drop" },
+    { "id": "t-decided", "from": "awaiting_choice", "to": "coding", "label": "human_decided", "variant": "emphasis", "fromSide": "top", "toSide": "bottom" },
+    { "id": "t-await-judge", "from": "coding", "to": "awaiting_judge", "route": "drop" },
+    { "id": "t-accept", "from": "awaiting_judge", "to": "frozen", "label": "result_accepted", "variant": "emphasis", "fromSide": "top", "toSide": "bottom" },
+    { "id": "t-adjust", "from": "awaiting_judge", "to": "coding", "label": "adjust", "variant": "dashed", "fromSide": "top", "toSide": "bottom", "route": "straight", "labelDx": 45 },
+    { "id": "t-fallback", "from": "coding", "to": "screened", "label": "fallback 回 G2", "variant": "security", "labelDy": -25 },
+    { "id": "t-thaw", "from": "frozen", "to": "coding", "label": "解冻重跑", "variant": "security", "labelDy": -25 },
+    { "id": "t-audit", "from": "frozen", "to": "audited", "label": "audit_pass", "variant": "emphasis", "fromSide": "bottom", "toSide": "top", "via": [[710, 400], [402, 400]] }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "主流程", "items": ["未建模→已建模→已筛方法→编码实验→已冻结→终审通过", "冻结是主 rail 的里程碑，不是游离边盒"] },
+    { "dot": "amber", "title": "人类等待点", "items": ["等待定方法 G2.5：人类 DECIDED 前只允许数据准备", "等待判结果 G4：accept 前进 / adjust 回环 / fallback 回退"] },
+    { "dot": "rose", "title": "回退与重试", "items": ["fallback 触发回 G2 重新筛选", "FROZEN 经 thaw 解冻→重跑→重冻结，数字不可手改"] }
+  ]
+}
