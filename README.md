@@ -119,8 +119,6 @@ bash scripts/sync-plugin.sh --check
 - 未通过相应门禁前，不生成后续阶段的正式产物。
 - 不把旧题目的结果或数字复制到新题目工作区。
 
-## 许可
-
 ## 工作流可视化
 
 仓库附带由 [tt-a1i/archify](https://github.com/tt-a1i/archify) 生成的通用数学建模流程图：
@@ -128,7 +126,26 @@ bash scripts/sync-plugin.sh --check
 - [Archify 可视化说明](docs/diagrams/archify/README.md)
 - [交互式图示索引](docs/diagrams/archify/index.html)
 
-包含工作区架构、G1–G6 通用门控流水线、子问题生命周期和文档冻结链。
+GitHub 首页使用 PNG 作为静态预览；交互版 HTML 和 JSON 源文件位于上述目录。
+
+### 工作区系统架构
+
+[![数学建模工作区系统架构](docs/diagrams/archify/assets/mm-workspace-architecture.png)](docs/diagrams/archify/assets/mm-workspace-architecture.png)
+
+### 通用 G1–G6 门控流水线
+
+[![数学建模通用门控流水线](docs/diagrams/archify/assets/mm-generic-workflow.png)](docs/diagrams/archify/assets/mm-generic-workflow.png)
+
+### 子问题门控生命周期
+
+[![子问题门控生命周期](docs/diagrams/archify/assets/mm-gate-lifecycle.png)](docs/diagrams/archify/assets/mm-gate-lifecycle.png)
+
+### 文档生成与冻结链
+
+[![数学建模文档生成与冻结链](docs/diagrams/archify/assets/mm-document-chain.png)](docs/diagrams/archify/assets/mm-document-chain.png)
+
+## 许可
+
 本项目按 MIT License 发布，见根目录 `LICENSE`。
 
 ## 仓库分支
