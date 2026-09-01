@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.3 — 2026-09-01
+
+- **High-quality modeling answers**: added `scripts/model_quality_gate.py` (G4-preceding mechanical gate: seed recorded, baseline comparable with real metrics, uncertainty present or explicitly N/A, output contract aligned); `scripts/leakage_check.py` (time-column disorder, target duplication, duplicate rows heuristics for predictive data); `scripts/claim_coverage.py` (every subquestion must have a paper section, frozen numbers, and abstract number coverage).
+- **Modeling discipline**: added `docs/modeling-self-review.md` (assumptions / complexity / interpretability / fairness / result-baseline checklist between G2 and G4) and `planning/timeline.md` (72h/96h time budget across the six gates); method-card contract gained complexity-budget and interpretability-need fields; `workflow_guard derive` now reports a `next_stage_hint`.
+- Tests grew to 102 (quality gate, leakage, claim coverage, stage hint).
+
 ## 0.4.2 — 2026-09-01
 
 - **Size**: shrunk the repository without changing functionality — optimized the 4 diagram PNGs (re-save) and moved the 4 archify interactive HTML files (2.85 MB) out of git into on-demand regeneration (`generated/`, Node ≥ 18; JSON sources + SVG/PNG remain committed); updated README/archify docs and added `docs/diagrams/archify/generated/` to `.gitignore`.

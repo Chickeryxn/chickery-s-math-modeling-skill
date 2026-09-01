@@ -7,10 +7,10 @@
 | Badge | Value |
 |---|---|
 | License | [MIT](LICENSE) |
-| Version | 0.4.2 (plugin manifests in sync) |
+| Version | 0.4.3 (plugin manifests in sync) |
 | Runtime | Python 3 (standard library only, no third-party dependencies) |
 | Platforms | Windows / Linux / macOS |
-| Tests | 81 cases, `python scripts/run_tests.py` all green |
+| Tests | 102 cases, `python scripts/run_tests.py` all green |
 
 ## Table of Contents
 
@@ -224,7 +224,7 @@ See [`scripts/README.md`](scripts/README.md) for detailed arguments and [`schema
 
 ## Test coverage
 
-`python scripts/run_tests.py` (81 cases, standard library only) covers:
+`python scripts/run_tests.py` (102 cases, standard library only) covers:
 
 - Evidence-derived gate computation and monotonic transitions (including a full G1→G6 progression to `final_assembly`)
 - Human-decision provenance (fake human, unregistered evidence, escaping paths all rejected)
@@ -238,11 +238,14 @@ See [`scripts/README.md`](scripts/README.md) for detailed arguments and [`schema
 - Upstream asset validation (`validate_upstream_assets`) and AI-trace scanning (`ai_trace_checker`)
 - AI-trace scanning (`ai_trace_checker`, `--config` thresholds)
 - Abstract quality (`abstract_checker`) and learning summary (`learning_summary`)
+- Model quality gate (`model_quality_gate`), leakage heuristics (`leakage_check`), and claim coverage (`claim_coverage`)
 
 ## Learning and review
 
 - [Learning path](docs/learning-path.md): six stations (read the problem, frame, choose methods, code/experiments, results/paper, reviewer's eye) explaining why each gate exists, with exercises and self-checks.
 - [Post-contest review](docs/post-contest-review.md): revisit which modeling judgments were validated or overturned; `python scripts/learning_summary.py .` generates a review skeleton.
+- [Modeling self-review](docs/modeling-self-review.md): structured review between G2 and G4 (assumptions / complexity / interpretability / fairness / result baseline).
+- Time budget template: `planning/timeline.md` (72h/96h breakdown across the six stages).
 
 ## FAQ
 

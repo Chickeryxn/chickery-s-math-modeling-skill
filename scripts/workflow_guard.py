@@ -170,11 +170,24 @@ def check_transition(old,new):
  if b<a:raise RuntimeError('INVALID_TRANSITION: gate regression')
  if b>a and not (b-a<=1 or (a==2 and b==2.5)):raise RuntimeError('INVALID_TRANSITION: gate jump skips a stage')
  if new.get('status')=='final' and b<6:raise RuntimeError('INVALID_TRANSITION: final requires G6')
+STAGE_HINTS={
+ 'G1':'next: G2 method screening (method card + risk probe)',
+ 'G2':'next: G2.5 human method choice (choice card -> qx_decisions.jsonl)',
+ 'G2.5':'next: G3 code & experiments (approved main + baseline only)',
+ 'G3':'next: G4 result judgment (run model_quality_gate + claim_coverage)',
+ 'G4':'next: G5 paper (solution package -> paper-section-writer)',
+ 'G5':'next: G6 final audit (consistency/completeness/QA)',
+ 'G6':'all gates passed; run full verification and check planning/timeline.md',
+}
+def stage_hint(gate):
+ return STAGE_HINTS.get(gate,'')
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('root',type=Path);sub=ap.add_subparsers(dest='cmd',required=True);r=sub.add_parser('require');r.add_argument('question_id');r.add_argument('artifact_kind',choices=sorted(ARTIFACT_MIN_GATE));d=sub.add_parser('derive');d.add_argument('question_id');t=sub.add_parser('transition');t.add_argument('old_manifest',type=Path);t.add_argument('new_manifest',type=Path);a=ap.parse_args();root=a.root.resolve()
  try:
   if a.cmd=='require':print(json.dumps(require_gate(root,a.question_id,a.artifact_kind),ensure_ascii=False))
-  elif a.cmd=='derive':print(json.dumps({'question_id':a.question_id,**derive_state(root,a.question_id)},ensure_ascii=False))
+  elif a.cmd=='derive':
+   state=derive_state(root,a.question_id)
+   print(json.dumps({'question_id':a.question_id,**state,'next_stage_hint':stage_hint(state['gate'])},ensure_ascii=False))
   else:check_transition(load_json(a.old_manifest),load_json(a.new_manifest));print('TRANSITION_OK')
   return 0
  except (RuntimeError,ValueError,OSError) as e:print(str(e),file=sys.stderr);return 2

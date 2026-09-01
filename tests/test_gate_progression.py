@@ -15,7 +15,7 @@ import json, tempfile, unittest
 from pathlib import Path
 import sys
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'scripts'))
-from workflow_guard import derive_state, require_gate
+from workflow_guard import derive_state, require_gate, stage_hint, STAGE_HINTS
 from validate_decisions import validate
 
 def write(p: Path, text: str):
@@ -118,6 +118,10 @@ class GateProgressionTests(unittest.TestCase):
         self.assertEqual(derive_state(root,'Q1')['gate'],'G6')
         self.assertEqual(require_gate(root,'Q1','final_assembly')['artifact_kind'],'final_assembly')
         td.cleanup()
+
+    def test_stage_hint_present(self):
+        self.assertTrue(stage_hint('G2').startswith('next:'))
+        self.assertEqual(stage_hint('G6'), STAGE_HINTS['G6'])
 
     def test_agents_md_example_decision_passes_validation(self):
         td=tempfile.TemporaryDirectory()

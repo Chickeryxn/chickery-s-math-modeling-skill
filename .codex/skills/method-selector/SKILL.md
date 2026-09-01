@@ -80,6 +80,8 @@ If these are missing, return to the producer skill rather than guessing.
 - Priority:
 - Unacceptable failure:
 - Experiment budget:
+- Complexity budget (why this complexity is needed):
+- Interpretability need (who must be able to explain it):
 
 ## Shortlist
 | ID | Role | Mathematical idea | Why eligible | Why not chosen (if not main) | Main risk | Implementation cost |
