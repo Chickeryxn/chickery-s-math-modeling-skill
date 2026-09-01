@@ -1,8 +1,64 @@
-# Mathematical Modeling Workspace and Codex Skills
+# Mathematical Modeling Contest AI Skill Library
 
 [简体中文](README.md) | [English](README.en.md)
 
-This project provides a mathematical-modeling workflow template with executable gate checks, decision provenance, experiment snapshots, artifact lineage, independence checks, and layered QA.
+**Math Modeling Skill** — an Agent skill library and executable workflow framework for mathematical-modeling contests (CUMCM / MCM/ICM): 28 Claude/Codex skills plus 14 standard-library-only validation scripts turn "AI writes code, humans make decisions, everything reproducible and auditable" into a machine-enforced process contract.
+
+| Badge | Value |
+|---|---|
+| License | [MIT](LICENSE) |
+| Version | 0.3.1 (plugin manifests in sync) |
+| Runtime | Python 3 (standard library only, no third-party dependencies) |
+| Platforms | Windows / Linux / macOS |
+| Tests | 34 cases, `python scripts/run_tests.py` all green |
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Quick start](#quick-start)
+- [Workflow and gates](#workflow-and-gates)
+- [Skill catalog 28](#skill-catalog-28)
+- [Contract system](#contract-system)
+- [Command reference](#command-reference)
+- [Directory layout](#directory-layout)
+- [Test coverage](#test-coverage)
+- [FAQ](#faq)
+- [Glossary](#glossary)
+- [Limitations](#limitations)
+- [License and acknowledgements](#license-and-acknowledgements)
+
+## Overview
+
+### The problem it solves
+
+AI assistance is allowed in modeling contests, but letting an agent "free-wheel" creates two kinds of risk:
+
+1. **The AI oversteps modeling judgment** — picking methods, fabricating rationales, and drawing conclusions on the modeler's behalf, which violates contest rules and academic integrity;
+2. **Untrustworthy results** — whether the code actually ran, where numbers came from, and whether artifacts are stale can never be checked.
+
+### The approach
+
+This project splits a contest into six gate stages (G1–G6). Passing each gate requires **evidence artifacts** that can be verified on disk; the validators under `scripts/` check them automatically, so gates are driven by evidence and can never be self-declared. Meanwhile, 28 single-purpose skills cover every step from reading the problem to delivering the paper, with a clear division of labor between AI and human.
+
+### Three core principles
+
+| Principle | Meaning |
+|---|---|
+| **AI owns mechanical correctness** | Parsing, coding, running experiments, assembling evidence, and drafting sections are AI tasks |
+| **Humans own modeling judgment** | Method choice, result verdicts, confidence, physical meaning, and contribution framing are human decisions, always recorded |
+| **Evidence drives everything** | Gates, freezes, and paper numbers must trace back to real on-disk artifacts and hashes, never to verbal claims |
+
+## Features
+
+| Capability | What it does | What it prevents |
+|---|---|---|
+| Gate checks (G1–G6) | Derives the current gate from evidence; monotonic progression | Skipping stages; promoting a gate by editing the manifest |
+| Decision provenance | Human decisions recorded in append-only JSONL ledgers bound to the user's verbatim answer | AI summaries masquerading as human judgment |
+| Experiment snapshots | Unified runner records budget, hashes, command, environment, return code | Unreproducible results; claiming completion after budget cuts |
+| Artifact lineage | Key artifacts carry source/validator/hashes; upstream changes mark consumers `STALE` | Using stale artifacts for freezing or paper assembly |
+| Independence checks | main / baseline / verifier roles verified for distinct scripts and runtime refs | Fake baselines, fake verifiers, or reading the main result as the only input |
+| Layered QA | Mechanical / semantic / provenance / lineage / independence / human-judgment / gate reported separately | A local check passing masquerading as overall approval |
 
 ## Quick start
 
@@ -12,116 +68,227 @@ cd chickery-s-math-modeling-skill
 git checkout mathmodeling-new-skeleton
 ```
 
-Open the repository root in Codex or Claude. Put the current problem statement and attachments in:
+Open the repository root in Codex or Claude, then put the problem statement and attachments in:
 
 ```text
 workspace/problem.txt
 workspace/data_raw/<attachments>
 ```
 
-Treat raw attachments as read-only and write cleaned copies under `workspace/data_clean/`. The default workflow is:
+Raw attachments are read-only; cleaned copies go under `workspace/data_clean/`. The default workflow is:
 
 ```text
-problem-parser
-→ problem-classifier
-→ data-auditor-cleaner
-→ workflow-orchestrator
+problem-parser → problem-classifier → data-auditor-cleaner → workflow-orchestrator
 ```
 
-The session configuration is in `planning/session_config.json`, with `learning + lean` as the default.
+Session configuration lives in `planning/session_config.json`: `interaction_mode` (`learning`/`speed`) controls question density, `rigor_profile` (`lean`/`submission`) controls artifact and audit density. Fresh workspaces default to `learning + lean`; switch to `submission` before final assembly.
 
-## G1–G6 workflow
+## Workflow and gates
+
+Every subquestion (Q1, Q2, …) advances independently through the same gates. Gate state is derived from on-disk evidence by `scripts/workflow_guard.py derive Qx`; **the manifest is only a cache and cannot promote itself**, and transitions must be monotonic.
+
+![Generic gate pipeline](docs/diagrams/archify/assets/mm-generic-workflow.png)
+
+| Gate | Name | Pass conditions (evidence) | Main outputs |
+|---|---|---|---|
+| G1 | PROBLEM_FRAMED | Parse, classification, data inventory, success criteria, and human framing exist | `planning/parse/`, `planning/classification/` |
+| G2 | METHOD_SCREENED | Method card defines main candidate + usable baseline; risk probe verdicts all PASS/CONDITIONAL; fallback has a trigger | `methods/Qx/qx_method_card.md`, `probes/risk_probe_summary.json` |
+| G2.5 | METHOD_CHOSEN_BY_HUMAN | Ledger contains a human `DECIDED` `method_choice` record (bound to the user's verbatim answer) | `methods/Qx/qx_decisions.jsonl` |
+| G3 | CODE_AND_EXPERIMENT_REVIEWED | Approved main and baseline executed; run summary complete; language review passes the five named checks | `code/Qx/reviews/`, `results/Qx/experiments/roundN/` |
+| G4 | RESULTS_JUDGED_AND_FROZEN | Result/stability/claim-scope verdicts present; in `submission`, solution package and `frozen_numbers.json` exist and are current | `results/Qx/reports/` |
+| G5 | PAPER_SECTION_READY | Writer uses the solution package as the only source; numbers come from the freeze; interpretation/contribution human-confirmed | `paper/sections/` |
+| G6 | FINAL_AUDIT_PASSED | Consistency, completeness, and QA audits all pass (submission profile only) | `paper/audits/`, `paper/qa_report.md` |
+
+**Key rules**
+
+- Model code may be generated only when G2 and G2.5 both pass.
+- Human method/result/stability/claim-scope decisions must be recorded in the append-only JSONL ledger; AI may not write the rationale.
+- Every number in the paper must come from `results/Qx/reports/frozen_numbers.json`; changing a value requires "thaw → update the source → rerun → re-freeze" with a change log entry, never manual edits.
+- Figures are typed: Type 1 diagnostics never enter the paper; only Type 3/4 may, and only after passing render checks.
+
+More diagrams: [gate lifecycle](docs/diagrams/archify/assets/mm-gate-lifecycle.png) · [28-skill architecture](docs/diagrams/archify/assets/mm-workspace-architecture.png) · [document freeze chain](docs/diagrams/archify/assets/mm-document-chain.png) (interactive versions under `docs/diagrams/archify/interactive/`).
+
+## Skill catalog 28
+
+The skill tree ships as two complete standalone copies under `.codex/skills/` and `.claude/skills/` (`plugins/mathmodeling-skills/skills/` is the distribution copy). Grouped by pipeline stage:
+
+### Problem understanding
+
+| Skill | One-line responsibility | Main outputs |
+|---|---|---|
+| `problem-parser` | Parses the problem into goals, objects, constraints, outputs, subquestions, and success criteria | `planning/parse/problem_parse.json` |
+| `problem-classifier` | Classifies subquestion task types from required output and structure; surfaces framing ambiguities for humans | `planning/classification/problem_classification.json` |
+| `related-paper-analyzer` | Analyzes only user-supplied papers under `workspace/papers/` for transferable method cues | `workspace/papers/related_paper_analysis.md` |
+| `data-auditor-cleaner` | Maps attachments, audits and cleans data, emits one reusable data profile | `workspace/data/data_profile.json`, `data_clean/` |
+
+### Method and decisions
+
+| Skill | One-line responsibility | Main outputs |
+|---|---|---|
+| `method-selector` | Builds a role-based shortlist (main + usable baseline + ≤1 conditional fallback) and runs method-specific risk probes | `methods/Qx/qx_method_card.md`, `probes/risk_probe_summary.json` |
+| `decision-prompt-builder` | Builds one "choice card" at genuine modeling-judgment points, max 3 questions | Not persisted (returns a choice_card) |
+| `modeler-decision-logger` | Faithfully appends the human's verbatim answer to the decision ledger | `methods/Qx/qx_decisions.jsonl` |
+| `model-assumptions-builder` | Extracts and maintains global/method assumptions; necessity labels stay human-owned | `planning/model_assumptions.md` |
+| `symbol-table-builder` | Maintains the global symbol/unit table and resolves cross-question conflicts | `planning/symbol_table.md` |
+
+### Code and experiments
+
+| Skill | One-line responsibility | Main outputs |
+|---|---|---|
+| `model-code-analyzer` | Translates the human-approved method into a language-neutral implementation and experiment contract | `code/Qx/qx_code_plan.md` |
+| `python-model-code-generator` | Generates and runs minimal reproducible Python for main + baseline | `code/Qx/*.py`, `run_summary.json` |
+| `matlab-model-code-generator` | Generates and runs MATLAB / Beita Tianyuan compatible code | `code/matlab/Qx/*.m`, `run_summary.json` |
+| `code-reviewer` | Routes work to the matching language reviewer | — (router) |
+| `python-code-reviewer` | Five named checks: syntax / input contract / method alignment / reproducibility / output contract | `code/Qx/reviews/qx_python_review.json` |
+| `matlab-code-reviewer` | Same named checks plus toolbox and Beita Tianyuan compatibility | `code/matlab/Qx/reviews/qx_matlab_review.json` |
+| `robustness-checker` | Runs perturbation, resampling, baseline-comparison, and other risk-targeted checks | `robustness/Qx/qx_robustness_summary.json` |
+
+### Results and paper
+
+| Skill | One-line responsibility | Main outputs |
+|---|---|---|
+| `result-report-generator` | Condenses experiment artifacts into decision-point evidence; never picks the winner | `results/Qx/reports/qx_final_result_analysis.md` |
+| `figure-table-planner` | Plans the smallest evidence-bearing set of figures/tables (Type 1–4) | `methods/Qx/qx_figure_table_plan.md` |
+| `math-figure-generator` | Produces publication-quality figures with shared color/layout conventions and render checks | `paper/figures/` |
+| `final-method-explainer` | Builds the authoritative final method explanation from card/ledger/results | `methods/Qx/qx_final_method_explanation.md` |
+| `solution-package-builder` | Assembles the writer package and freezes numbers after human sign-off | `results/Qx/reports/qx_solution_package_for_writer.md`, `frozen_numbers.json` |
+| `paper-section-writer` | Drafts sections only from the solution package and frozen numbers | `paper/sections/qx.tex` |
+| `paper-polisher` | Grammar, consistency, and overclaim calibration (borrowing nature-polishing principles) | Polished `paper/sections/` |
+| `reference-manager` | Verifies citation authenticity, generates BibTeX, flags unverified entries | `paper/refs.bib`, `paper/reference_audit.md` |
+
+### Orchestration and auditing
+
+| Skill | One-line responsibility | Main outputs |
+|---|---|---|
+| `workflow-orchestrator` | Gate scheduler: reads state, derives gates, routes the next action; never models/codes/writes itself | `planning/manifests/Qx.json` (state source) |
+| `completeness-auditor` | Checks required evidence per active profile is present and current | `paper/audits/completeness_audit.md` |
+| `consistency-auditor` | Cross-media checks of numbers, symbols, parameters, decisions, and files | `paper/audits/cross_media_consistency_audit.md` |
+| `quality-assurance-auditor` | Final five-dimension audit (workflow/evidence/method/paper/presentation) | `paper/qa_report.md` |
+
+## Contract system
+
+Domain-neutral contracts live in `schemas/` and are enforced by the validators in `scripts/`; **new problems must not modify the schemas** — problem semantics go into the separate `planning/model_contract.json`.
+
+| Contract | Schema file | Validator | Description |
+|---|---|---|---|
+| Model contract | `schemas/model_contract.schema.json` | `validate_model_contract.py` | Entities/inputs/state functions/decision variables/constraints/objective/evaluator/uncertainty/validation; main, baseline, and verifier must reference the same contract hash |
+| Human decisions | `schemas/decision.schema.json` | `validate_decisions.py` | `DECIDED` requires a `source` (`user_answer` + message id + verbatim answer) and an ISO-8601 `recorded_at` |
+| Run snapshot | `schemas/run_snapshot.schema.json` | `create_run_snapshot.py` / `validate_run_snapshot.py` | Planned/actual budgets, input/code/config hashes, command, environment, return code; success must be runner-executed |
+| Artifact lineage | `schemas/lineage.schema.json` | `lineage.py` / `validate_artifacts.py` | Source/validator/consumer/hashes/decision IDs; upstream changes mark consumers `STALE` |
+
+## Command reference
+
+| Command | Purpose |
+|---|---|
+| `python scripts/run_tests.py` | Run the whole test suite (standard-library unittest) |
+| `python scripts/validate_repo.py .` | Repository-wide integrity check (skill trees, tests, contracts, snapshots, lineage, QA) |
+| `python scripts/validate_skill_trees.py .` | Hash consistency across the three skill trees + plugin manifest versions |
+| `python scripts/sync_plugin.py . [--check]` | Sync `.codex/skills/` → `.claude/skills/` and the plugin distribution copy |
+| `python scripts/workflow_guard.py . derive Q1` | Derive Q1's current gate from evidence |
+| `python scripts/workflow_guard.py . require Q1 model_code` | Gate check before producing sensitive artifacts (GATE_BLOCKED otherwise) |
+| `python scripts/validate_model_contract.py planning/model_contract.example.json` | Validate contract shape and print the contract hash |
+| `python scripts/validate_decisions.py . methods/Q1/q1_decisions.jsonl` | Validate the decision ledger (provenance, append-only, timestamps) |
+| `python scripts/create_run_snapshot.py run . runs/<run_id> --command "python code/main.py" --result-ref results/result.json --validation-ref results/validation.json` | Execute an experiment via the unified runner and create an immutable snapshot |
+| `python scripts/validate_run_snapshot.py . runs/<run_id>` | Validate snapshot integrity (success must be runner-executed) |
+| `python scripts/lineage.py assess . path/to/artifact.lineage.json` | Assess lineage status CURRENT/STALE/MISSING |
+| `python scripts/validate_artifacts.py . planning/manifests/Q1.json` | Validate manifest-declared artifacts have CURRENT lineage |
+| `python scripts/qa_report.py .` | Generate the layered QA report (any blocking layer missing → not PASS) |
+
+See [`scripts/README.md`](scripts/README.md) for detailed arguments and [`schemas/README.md`](schemas/README.md) for contract guidance.
+
+## Directory layout
 
 ```text
-G1 Problem Framed
-→ G2 Method Screened
-→ G2.5 Chosen by Human
-→ G3 Code and Experiment Reviewed
-→ G4 Results Judged and Frozen
-→ G5 Paper Section Ready
-→ G6 Final Audit
+.
+├── .codex/skills/                 # Codex skill tree (28 skills; sync source)
+├── .claude/skills/                # Claude skill tree (complete standalone copy)
+├── plugins/mathmodeling-skills/   # Distribution package (two manifests + skills + hooks)
+├── .agents/plugins/marketplace.json  # marketplace catalog entry
+├── AGENTS.md                      # Single source of truth for workflow policy (gates/artifacts/decisions/freeze/audits)
+├── CLAUDE.md                      # Claude-specific operating rules
+├── planning/                      # Session config, parse/classification, manifests, presets, example contracts
+├── methods/Qx/                    # Method cards, decision ledgers, risk probes, final explanations
+├── code/                          # Model code and reviews (code/Qx/, code/matlab/Qx/)
+├── results/Qx/                    # Experiment rounds, reports, solution package, frozen_numbers.json
+├── robustness/Qx/                 # Robustness evidence
+├── paper/                         # Sections, figures, references, and the three final audits
+├── workspace/                     # problem.txt, data_raw/ (read-only), data_clean/, papers/
+├── references/                    # Upstream knowledge base (historical decisions, advisory, not required)
+├── schemas/                       # Domain-neutral contracts (4 schemas + README)
+├── scripts/                       # 14 standard-library-only runner/validator scripts
+├── docs/diagrams/archify/         # Generic flow diagrams (PNG/SVG/interactive HTML/JSON sources)
+└── tests/                         # 34 test cases
 ```
 
-Gate status is derived from the manifest and canonical evidence; a manifest cannot promote itself. A passing local script does not imply that the overall gate passed. Human method, result, stability, and claim-scope decisions belong in append-only JSONL ledgers.
+## Test coverage
 
-## Workflow integrity tools
+`python scripts/run_tests.py` (34 cases, standard library only) covers:
 
-Common commands:
+- Evidence-derived gate computation and monotonic transitions (including a full G1→G6 progression to `final_assembly`)
+- Human-decision provenance (fake human, unregistered evidence, escaping paths all rejected)
+- Run snapshots and budget degradation (`DEGRADED_SUCCESS`; success without the runner rejected)
+- Artifact lineage and STALE propagation
+- main/baseline/verifier independence (shared metric sources rejected)
+- Model-contract shape, skill-tree synchronization, layered QA
+- Three synthetic scenario families (regression / scheduling / dynamic events) end to end
+- Risk-probe list/dict shape compatibility
 
-```powershell
-python scripts/run_tests.py
-python scripts/validate_repo.py .
-python scripts/validate_skill_trees.py .
-python scripts/sync_plugin.py . --check
-python scripts/validate_model_contract.py planning/model_contract.example.json
-python scripts/workflow_guard.py . derive Q1
-python scripts/workflow_guard.py . require Q1 model_code
-python scripts/create_run_snapshot.py run . runs/<run_id> --command "python code/main.py" --result-ref results/result.json --validation-ref results/validation.json
-python scripts/lineage.py assess . path/to/artifact.lineage.json
-```
+## FAQ
 
-See `scripts/README.md` for detailed arguments and `schemas/README.md` for contract guidance.
+**Q: Can it do the problem or write the paper for me?**
+No. AI handles mechanical correctness only; method choice, result verdicts, physical interpretation, and contribution framing must be decided by you and recorded — this is also what contest AI-usage rules require.
 
-## Model contract
+**Q: What dependencies do I need?**
+None. All scripts use only the Python standard library; `python scripts/run_tests.py` is a self-check.
 
-During problem framing, create a problem-specific `model_contract.json` describing entities, inputs, state functions, decision variables, hard and soft constraints, the objective, evaluator, uncertainty handling, and validation. `schemas/model_contract.schema.json` is domain-neutral and should not contain problem entities or parameters.
+**Q: Does it work with both Codex and Claude?**
+Yes. The two skill trees are each complete and consistent. When editing skills, change `.codex/skills/` first, then run `sync_plugin.py` to refresh the other copies.
 
-Main, usable baseline, and verifier implementations must reference the same model contract and hash while retaining independent implementation and run evidence.
+**Q: Why is the default branch named `mathmodeling-new-skeleton`?**
+It is the current development line. After cloning, run `git checkout mathmodeling-new-skeleton` as shown in this README.
 
-## Experiment snapshots and artifact lineage
+**Q: Why is my experiment marked `DEGRADED_SUCCESS`?**
+The actual budget fell below the planned budget (for example, fewer iterations). The run still succeeds, but stability/optimality claims must be downgraded — you may not claim the original plan was completed.
 
-Use the unified runner to record planned and actual budgets, budget deltas, input/code/config hashes, command, environment, return code, result, and validation files. A run with a material budget reduction is marked `DEGRADED_SUCCESS`, and stability or optimality claims must be qualified.
+**Q: Can I edit `frozen_numbers.json` by hand?**
+No. To change a value: thaw → update the canonical source → rerun the affected experiments → re-freeze, and record the reason in `freeze_change_log.md`.
 
-Key artifacts should carry lineage with source, validation, consumer, code/config/input hashes, and decision IDs. Changed source hashes make dependent artifacts `STALE`; stale artifacts cannot be used for freezing or final paper assembly.
+**Q: Can diagnostic figures go into the paper?**
+No. Type 1 diagnostics are internal only; only Type 3/4 figures may enter the paper, after passing render verification.
 
-## Human decisions and independence
+**Q: How do I extend or modify a skill?**
+Edit `.codex/skills/<skill>/SKILL.md`, run `python scripts/sync_plugin.py .`, then verify with `validate_skill_trees.py`.
 
-A `DECIDED` record must have verifiable user-answer provenance; an AI summary cannot replace the user's verbatim answer. Main, baseline, and verifier are separate roles. Different filenames alone do not prove independence; use the dedicated validator for static references and runtime evidence.
+**Q: What is the relationship to upstream libraries such as XiaoMaColtAI?**
+This project merges six upstream projects (XiaoMaColtAI, CUMCMThesis, Lupynow, nature-skills, sci-box, …) and locks 12 decisions; the historical record is in [`references/README.md`](references/README.md), but the current executable contract is `AGENTS.md`, `schemas/`, and `scripts/`.
 
-## Layout and plugins
+## Glossary
 
-```text
-.codex/skills/
-.claude/skills/
-plugins/mathmodeling-skills/skills/
-planning/
-methods/
-code/
-results/
-robustness/
-paper/
-schemas/
-scripts/
-tests/
-workspace/
-```
+| Term | Meaning |
+|---|---|
+| Gate | One of G1–G6 plus the G2.5 human-choice point; evidence-derived and monotonic |
+| Manifest | `planning/manifests/Qx.json`, the machine-readable state cache per subquestion (cannot promote a gate) |
+| Canonical evidence | Real, authoritative artifacts on disk — the only basis for gate derivation |
+| Risk probe | Method-specific, time-bounded mini-experiment checking executability/data coverage/assumptions/output degeneracy/perturbation/scale |
+| Choice card | 2–3 mutually exclusive options with consequences at a modeling-judgment point, answered by the human |
+| Decision ledger | `methods/Qx/qx_decisions.jsonl`, append-only JSONL; `DECIDED` must bind the user's verbatim answer |
+| Run snapshot | Immutable experiment record from the unified runner (budget/hashes/command/environment/return code) |
+| DEGRADED_SUCCESS | A successful run whose actual budget fell short of the plan; related claims must be qualified |
+| Lineage | An artifact's source/validator/consumer/hash record; upstream changes mark consumers `STALE` |
+| Model contract | `planning/model_contract.json`, problem-specific definitions of entities/constraints/objective/evaluation/validation |
+| Frozen numbers | `frozen_numbers.json`, the single source of truth for paper numbers; never edited by hand |
+| main / baseline / verifier | Main method / usable baseline / independent verifier — separate roles that must prove independence |
+| rigor profile | `lean` (minimal exploration artifacts) or `submission` (full artifacts and the three final audits) |
+| interaction mode | `learning` (more questions, suggestions after answering) or `speed` (fewer questions, suggestions alongside) |
+| preset | An explicitly activated, versioned, advisory set of defaults that cannot override contracts or human decisions |
 
-The project has one marketplace catalog:
+## Limitations
 
-```text
-.agents/plugins/marketplace.json
-```
+- This project provides a **workflow template and executable validation tools**; it does not claim to prevent every direct file write that bypasses the tools.
+- Validators check **on-disk artifacts**; the honesty of the workflow ultimately depends on the user following it.
+- This project **does not encode an offline/network policy**; offline constraints are an environment- or user-level concern.
+- Gates and audits are quality assurance, not a guarantee of contest outcomes or paper conclusions.
 
-and two plugin manifests:
+## License and acknowledgements
 
-```text
-plugins/mathmodeling-skills/.codex-plugin/plugin.json
-plugins/mathmodeling-skills/.claude-plugin/plugin.json
-```
-
-After updating `.codex/skills/`, run `python scripts/sync_plugin.py .` to update the Claude and plugin distribution copies.
-
-## Presets and references
-
-Presets under `planning/presets/` must be explicitly activated, versioned, and marked advisory. They may provide defaults but cannot override a problem contract or human decision. Content under `references/` is advisory knowledge and is not automatically required for a new problem.
-
-## Tests and limitations
-
-```powershell
-python scripts/run_tests.py
-python scripts/validate_repo.py .
-```
-
-The tests cover gates, human decisions, run snapshots, budget degradation, lineage/stale status, independence, continuous events, model contracts, skill synchronization, layered QA, and three synthetic scenario families.
-
-The project provides a workflow template and executable validation tools; it does not claim to prevent every direct file write that bypasses the tools. The project does not encode an offline or network policy.
+[MIT License](LICENSE). This project merges and borrows from [XiaoMaColtAI/math-modeling-skill](https://github.com/XiaoMaColtAI/math-modeling-skill), [latexstudio/CUMCMThesis](https://github.com/latexstudio/CUMCMThesis), [Lupynow/math-modeling-skills](https://github.com/Lupynow/math-modeling-skills), [Yuan1z0825/nature-skills](https://github.com/Yuan1z0825/nature-skills), and [jihe520/sci-box](https://github.com/jihe520/sci-box); diagrams are generated by [tt-a1i/archify](https://github.com/tt-a1i/archify). See [`references/README.md`](references/README.md) for the merged decisions.
