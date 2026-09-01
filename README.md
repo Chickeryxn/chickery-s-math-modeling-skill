@@ -7,10 +7,10 @@
 | 徽章 | 值 |
 |---|---|
 | 许可 | [MIT](LICENSE) |
-| 版本 | 0.4.3（插件 manifest 同步） |
+| 版本 | 0.4.4（插件 manifest 同步） |
 | 运行环境 | Python 3（仅标准库，无第三方依赖） |
 | 平台 | Windows / Linux / macOS |
-| 测试 | 102 个用例，`python scripts/run_tests.py` 全绿 |
+| 测试 | 111 个用例，`python scripts/run_tests.py` 全绿 |
 
 ## 目录
 
@@ -224,7 +224,7 @@ problem-parser → problem-classifier → data-auditor-cleaner → workflow-orch
 
 ## 测试覆盖
 
-`python scripts/run_tests.py`（102 个用例，全标准库）覆盖：
+`python scripts/run_tests.py`（111 个用例，全标准库）覆盖：
 
 - 门禁证据推导与单调迁移（含完整 G1→G6 推进链到 `final_assembly`）
 - 人类决策溯源（伪造人类、未注册证据、路径逃逸均被拒绝）
@@ -239,6 +239,8 @@ problem-parser → problem-classifier → data-auditor-cleaner → workflow-orch
 - AI 痕迹扫描（`ai_trace_checker`，含 `--config` 自定义阈值）
 - 摘要质量检查（`abstract_checker`）与学习摘要生成（`learning_summary`）
 - 模型质量门（`model_quality_gate`）、泄漏启发式（`leakage_check`）与题目覆盖校验（`claim_coverage`）
+- 图表一致性（`figure_consistency_check`）与论文章节结构检查（`section_structure_check`）
+- 摘要/结论质量（`abstract_checker`，含结论子问题覆盖）
 
 ## 学习与复盘
 
@@ -246,6 +248,7 @@ problem-parser → problem-classifier → data-auditor-cleaner → workflow-orch
 - [赛后复盘](docs/post-contest-review.md)：用决策账本回看"哪些建模判断被结果验证/推翻"，`python scripts/learning_summary.py .` 生成复盘骨架。
 - [建模自评](docs/modeling-self-review.md)：G2–G4 间的建模方案自评（假设/复杂度/可解释性/公平性/结果底线）。
 - 时间预算模板见 `planning/timeline.md`（72h/96h 六阶段拆解）。
+- Agent 能力资源：`references/abstraction-patterns.md`（多范式抽象）、`references/publication-gallery.md`（顶刊图规范）、`references/paper-skeleton.md`（论文骨架）、`references/upstream/lupynow-cookbook/`（8 本算法 cookbook）、`references/upstream/nature-figure/`（含渲染审计脚本）。
 
 ## 常见问题 FAQ
 

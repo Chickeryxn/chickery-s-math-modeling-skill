@@ -9,5 +9,9 @@
   - `design-theory.md` — typography / color / export rules for publication figures.
   - `api.md` — PALETTE constants and matplotlib style API used by upstream.
   - `multipanel-evidence-architecture.md` — multi-panel evidence architecture guidance.
-- **Scope**: Only the Markdown rule layer is imported. Upstream Python/R renderers, the OpenRouter GPT-Image path, and the `figures4papers` assets (which carry **no license** upstream) are intentionally NOT imported.
+- **Imported scripts** (from `skills/nature-figure/scripts/`, pure standard library):
+  - `audit_panel_alignment.py` — mechanical panel-alignment QA (1.5pt alignment gate, overlap/whitespace).
+  - `audit_pdf_text.py` — PDF text-extraction audit (font sizes, clipping signals).
+  - `validate_figure.py` — static pre-check of figure scripts (style/axis/legend issues before rendering).
+- **Scope**: Markdown rule layer + pure-stdlib audit scripts. Upstream R renderers, the OpenRouter GPT-Image path, and the `figures4papers` assets (which carry **no license** upstream) are intentionally NOT imported.
 - **Drift note**: Upstream rules carry date stamps and reference Nature-specific numeric rules (e.g. <250-word captions, 89/183 mm). Treat as advisory guidance, not official journal requirements.

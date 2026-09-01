@@ -10,5 +10,6 @@
   "main-text-discipline.md": "9db1d9ee9a536cc1e6d7a1d644656161e55ecb7e9b6ae04c1767847618a1cb4b",
   "terminology-ledger.md": "19f3100d0d3def3189ddc4de0d777ab3440e482049be93c50046cdcf9e7cb6e1",
   "consistency-sweep.md": "d68a9f6261fd6b3275ca95d63aa92d2b05ac03b41f8c5eb54431113d2e1cfb5c",
-  "check_consistency.py": "734ee7de12492fd3ebf9d9e2868a6a5af0d9d478ede021e4e7dc645a69f24ab8"
+  "check_consistency.py": "734ee7de12492fd3ebf9d9e2868a6a5af0d9d478ede021e4e7dc645a69f24ab8",
+  "technical-concern-taxonomy.md": "5b5155344efcc68e2cd37c1c6d3b61219d2b1a8198824401cce4d2e60881c3cb"
 }

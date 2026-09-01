@@ -3,5 +3,8 @@
   "qa-contract.md": "9f70150460008adacb2ecf39e37630e2919a98f1e14e9167c2bc1d8f70f56986",
   "design-theory.md": "f2b77fb4e290de082146f4bdea3fbdf8135d40d4877bb70eb6447b4fbbcc405b",
   "api.md": "46a858f848a0d847acb53650096989a6d4ff53d8c1d98b6a9a448ca10fea077a",
-  "multipanel-evidence-architecture.md": "9f1e4d4933c2d0ea1b61147251575faed43e252f6205ec2f927d14365dc9dd02"
+  "multipanel-evidence-architecture.md": "9f1e4d4933c2d0ea1b61147251575faed43e252f6205ec2f927d14365dc9dd02",
+  "audit_panel_alignment.py": "0450114973b88aa701f40f178832321d6f284b09da4d111011d5f772d7da8deb",
+  "audit_pdf_text.py": "1492d882101dbc574a9443518d7043d14e00434b89864fdda9bc8d1aac503772",
+  "validate_figure.py": "f79fd9a4bba4ff112261e3d9855387030efc0324235c8dafbbac7f6cfa50bc74"
 }

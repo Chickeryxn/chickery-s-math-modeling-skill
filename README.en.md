@@ -7,10 +7,10 @@
 | Badge | Value |
 |---|---|
 | License | [MIT](LICENSE) |
-| Version | 0.4.3 (plugin manifests in sync) |
+| Version | 0.4.4 (plugin manifests in sync) |
 | Runtime | Python 3 (standard library only, no third-party dependencies) |
 | Platforms | Windows / Linux / macOS |
-| Tests | 102 cases, `python scripts/run_tests.py` all green |
+| Tests | 111 cases, `python scripts/run_tests.py` all green |
 
 ## Table of Contents
 
@@ -224,7 +224,7 @@ See [`scripts/README.md`](scripts/README.md) for detailed arguments and [`schema
 
 ## Test coverage
 
-`python scripts/run_tests.py` (102 cases, standard library only) covers:
+`python scripts/run_tests.py` (111 cases, standard library only) covers:
 
 - Evidence-derived gate computation and monotonic transitions (including a full G1→G6 progression to `final_assembly`)
 - Human-decision provenance (fake human, unregistered evidence, escaping paths all rejected)
@@ -239,6 +239,8 @@ See [`scripts/README.md`](scripts/README.md) for detailed arguments and [`schema
 - AI-trace scanning (`ai_trace_checker`, `--config` thresholds)
 - Abstract quality (`abstract_checker`) and learning summary (`learning_summary`)
 - Model quality gate (`model_quality_gate`), leakage heuristics (`leakage_check`), and claim coverage (`claim_coverage`)
+- Figure-set consistency (`figure_consistency_check`) and paper section-structure check (`section_structure_check`)
+- Abstract/conclusion quality (`abstract_checker`, with subquestion conclusion coverage)
 
 ## Learning and review
 
@@ -246,6 +248,7 @@ See [`scripts/README.md`](scripts/README.md) for detailed arguments and [`schema
 - [Post-contest review](docs/post-contest-review.md): revisit which modeling judgments were validated or overturned; `python scripts/learning_summary.py .` generates a review skeleton.
 - [Modeling self-review](docs/modeling-self-review.md): structured review between G2 and G4 (assumptions / complexity / interpretability / fairness / result baseline).
 - Time budget template: `planning/timeline.md` (72h/96h breakdown across the six stages).
+- Agent capability resources: `references/abstraction-patterns.md` (multi-paradigm abstraction), `references/publication-gallery.md` (publication figure standards), `references/paper-skeleton.md` (paper skeleton), `references/upstream/lupynow-cookbook/` (8 algorithm cookbooks), `references/upstream/nature-figure/` (incl. render audit scripts).
 
 ## FAQ
 

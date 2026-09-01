@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.4 — 2026-09-01
+
+- **Model diversity & abstraction**: added `references/abstraction-patterns.md` (abstraction four-step + 2–3 modeling paradigms per problem type + simplification ladder); `method-selector` now requires ≥2 modeling paradigms in the shortlist (unless the output locks one) and references the cookbooks; `method-index` gained the multi-paradigm/simplification section.
+- **Imported Lupynow cookbooks ×8** (MIT): optimization/ML/evaluation/mechanistic/statistical/network/clustering/game-theory "selection quick-reference + core formulas + traps" under `references/upstream/lupynow-cookbook/` (provenance + hashes registered).
+- **Publication-grade figures**: imported nature-figure pure-stdlib render audits (`audit_panel_alignment.py`, `audit_pdf_text.py`, `validate_figure.py`, Apache-2.0); added `references/publication-gallery.md` (per-chart-type top-journal standards with good/bad samples); added 4 more clean-room matplotlib patterns (forest, density ridge, clustered heatmap, multi-panel time series); added `scripts/figure_consistency_check.py` (set-wide naming/size/manifest consistency).
+- **Structure-conforming writing**: added `references/paper-skeleton.md` (full contest skeleton with purpose/structure/red lines per section); `scripts/section_structure_check.py` (section presence, order, length share); imported nature-reviewer `technical-concern-taxonomy.md` (Apache-2.0); `abstract_checker` now checks conclusion coverage per subquestion (`--subquestions`).
+- Tests grew to 111.
+
 ## 0.4.3 — 2026-09-01
 
 - **High-quality modeling answers**: added `scripts/model_quality_gate.py` (G4-preceding mechanical gate: seed recorded, baseline comparable with real metrics, uncertainty present or explicitly N/A, output contract aligned); `scripts/leakage_check.py` (time-column disorder, target duplication, duplicate rows heuristics for predictive data); `scripts/claim_coverage.py` (every subquestion must have a paper section, frozen numbers, and abstract number coverage).

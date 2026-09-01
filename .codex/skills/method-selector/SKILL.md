@@ -39,11 +39,12 @@ If these are missing, return to the producer skill rather than guessing.
    - Identify the failure modes that would make a method unusable.
 
 3. **Create a role-based shortlist.**
+   - Generate candidates from **at least two modeling paradigms** unless the required output locks the paradigm (use `references/abstraction-patterns.md` for the abstraction four-step and multi-paradigm templates).
    - One `main_candidate`: best fit to the chosen trade-off.
    - One `usable_baseline`: completes the real task and yields directly comparable outputs.
    - At most one `conditional_fallback`: differs in a meaningful mathematical way and has an explicit activation trigger.
    - If a simple reference cannot complete the real task, label it `diagnostic_reference`; it does not satisfy the baseline requirement.
-   - Do not add a method merely to reach a candidate count.
+   - Do not add a method merely to reach a candidate count; do not silently keep only one paradigm when the problem admits several.
 
 4. **Define method-specific risk checks.**
    - Use the contract in `references/risk-probe-contract.md`.
@@ -160,6 +161,8 @@ Migrate material evidence into the method card and probe summary. Do not require
 - Risk checks and summary schema: `references/risk-probe-contract.md`
 - Method-family routing cues: `references/method-family-guide.md`
 - Upstream method resources (self-written index + MIT decision matrix): `references/upstream-method-resources.md`
+- Multi-paradigm abstraction: repo `references/abstraction-patterns.md`
+- Algorithm cookbooks (MIT, advisory): repo `references/upstream/lupynow-cookbook/`
 
 # Verification
 

@@ -146,6 +146,70 @@ def correlation_pairgrid(fig, X, names):
             if i == n - 1: ax.set_xlabel(names[j], fontsize=7)
 ```
 
+## 7. Forest plot (point estimates with CI)
+
+```python
+def forest_plot(ax, labels, est, lo, hi, ref=None):
+    y = np.arange(len(labels))[::-1]
+    ax.errorbar(est, y, xerr=[np.array(est)-np.array(lo), np.array(hi)-np.array(est)],
+                fmt='o', color=PALETTE['primary'], ecolor=PALETTE['baseline'], capsize=3, ms=5)
+    ax.set_yticks(y); ax.set_yticklabels(labels, fontsize=8)
+    if ref is not None:
+        ax.axvline(ref, ls='--', color=PALETTE['baseline'], lw=0.9)
+    ax.set_xlabel('Estimate (95% CI)'); ax.set_title('Forest plot (simulated)')
+```
+
+## 8. Density ridge plot (per-group distributions)
+
+```python
+def density_ridge(ax, groups, labels):
+    for i, (g, lab) in enumerate(zip(groups, labels)):
+        grid = np.linspace(np.min(g), np.max(g), 200)
+        d = kde(g, grid); d = d / d.max() * 0.8
+        ax.fill_between(grid, i, i + d, alpha=0.45, color=PALETTE['primary'] if i % 2 == 0 else PALETTE['accent1'])
+        ax.text(grid[np.argmax(d)], i + d.max() + 0.08, lab, ha='center', fontsize=8)
+    ax.set_yticks([]); ax.set_ylim(-0.2, len(groups) + 0.6); ax.set_xlabel('Value')
+    ax.set_title('Density ridge (simulated)')
+```
+
+## 9. Clustered heatmap (reordered rows/columns)
+
+```python
+def clustered_heatmap(ax, Z, row_labels, col_labels):
+    # Z: rows x cols; cluster rows by simple linkage on row vectors
+    def hclust(M):
+        # single-linkage on correlation distance, greedy merge order
+        n = len(M); perm = list(range(n)); remaining = list(range(n))
+        while len(remaining) > 1:
+            best = None
+            for a in remaining:
+                for b in remaining:
+                    if a >= b: continue
+                    d = 1 - abs(np.corrcoef(M[a], M[b])[0, 1])
+                    if best is None or d < best[0]: best = (d, a, b)
+            _, a, b = best
+            remaining.remove(b)
+            M[a] = (M[a] + M[b]) / 2
+        return perm
+    perm = hclust(Z.copy())
+    im = ax.imshow(Z[perm], aspect='auto', cmap='RdBu_r', vmin=-1, vmax=1)
+    ax.set_yticks(range(len(perm))); ax.set_yticklabels([row_labels[i] for i in perm], fontsize=7)
+    ax.set_xticks(range(Z.shape[1])); ax.set_xticklabels(col_labels, fontsize=7, rotation=45, ha='right')
+    ax.figure.colorbar(im, ax=ax, fraction=0.03, pad=0.02); ax.set_title('Clustered heatmap (simulated)')
+```
+
+## 10. Multi-panel time series (shared x)
+
+```python
+def time_series_panels(fig, t, series_list, labels):
+    for i, (s, lab) in enumerate(zip(series_list, labels)):
+        ax = fig.add_subplot(len(series_list), 1, i + 1, sharex=ax if i else None)
+        ax.plot(t, s, color=PALETTE['primary'], lw=1.4)
+        ax.set_ylabel(lab, fontsize=8); ax.grid(alpha=0.25)
+        if i < len(series_list) - 1: ax.set_xticks([])
+    ax.set_xlabel('Time')
+```
+
 ## Usage rules
 
 - All patterns are **simulated-data examples**: replace the data with the model's real outputs; never claim these simulated figures reproduce any source study.

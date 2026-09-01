@@ -16,5 +16,6 @@
   - `terminology-ledger.md` — from `skills/nature-shared/core/`; terminology ledger guidance.
   - `consistency-sweep.md` — from `skills/nature-shared/core/`; consistency sweep guidance.
   - `check_consistency.py` — from `skills/nature-shared/scripts/`; pure-standard-library mechanical consistency checker.
+  - `technical-concern-taxonomy.md` — from `skills/nature-reviewer/references/`; reviewer concern taxonomy (12 axes) used as a G6 pre-submission self-audit checklist.
 - **Scope**: Markdown rule layer + one pure-stdlib checker. Network/third-party assets (MCP server, downloader, image2ppt, paper-to-patent toolchains) are NOT imported.
 - **Drift note**: Quantitative claims (e.g. "However 51 ≫ Furthermore 22") are corpus statistics, not official rules; verify against current journal guidance before citing.

@@ -6,9 +6,10 @@
 
 | 子目录 | 来源仓库 | 固定 commit | 许可证 | 引入内容 | 状态 |
 |---|---|---|---|---|---|
-| `nature-figure/` | [Yuan1z0825/nature-skills](https://github.com/Yuan1z0825/nature-skills) | `ebd722e` | Apache-2.0 | 图契约/QA/设计理论/PALETTE/多面板架构 | 逐字引入（保留声明） |
-| `nature-writing/` | 同上 | `ebd722e` | Apache-2.0 | 润色/写作/统计/共享规则 + check_consistency.py | 逐字引入（保留声明） |
+| `nature-figure/` | [Yuan1z0825/nature-skills](https://github.com/Yuan1z0825/nature-skills) | `ebd722e` | Apache-2.0 | 图契约/QA/设计理论/PALETTE/多面板架构 + 3 个纯标准库渲染审计脚本 | 逐字引入（保留声明） |
+| `nature-writing/` | 同上 | `ebd722e` | Apache-2.0 | 润色/写作/统计/共享规则 + check_consistency.py + 评审关注分类 | 逐字引入（保留声明） |
 | `lupynow-writing/` | [Lupynow/math-modeling-skills](https://github.com/Lupynow/math-modeling-skills) | `3a9428c` | MIT | 去 AI 味/四轮自审/句式库/Figure Contract/决策矩阵 | 逐字引入（保留版权行） |
+| `lupynow-cookbook/` | 同上 | `3a9428c` | MIT | 8 本算法 cookbook（优化/ML/评价/机理/统计/网络/聚类/博弈） | 逐字引入（保留版权行） |
 | `method-index/` | 综合（XiaoMaColtAI 等） | — | MIT（自写） | 方法家族索引 + 门禁映射/稳健性清单 | 自写（clean-room） |
 
 ## 校验

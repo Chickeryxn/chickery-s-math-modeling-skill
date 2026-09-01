@@ -83,6 +83,11 @@
 - 冲突裁决顺序：题目特征 → 数据规模/质量 → 用户背景/预算（交互模式 `learning` 多问、`speed` 少问）。
 - 若首选方法的风险探针 `CONDITIONAL`，须在备选/触发条件中写明降级路径，而不是硬撑。
 
+## 多范式与简化阶梯
+
+- 抽象四步与多范式候选生成：见 `references/abstraction-patterns.md`（每题型 ≥2 种建模范式 + "为什么不走另一范式"必填项）。
+- 简化阶梯：复杂模型 → 必要假设 → 简化假设 → 可解形式；每降一级回答"哪个结论会变、误差可接受吗、用什么兜底"，记入方法卡 Fallback trigger。
+
 ## 真题演练索引（练习用）
 
 按题型挂接练习素材，标注"方法—风险—教训"三要素。下列真题索引为**训练指引**（非决策指令）；完整例题可参考 [Lupynow/math-modeling-skills](https://github.com/Lupynow/math-modeling-skills) 的 playbooks（MIT，advisory）：

@@ -5,7 +5,7 @@ import sys, unittest
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-from abstract_checker import extract_abstract, check
+from abstract_checker import extract_abstract, check, check_conclusion_coverage
 
 LATEX_GOOD = r"""\begin{abstract}
 本文对问题一建立了熵权-TOPSIS 模型，得分 0.83；问题二采用遗传算法，结果 12.4 分钟。
@@ -40,6 +40,16 @@ class AbstractCheckerTests(unittest.TestCase):
         self.assertTrue(any("too short" in i for i in check("短。")["issues"]))
         long = "字" * 950
         self.assertTrue(any("too long" in i for i in check(long)["issues"]))
+
+    def test_conclusion_coverage(self):
+        text = "## 结论\n\n问题一的结果为 2.4，问题二的结果为 0.88。\n"
+        self.assertEqual(check_conclusion_coverage(text, ["Q1", "Q2"]), [])
+        self.assertTrue(any("Q3" in i for i in check_conclusion_coverage(text, ["Q1", "Q2", "Q3"])))
+
+    def test_conclusion_coverage_in_check(self):
+        text = "## 摘要\n\n结果 2.4。\n\n## 结论\n\n问题一完成。\n"
+        r = check(text, min_numbers=1, min_words=1, subquestions=["Q1", "Q2"])
+        self.assertTrue(any("Q2" in i for i in r["issues"]))
 
 
 if __name__ == "__main__":
