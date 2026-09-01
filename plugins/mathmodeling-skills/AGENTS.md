@@ -65,9 +65,16 @@ Each line is a JSON object with at least:
   "choice": "M2",
   "rationale": "M2 is selected because ...",
   "evidence_refs": ["methods/Q2/probes/risk_probe_summary.json"],
-  "decided_at": "ISO-8601 timestamp"
+  "recorded_at": "ISO-8601 timestamp",
+  "source": {
+    "source_type": "user_answer",
+    "user_message_id": "<user message id>",
+    "user_verbatim_answer": "<user's verbatim answer>"
+  }
 }
 ```
+
+- A `DECIDED` record must contain the nested `source` object above; without a verifiable user answer the record is invalid per `scripts/validate_decisions.py`. Use `recorded_at` (ISO-8601) for the timestamp.
 
 - The AI may present evidence and options but must not originate the human's choice, rationale, confidence, physical interpretation, or submission authorization.
 - The AI may append the user's answer verbatim or faithfully structure it; it must not strengthen or invent the rationale.

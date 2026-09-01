@@ -1,11 +1,21 @@
 #!/usr/bin/env python3
-"""Derive workflow gates from canonical evidence and guard sensitive artifacts."""
+"""Derive workflow gates from canonical evidence and guard sensitive artifacts.
+
+Semantics
+---------
+`derive_state` returns the gate at which the evidence is currently stuck:
+gates G1..G(n-1) are satisfied and gate Gn is not yet evidenced.  This value
+is used by `require_gate` as the "latest satisfied-or-stuck" gate: an artifact
+kind is producible when that value is at least the kind's minimum gate
+(`ARTIFACT_MIN_GATE`).  A manifest is a cache only and can never promote the
+derived gate; transitions must be monotonic.
+"""
 from __future__ import annotations
 import argparse, json, sys
 from pathlib import Path
 GATES={"G1":1,"G2":2,"G2.5":2.5,"G3":3,"G4":4,"G5":5,"G6":6,"G1_PROBLEM_FRAMED":1,"G2_METHOD_SCREENED":2,"G2_5_HUMAN_CHOSEN":2.5,"G3_CODE_REVIEWED":3,"G4_RESULTS_JUDGED":4,"G5_PAPER_READY":5,"G6_FINAL_AUDIT":6}
 NAMES={1:'G1',2:'G2',2.5:'G2.5',3:'G3',4:'G4',5:'G5',6:'G6'}
-ARTIFACT_MIN_GATE={"model_code":2.5,"code_plan":2.5,"experiment":2.5,"result_report":4,"robustness_report":3,"solution_package":5,"paper_section":5,"frozen_numbers":5,"final_assembly":6}
+ARTIFACT_MIN_GATE={"model_code":2.5,"code_plan":2.5,"experiment":2.5,"result_report":4,"robustness_report":3,"solution_package":4,"paper_section":5,"frozen_numbers":4,"final_assembly":6}
 
 def gate_value(x):
  if x not in GATES:raise ValueError(f'unknown gate: {x}')
@@ -50,6 +60,11 @@ def risk_probe_ready(path):
         return False
     if not isinstance(data,dict): return False
     methods=data.get('methods') or {}
+    if isinstance(methods,list):
+        # Accept the documented array shape: [{"id": "M1", ...}, ...]
+        methods={m.get('id') or f'method{i}':m for i,m in enumerate(methods) if isinstance(m,dict)}
+    elif not isinstance(methods,dict):
+        return False
     return bool(methods) and all(isinstance(v,dict) and v.get('verdict') in {'PASS','CONDITIONAL'} for v in methods.values())
 
 def review_ready(path):
@@ -126,6 +141,8 @@ def require_gate(root,qid,kind):
  if kind not in ARTIFACT_MIN_GATE:raise ValueError('unknown artifact kind: '+kind)
  state=derive_state(root,qid);actual=gate_value(state['gate']);required=ARTIFACT_MIN_GATE[kind]
  if actual<required:raise RuntimeError(f'GATE_BLOCKED: evidence-derived {state["gate"]} cannot produce {kind}; requires >= {NAMES[required]}')
+ if kind=='frozen_numbers' and not state['checks'].get('package_signoff'):
+  raise RuntimeError('GATE_BLOCKED: frozen_numbers requires a human package_signoff decision')
  m=root/'planning/manifests'/f'{qid}.json'
  if not m.is_file():
   raise RuntimeError(f'GATE_BLOCKED: missing required manifest {m}')

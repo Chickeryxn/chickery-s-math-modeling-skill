@@ -35,8 +35,8 @@ If no paper originals are present under `workspace/papers/`, stop and remind the
 
 Use or request:
 
-- `workspace/problem/problem-parser/problem_parse.json`, if available.
-- `workspace/problem/problem-classifier/problem_classification.json`, if available.
+- `planning/parse/problem_parse.json`, if available.
+- `planning/classification/problem_classification.json`, if available.
 - Original paper files under `workspace/papers/`.
 - User notes about which papers matter most, if available.
 

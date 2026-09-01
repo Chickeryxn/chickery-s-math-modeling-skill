@@ -36,14 +36,17 @@ class WorkflowTests(unittest.TestCase):
 
     def test_unregistered_external_evidence_fails(self):
         root=self.make_root();path=root/'methods/Q1/q1_decisions.jsonl';path.write_text(json.dumps({'decision_id':'d','decision_type':'method_choice','status':'DECIDED','decided_by':'human','rationale':'user supplied','choice':'M1','evidence_refs':['evidence:not-registered'],'recorded_at':'2026-09-01','source':{'source_type':'user_answer','user_message_id':'u1','user_verbatim_answer':'I choose M1'}})+'\n',encoding='utf-8')
-        self.assertTrue(validate(path,root))
+        # validate() returns the list of errors; it must be non-empty here.
+        self.assertTrue(len(validate(path,root))>0)
 
     def test_relative_evidence_path_must_exist(self):
         root=self.make_root();path=root/'methods/Q1/q1_decisions.jsonl';path.write_text(json.dumps({'decision_id':'d','decision_type':'method_choice','status':'DECIDED','decided_by':'human','rationale':'user supplied','choice':'M1','evidence_refs':['methods/Q1/missing.json'],'recorded_at':'2026-09-01','source':{'source_type':'user_answer','user_message_id':'u1','user_verbatim_answer':'I choose M1'}})+'\n',encoding='utf-8')
-        self.assertTrue(validate(path,root))
+        # validate() returns the list of errors; it must be non-empty here.
+        self.assertTrue(len(validate(path,root))>0)
 
     def test_decision_validator_rejects_fake_human(self):
         root=self.make_root();path=root/'methods/Q1/q1_decisions.jsonl';path.write_text(json.dumps({'decision_id':'d','decision_type':'method_choice','status':'DECIDED','decided_by':'human','rationale':'AI made this','choice':'M1','evidence_refs':[],'recorded_at':'2026-09-01','source':{'source_type':'ai_summary'}})+'\n',encoding='utf-8')
-        self.assertTrue(validate(path,root))
+        # validate() returns the list of errors; it must be non-empty here.
+        self.assertTrue(len(validate(path,root))>0)
 
 if __name__=='__main__':unittest.main()

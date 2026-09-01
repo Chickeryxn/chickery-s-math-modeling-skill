@@ -1,20 +1,23 @@
 # CUMCM2026 只读知识库（references/）
 
+> **历史性说明**：本目录记录 6 个上游项目合并时的历史决策与流程契约，仅作溯源参考。
+> **当前可执行契约以 `AGENTS.md`、`schemas/`、`scripts/` 为准**；下列条目中凡与现行契约冲突的表述，均已在条目内标注。
+
 本目录是只读知识库，存放 6 个上游项目合并后的固定决策与流程契约。除本文件外，后续由阶段门禁体系自动维护。
 
 ## 六个上游项目与定位
 1. latexstudio/CUMCMThesis —— 国赛 LaTeX 论文模板（PDF 主线输出）。
 2. Lupynow/math-modeling-skills —— 去 AI 味 + 四轮自审等写作质控。
-3. Yuan1z0825/nature-skills —— nature-figure 期刊级配图引擎。
-4. XiaoMaColtAI/math-modeling-skill —— 五门禁主干（方法论骨架）。
+3. Yuan1z0825/nature-skills —— nature-figure 期刊级配图引擎（历史上游，见 5AB 修正）。
+4. XiaoMaColtAI/math-modeling-skill —— 门禁主干（方法论骨架，历史上游；现行门禁见下）。
 5. 本仓库 —— 安装/项目模式、AGENTS.md、28 skills、results/Qx/ 目录与 frozen_numbers.json 数字真相源。
-6. jihe520/sci-box —— 常规图/示意图引擎与科研工具集。
+6. jihe520/sci-box —— 常规图/示意图引擎（历史上游，见 5AB 修正）。
 
 ## 12 项已锁定决策
-1A 主线 XiaoMaColtAI（五门禁主干）；2B 官方 PDF（CUMCMThesis + XiaoMaColtAI LaTeX 工具）；3A 合并 frozen_numbers.json（唯一数字真相源，复现清单并入）；4A 全候选（主候选 + 基线 + ≤1 条件备选）；5AB 双图引擎（sci-box 常规图/示意图 + nature-figure 期刊级图）；6A 国赛中文不叠 nature-polishing，只用 Lupynow 去 AI 味 + 四轮自审；7C 项目模式先 dry-run 再写配置；8A 每对话独立 PROJECT_ROOT，技能全局装一次；9C 五门禁管进度 + G2.5/G4 人工裁决 + 质检 Subagent 机械核对；10A 三角色协作默认关闭，仅固定质检；11A 实验目录统一 results/Qx/；12A 按主办方规则，AI 不替用户做建模判断与贡献论述。
+1A 主线 XiaoMaColtAI（门禁主干）；2B 官方 PDF（CUMCMThesis + XiaoMaColtAI LaTeX 工具）；3A 合并 frozen_numbers.json（唯一数字真相源，复现清单并入）；4A 全候选（主候选 + 基线 + ≤1 条件备选）；5AB 双图引擎（历史方案：sci-box 常规图/示意图 + nature-figure 期刊级图。**现行修正**：当前仓库统一由 `math-figure-generator`（matplotlib）按 Type 1–4 图型生成并渲染校验，sci-box/nature-figure 仅作上游溯源）；6A 国赛中文不叠 nature-polishing 流水线，只用 Lupynow 去 AI 味 + 四轮自审（**现行修正**：`paper-polisher` 仅借鉴 nature-polishing 的"语言服务论证、不过度润色"设计原则，不套用其流水线）；7C 项目模式先 dry-run 再写配置；8A 每对话独立 PROJECT_ROOT，技能全局装一次；9C 门禁管进度（**现行修正**：G1–G6 六门禁 + G2.5/G4 人工裁决点，见下）+ 质检 Subagent 机械核对；10A 三角色协作默认关闭，仅固定质检；11A 实验目录统一 results/Qx/；12A 按主办方规则，AI 不替用户做建模判断与贡献论述。
 
-## 门禁体系（五门禁 + 两处人工裁决）
-G1 PROBLEM_FRAMED（问题框架化）→ G2 METHOD_SCREENED（方法筛选，含风险探针）→ G2.5 CHOSEN_BY_HUMAN（人工选型）→ G3 CODE_AND_EXPERIMENT_REVIEWED（代码与实验评审）→ G4 RESULTS_FROZEN / JUDGED_BY_HUMAN（人工裁决 + 数字冻结）→ G5 PAPER_SECTION_READY → G6 AUDIT_LAYER_PASSED（一致性/完整性/质检三审）。
+## 门禁体系（现行：G1–G6 六门禁 + 两处人工裁决点）
+G1 PROBLEM_FRAMED（问题框架化）→ G2 METHOD_SCREENED（方法筛选，含风险探针）→ G2.5 CHOSEN_BY_HUMAN（人工选型）→ G3 CODE_AND_EXPERIMENT_REVIEWED（代码与实验评审）→ G4 RESULTS_JUDGED_AND_FROZEN（人工裁决 + 数字冻结）→ G5 PAPER_SECTION_READY → G6 FINAL_AUDIT_PASSED（一致性/完整性/质检三审）。
 
 ## 数字唯一真相源
 论文中出现的每个数字必须来自 results/Qx/reports/frozen_numbers.json；任何改动都要记录变更并重新冻结，禁止手改。

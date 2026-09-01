@@ -56,6 +56,22 @@ Require:
   "methods": [
     {
       "method_id": "M1",
+      "role": "main_candidate",
+      "script": "code/Q1/q1_main.py",
+      "status": "success",
+      "execution_time_seconds": 0,
+      "input_files": [],
+      "output_files": [],
+      "figure_files": [],
+      "metrics_summary": {},
+      "result_ref": "results/Q1/experiments/round1/metrics/main.json",
+      "validation_ref": "results/Q1/experiments/round1/metrics/main_validation.json",
+      "run_snapshot": "runs/round1/run_metadata.json",
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "method_id": "M0",
       "role": "usable_baseline",
       "script": "code/Q1/q1_baseline.py",
       "status": "success",
@@ -64,10 +80,22 @@ Require:
       "output_files": [],
       "figure_files": [],
       "metrics_summary": {},
+      "result_ref": "results/Q1/experiments/round1/metrics/baseline.json",
+      "validation_ref": "results/Q1/experiments/round1/metrics/baseline_validation.json",
+      "run_snapshot": "runs/round1/run_metadata.json",
       "warnings": [],
       "errors": []
     }
   ],
+  "verifier": {
+    "script": "code/Q1/q1_verifier.py",
+    "result_ref": "results/Q1/experiments/round1/metrics/verifier.json",
+    "validation_ref": "results/Q1/experiments/round1/metrics/verifier_validation.json",
+    "run_snapshot": "runs/round1/run_metadata.json"
+  },
+  "independence": {
+    "runtime_status": "STATICALLY_DISTINCT"
+  },
   "comparison": {},
   "fallback_trigger": {
     "fallback_id": null,
@@ -78,6 +106,8 @@ Require:
   "environment": {}
 }
 ```
+
+Role values are `main_candidate`, `usable_baseline`, and `conditional_fallback` (the last only after activation). To declare `independence.runtime_status: RUNTIME_INDEPENDENT`, every role object (including `verifier`) must carry `result_ref`, `validation_ref`, and `run_snapshot` keys; otherwise the declaration is reported as `NOT_VERIFIED` by `scripts/validate_independence.py`. Use distinct `result_ref`/`validation_ref` per role — a baseline or verifier may not read the main result as its only numeric input.
 
 # Code Plan Contents
 

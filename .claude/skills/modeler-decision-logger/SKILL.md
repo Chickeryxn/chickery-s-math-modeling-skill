@@ -28,10 +28,17 @@ Use `planning/framing_decisions.jsonl` for global/pre-Qx framing decisions.
   "choice": "M2",
   "rationale": "Human-authored reason tied to evidence.",
   "evidence_refs": ["methods/Q1/probes/risk_probe_summary.json"],
-  "decided_at": "ISO-8601",
+  "recorded_at": "ISO-8601",
+  "source": {
+    "source_type": "user_answer",
+    "user_message_id": "<user message id>",
+    "user_verbatim_answer": "<user's verbatim answer>"
+  },
   "supersedes": null
 }
 ```
+
+A `DECIDED` record is valid only with the nested `source` object above (`source_type=user_answer` plus a non-empty `user_message_id` and `user_verbatim_answer`); use `recorded_at` for the timestamp. Without these, `scripts/validate_decisions.py` rejects the record.
 
 Optional structured fields may include confidence, rejected alternatives, round action, claim scope, assumption labels, or fallback activation.
 

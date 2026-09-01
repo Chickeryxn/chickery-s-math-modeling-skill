@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.1 — 2026-09-01
+
+- Fixed a gate deadlock: `solution_package` and `frozen_numbers` are now producible at G4 (previously both required G5 while their absence capped the derived gate at G4); `frozen_numbers` still requires a human `package_signoff`.
+- Made `risk_probe_ready` accept both the documented array-shaped and dict-shaped `methods` in `risk_probe_summary.json` (previously the array shape crashed `workflow_guard derive` with an uncaught `AttributeError`).
+- Aligned decision records on `recorded_at` + nested `source` (user-answer provenance) across `AGENTS.md`, the decision-logger skill, and the validator; `validate_decisions.py` now rejects non-ISO-8601 timestamps.
+- Aligned `references/README.md` with the current G1–G6 gate contract and the single matplotlib figure engine; fixed `related-paper-analyzer` input paths and added the `workspace/papers/` skeleton.
+- Clarified the derive/require gate semantics, independence runtime-reference contract, and `evidence_registry.json` usage in the docs.
+- Added gate-progression regression tests covering the full G1–G6 path to `final_assembly`.
+
 ## 0.3.0 — 2026-09-01
 
 - Added evidence-derived gate computation instead of trusting manifest gates.

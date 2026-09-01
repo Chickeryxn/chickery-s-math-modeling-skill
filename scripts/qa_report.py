@@ -61,7 +61,7 @@ def audit(root):
             m=json.loads(p.read_text(encoding='utf-8-sig'));state=derive_state(root,qid);lineage=q_artifact_lineages(root,qid,m);runs=q_runs(root,qid);ind=q_independence(root,qid)
             gate='GATE_BLOCKED' if state['blockers'] else state['gate']
             mechanical='MECHANICAL_PASS' if not state['blockers'] and runs['status'] in {'PASS','NOT_RUN'} else 'CONDITIONAL'
-            semantic='SEMANTIC_PASS' if not state['blockers'] and ind['status'] in {'RUNTIME_INDEPENDENT','STATICALLY_DISTINCT','NOT_RUN'} and lineage['status'] in {'CURRENT','NOT_RUN'} else 'CONDITIONAL'
+            semantic='SEMANTIC_PASS' if not state['blockers'] and ind['status'] in {'RUNTIME_INDEPENDENT','STATICALLY_DISTINCT'} and lineage['status'] in {'CURRENT','NOT_RUN'} else 'CONDITIONAL'
             provenance='HUMAN_JUDGMENT_PENDING' if any(not state['checks'].get(x,False) for x in ('method_choice','result_verdict','stability_verdict','claim_scope')) else 'SEMANTIC_PASS'
             issues=list(state['blockers'])+list(runs['errors'])+list(lineage['errors'])+list(ind['errors'])
             if issues:blocking.extend(f'{qid}: {x}' for x in issues)

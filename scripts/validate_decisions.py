@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Validate append-only decision ledgers with verifiable user provenance."""
 from __future__ import annotations
-import argparse, json, sys
+import argparse, json, re, sys
 from pathlib import Path
 STATUSES={"SUGGESTED","PENDING","DECIDED","SUPERSEDED","STALE"}
 DECIDED_TYPES={"framing","method_choice","fallback_activation","result_verdict","stability_verdict","assumption_necessity","claim_scope","package_signoff","submission_authorization"}
+DATE_PREFIX=re.compile(r'^\d{4}-\d{2}-\d{2}')
 
 def resolve_project_file(root:Path, ref:str)->Path|None:
     if not isinstance(ref,str) or not ref.strip(): return None
@@ -38,6 +39,9 @@ def validate(path:Path, root:Path)->list[str]:
         if not isinstance(did,str) or not did.strip():errors.append(f"{loc}: decision_id must be non-empty string")
         elif did in seen:errors.append(f"{loc}: duplicate decision_id {did}; first at line {seen[did]}")
         else:seen[did]=no
+        ts=r.get('recorded_at')
+        if not isinstance(ts,str) or not ts.strip():errors.append(f"{loc}: recorded_at must be a non-empty string")
+        elif not DATE_PREFIX.match(ts):errors.append(f"{loc}: recorded_at must start with an ISO-8601 date (YYYY-MM-DD): {ts}")
         status=r.get('status')
         if status not in STATUSES:errors.append(f"{loc}: invalid status {status}")
         source=r.get('source') or {}

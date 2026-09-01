@@ -4,6 +4,8 @@ Use only checks relevant to the method, but always cover executability, represen
 
 ## Canonical summary
 
+`methods` accepts either an array of method objects (each with an `id`) or an object keyed by method id; `scripts/workflow_guard.py` accepts both shapes. All listed methods must end with a `PASS` or justified `CONDITIONAL` verdict for screening to pass.
+
 Save `methods/Qx/probes/risk_probe_summary.json`:
 
 ```json
