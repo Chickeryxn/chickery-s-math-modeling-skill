@@ -7,6 +7,10 @@ description: Design and run risk-targeted robustness, sensitivity, error, and ba
 
 Test the claims most likely to fail. Choose checks from the model's assumptions and decision risks rather than filling a generic checklist.
 
+# References
+
+- `references/upstream-statistics-checklist.md` — self-written P0/P1/P2 grading, minimum statistical reporting, figure-statistics rules (see repo `references/upstream/nature-writing/` for the Apache-2.0 originals).
+
 # Preconditions
 
 - Approved main and usable baseline executed.

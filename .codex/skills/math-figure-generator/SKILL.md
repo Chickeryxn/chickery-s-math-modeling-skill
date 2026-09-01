@@ -14,6 +14,7 @@ description: Generate and render-verify publication-quality mathematical-modelin
 Load only what the requested chart needs:
 
 - `references/chart-patterns.md`
+- `references/cleanroom-patterns.md` (self-written patterns; see repo `references/upstream/nature-figure/` for publication rules)
 - `references/color-systems.md`
 - `references/layout-guide.md`
 - `references/render-check.md`

@@ -3,6 +3,10 @@ name: paper-section-writer
 description: Draft submission-ready mathematical-modeling paper sections from the approved solution package, frozen numbers, human decision ledger, and verified figures without searching scattered exploratory outputs or inventing interpretation.
 ---
 
+# References
+
+- `references/upstream-section-templates.md` — self-written abstract/introduction patterns and paper-card evidence system (see repo `references/upstream/nature-writing/` for the Apache-2.0 originals).
+
 # Preconditions
 
 - `rigor_profile` is `submission`.

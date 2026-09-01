@@ -1,0 +1,54 @@
+% Clean-room contest paper baseline (self-written; no upstream template code is vendored).
+% Compile with XeLaTeX:  xelatex main.tex  (twice for references)
+% Replace __TITLE__ / __ABSTRACT__ placeholders, or edit directly.
+\documentclass[12pt,a4paper]{ctexart}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{graphicx}
+\usepackage{booktabs,longtable,tabularx,multirow}
+\usepackage{float}
+\usepackage{caption,subcaption}
+\usepackage{enumitem}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\graphicspath{{figures/}}
+
+% Chinese numbered sections: 一、二、… with 1.1 subsections
+\ctexset{
+  section/format=\Large\bfseries\heiti,
+  section/number=\chinese{section},
+  subsection/format=\large\bfseries\heiti,
+  subsubsection/format=\normalsize\bfseries\heiti,
+}
+
+% Frozen-number macros (injected by scripts/latex_assembly.py)
+__FROZEN_MACROS__
+
+\title{__TITLE__}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+__ABSTRACT__
+\end{abstract}
+
+% Contest convention: no table of contents.
+\tableofcontents\addtocontents{toc}{\protect\thispagestyle{empty}}% keep empty; remove line to omit TOC
+\newpage
+
+% Sections are \input fragments produced by paper-section-writer
+__INPUTS__
+
+% AI-use declaration (injected from decision ledgers / ai_use_disclosure.md)
+__AI_DECLARATION__
+
+\begin{thebibliography}{99}
+% Fill references here or use reference-manager output (paper/refs.bib -> manual \bibitem).
+\end{thebibliography}
+
+\appendix
+\section*{支撑材料清单}
+% Appendix pages are unlimited; list supporting materials and full runnable source code per contest rules.
+\end{document}

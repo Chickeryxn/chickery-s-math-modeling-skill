@@ -7,7 +7,7 @@
 | 徽章 | 值 |
 |---|---|
 | 许可 | [MIT](LICENSE) |
-| 版本 | 0.3.1（插件 manifest 同步） |
+| 版本 | 0.4.0（插件 manifest 同步） |
 | 运行环境 | Python 3（仅标准库，无第三方依赖） |
 | 平台 | Windows / Linux / macOS |
 | 测试 | 34 个用例，`python scripts/run_tests.py` 全绿 |
@@ -25,6 +25,7 @@
 - [测试覆盖](#测试覆盖)
 - [常见问题 FAQ](#常见问题-faq)
 - [术语表](#术语表)
+- [上游融合](#上游融合)
 - [限制与边界](#限制与边界)
 - [许可与致谢](#许可与致谢)
 
@@ -281,6 +282,21 @@ Type 1 诊断图只做内部调试，永不进论文；Type 3/4 才可进论文�
 | rigor profile | `lean`（探索期精简工件）或 `submission`（提交期全量工件与三审） |
 | interaction mode | `learning`（多提问、先答后建议）或 `speed`（少提问、可并列建议） |
 | preset | 必须显式激活、带版本、advisory 的默认值集，不得覆盖合同或人类决定 |
+
+## 上游融合
+
+本项目在**不改变治理核心**（AGENTS.md / schemas / scripts、G1–G6 门禁、28 技能、零第三方运行时依赖、单一 matplotlib 引擎）的前提下，融合了 6 个上游项目的知识规则层与纯标准库工具层：
+
+| 上游 | 引入内容 | 方式 |
+|---|---|---|
+| [nature-skills](https://github.com/Yuan1z0825/nature-skills)（Apache-2.0） | 图契约/QA/PALETTE、写作润色规则、统计 P0/P1/P2、结果分配与一致性工具 | 逐字引入至 `references/upstream/`，保留声明 |
+| [Lupynow/math-modeling-skills](https://github.com/Lupynow/math-modeling-skills)（MIT） | 去 AI 味规则、四轮自审、句式库、Figure Contract、方法决策矩阵 | 逐字引入，保留版权行 |
+| [XiaoMaColtAI/math-modeling-skill](https://github.com/XiaoMaColtAI/math-modeling-skill)（无许可，不复制） | 门禁映射、数值求解稳健性 9 项、复现理念 | clean-room 自写至 `references/upstream/method-index/` |
+| [sci-box](https://github.com/jihe520/sci-box)（无许可，不复制） | 图型启发 | clean-room 图模板（`math-figure-generator` references） |
+| [CUMCMThesis](https://github.com/latexstudio/CUMCMThesis)（无许可，不 vendor） | 国赛论文模板 | 构建期外部依赖，见 [`docs/paper-build.md`](docs/paper-build.md) |
+| [archify](https://github.com/tt-a1i/archify)（MIT） | 流程图生成 | 外部工具 + 已提交生成物（`docs/diagrams/archify/`） |
+
+引入纪律：Apache-2.0 / MIT 内容保留声明与许可文本；无许可证或专有内容（如 XiaoMaColtAI 的 `tools/docx|pdf|xlsx`）一律不复制；网络执行（检索/MCP）与第三方运行时（Node/TeX/Pandoc/LibreOffice）不入核心。校验命令：`python scripts/validate_upstream_assets.py .`。来源与许可证明细见 [`references/upstream/README.md`](references/upstream/README.md)、`LICENSES/` 与 `NOTICE.md`。
 
 ## 限制与边界
 

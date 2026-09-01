@@ -143,6 +143,7 @@ Migrate material evidence into the method card and probe summary. Do not require
 
 - Risk checks and summary schema: `references/risk-probe-contract.md`
 - Method-family routing cues: `references/method-family-guide.md`
+- Upstream method resources (self-written index + MIT decision matrix): `references/upstream-method-resources.md`
 
 # Verification
 

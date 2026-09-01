@@ -24,6 +24,17 @@ Use this skill:
 - When Chinese-to-English translation has produced rough drafts that need smoothing.
 - When formulas, notation, or terminology are inconsistent across sections.
 
+# References
+
+Load only what the current task needs:
+
+- `scripts/ai_trace_checker.py` — quantifiable AI-trace frequency check (run on a section for a mechanical pre-scan).
+- Repo-level advisory rules (Apache-2.0 / MIT, notices retained):
+  - `references/upstream/lupynow-writing/de-ai-writing.md` — eight AI-trace classes and quantifiable caps.
+  - `references/upstream/lupynow-writing/self-review-framework.md` — four-round self review.
+  - `references/upstream/lupynow-writing/common-phrases.md` — bilingual phrase bank.
+  - `references/upstream/nature-writing/style-guardrails.md`, `writing-strategy.md`, `nat-comms-2025-diction.md`, `section-moves.md`, `phrasebank-playbook.md` — nature-polishing rules.
+
 # Preconditions
 
 The following should already exist or be provided:

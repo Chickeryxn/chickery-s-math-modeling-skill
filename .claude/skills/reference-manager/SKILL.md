@@ -22,6 +22,10 @@ Use this skill:
 - When the paper has `\cite{...}` or bracketed reference markers that need verification.
 - When the related-paper analysis produced paper references that need to be formatted.
 
+# References
+
+- `references/upstream-citation-rules.md` — self-written support grading, field-completeness gate, and difference patterns (offline-first; see repo `references/upstream/nature-writing/` for Apache-2.0 originals).
+
 # Preconditions
 
 The following should already exist or be provided:

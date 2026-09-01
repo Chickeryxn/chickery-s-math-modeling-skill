@@ -28,6 +28,7 @@ def main():
         if d.get('methods') or d.get('verifier'):
             add([py,str(r/'scripts/validate_independence.py'),str(r),str(p)])
     qa=run([py,str(r/'scripts/qa_report.py'),str(r)],r);reports.append(qa)
+    add([py,str(r/'scripts/validate_upstream_assets.py'),str(r)])
     result={'status':'PASS' if not errors else 'FAIL','errors':errors,'checks':reports}
     print(json.dumps(result,ensure_ascii=False,indent=2));return 0 if not errors else 2
 if __name__=='__main__':raise SystemExit(main())

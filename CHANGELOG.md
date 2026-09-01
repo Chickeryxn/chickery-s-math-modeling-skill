@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0 — 2026-09-01
+
+- Added the upstream integration layer: `references/upstream/` with provenance-tracked knowledge assets (nature-skills figure/writing/statistics rules under Apache-2.0; Lupynow de-AI-writing/self-review/phrase-bank/decision matrix under MIT; clean-room method index and XiaoMaColtAI methodology mapping).
+- Added `scripts/validate_upstream_assets.py` (pure stdlib) wired into `validate_repo.py`; added `scripts/ai_trace_checker.py` (quantifiable AI-trace scan) and `scripts/latex_assembly.py` (paper section assembly + frozen-number macro injection + AI-use declaration) with tests.
+- Added clean-room paper baseline `templates/paper/main.tex` and `docs/paper-build.md` (CUMCMThesis remains a build-time external dependency, not vendored).
+- Enriched `math-figure-generator` (clean-room patterns), `paper-polisher`, `paper-section-writer`, `reference-manager`, `robustness-checker`, `method-selector` references.
+- Added `LICENSES/` and `NOTICE.md` for third-party attribution.
+
 ## 0.3.1 — 2026-09-01
 
 - Fixed a gate deadlock: `solution_package` and `frozen_numbers` are now producible at G4 (previously both required G5 while their absence capped the derived gate at G4); `frozen_numbers` still requires a human `package_signoff`.

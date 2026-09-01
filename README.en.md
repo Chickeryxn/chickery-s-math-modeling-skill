@@ -7,7 +7,7 @@
 | Badge | Value |
 |---|---|
 | License | [MIT](LICENSE) |
-| Version | 0.3.1 (plugin manifests in sync) |
+| Version | 0.4.0 (plugin manifests in sync) |
 | Runtime | Python 3 (standard library only, no third-party dependencies) |
 | Platforms | Windows / Linux / macOS |
 | Tests | 34 cases, `python scripts/run_tests.py` all green |
@@ -25,6 +25,7 @@
 - [Test coverage](#test-coverage)
 - [FAQ](#faq)
 - [Glossary](#glossary)
+- [Upstream integration](#upstream-integration)
 - [Limitations](#limitations)
 - [License and acknowledgements](#license-and-acknowledgements)
 
@@ -281,6 +282,21 @@ This project merges six upstream projects (XiaoMaColtAI, CUMCMThesis, Lupynow, n
 | rigor profile | `lean` (minimal exploration artifacts) or `submission` (full artifacts and the three final audits) |
 | interaction mode | `learning` (more questions, suggestions after answering) or `speed` (fewer questions, suggestions alongside) |
 | preset | An explicitly activated, versioned, advisory set of defaults that cannot override contracts or human decisions |
+
+## Upstream integration
+
+Without changing the governance core (AGENTS.md / schemas / scripts, G1–G6 gates, 28 skills, zero third-party runtime dependencies, single matplotlib engine), this project integrates the knowledge-rule layer and pure-standard-library tool layer of six upstream projects:
+
+| Upstream | What is integrated | How |
+|---|---|---|
+| [nature-skills](https://github.com/Yuan1z0825/nature-skills) (Apache-2.0) | Figure contract/QA/PALETTE, polishing rules, statistics P0/P1/P2, result-allocation and consistency tools | Verbatim under `references/upstream/`, notices retained |
+| [Lupynow/math-modeling-skills](https://github.com/Lupynow/math-modeling-skills) (MIT) | De-AI-writing rules, four-round self review, phrase bank, Figure Contract, method decision matrix | Verbatim, copyright retained |
+| [XiaoMaColtAI/math-modeling-skill](https://github.com/XiaoMaColtAI/math-modeling-skill) (no license; not copied) | Gate mapping, 9-point numerical robustness checklist, reproducibility ideas | Clean-room rewrite under `references/upstream/method-index/` |
+| [sci-box](https://github.com/jihe520/sci-box) (no license; not copied) | Figure-pattern inspiration | Clean-room figure templates (in `math-figure-generator` references) |
+| [CUMCMThesis](https://github.com/latexstudio/CUMCMThesis) (no license; not vendored) | Contest paper template | Build-time external dependency; see [`docs/paper-build.md`](docs/paper-build.md) |
+| [archify](https://github.com/tt-a1i/archify) (MIT) | Flow-diagram generation | External tool + committed artifacts (`docs/diagrams/archify/`) |
+
+Integration discipline: Apache-2.0 / MIT content keeps its notices and license texts; unlicensed or proprietary content (e.g. XiaoMaColtAI `tools/docx|pdf|xlsx`) is never copied; networked execution (search/MCP) and third-party runtimes (Node/TeX/Pandoc/LibreOffice) stay out of the core. Verify with `python scripts/validate_upstream_assets.py .`. See [`references/upstream/README.md`](references/upstream/README.md), `LICENSES/`, and `NOTICE.md` for provenance.
 
 ## Limitations
 

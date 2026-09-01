@@ -25,6 +25,10 @@ G1 PROBLEM_FRAMED（问题框架化）→ G2 METHOD_SCREENED（方法筛选，�
 ## 双图引擎路由
 常规图/示意图 → sci-box；期刊级/发表质量图 → nature-figure；诊断图（类型1）永不进论文。
 
+## 上游知识资产层（upstream/）
+
+`references/upstream/` 存放**经审核、可溯源的上游知识资产**（图契约、写作质控、统计规则、方法索引），供技能按需引用；由 `scripts/validate_upstream_assets.py` 自动校验来源记录与文件完整性。引入规则：Apache-2.0/MIT 内容保留声明；无许可证或专有内容一律不复制（详见 `references/upstream/README.md`）。
+
 ## 合规
 AI 只负责机械正确性；建模判断、数字含义、假设框架、贡献论述由用户承担。每轮可输出 ai_use_disclosure.md 记录 AI 参与范围。
 

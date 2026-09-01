@@ -1,0 +1,20 @@
+# Upstream: nature-skills (writing / statistics / shared)
+
+- **Source repository**: https://github.com/Yuan1z0825/nature-skills
+- **Fixed commit**: `ebd722e18808442688bd205917a3e774195c258f` (shallow clone HEAD, reviewed 2026-09)
+- **License**: Apache-2.0 (root LICENSE). Imported verbatim; see `LICENSES/Apache-2.0.txt` and `NOTICE.md`.
+- **Imported files** (from the upstream repo):
+  - `style-guardrails.md` — from `skills/nature-polishing/references/`; UK spelling, caption/title limits, overclaim list.
+  - `writing-strategy.md` — from `skills/nature-polishing/references/`; hourglass structure.
+  - `nat-comms-2025-diction.md` — from `skills/nature-polishing/references/`; quantified diction statistics.
+  - `section-moves.md` — from `skills/nature-polishing/references/`; section move patterns.
+  - `phrasebank-playbook.md` — from `skills/nature-polishing/references/`; phrasing playbook.
+  - `common-failure-modes.md` — from `skills/nature-statistics/references/`; P0/P1/P2 statistical failure modes.
+  - `statistical-reporting.md` — from `skills/nature-statistics/references/`; minimum reporting information.
+  - `reviewer-checklist.md` — from `skills/nature-statistics/references/`; reviewer checklist.
+  - `main-text-discipline.md` — from `skills/nature-shared/core/`; 8-category result allocation table.
+  - `terminology-ledger.md` — from `skills/nature-shared/core/`; terminology ledger guidance.
+  - `consistency-sweep.md` — from `skills/nature-shared/core/`; consistency sweep guidance.
+  - `check_consistency.py` — from `skills/nature-shared/scripts/`; pure-standard-library mechanical consistency checker.
+- **Scope**: Markdown rule layer + one pure-stdlib checker. Network/third-party assets (MCP server, downloader, image2ppt, paper-to-patent toolchains) are NOT imported.
+- **Drift note**: Quantitative claims (e.g. "However 51 ≫ Furthermore 22") are corpus statistics, not official rules; verify against current journal guidance before citing.
