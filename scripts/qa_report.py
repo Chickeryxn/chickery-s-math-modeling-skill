@@ -1,30 +1,78 @@
 #!/usr/bin/env python3
-"""Manifest-aware layered QA summary; does not turn local PASS into gate PASS."""
+"""Produce evidence-aware layered QA without collapsing local checks into gate success."""
 from __future__ import annotations
-import argparse, json, sys
+import argparse,json,sys
 from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parent))
+from workflow_guard import derive_state
+from create_run_snapshot import validate as validate_run
+from lineage import assess as assess_lineage
+from validate_independence import validate as validate_independence
 
-def artifact_status(root: Path, ref):
-    p=(root/ref).resolve()
-    return 'CURRENT' if p.is_file() else 'MISSING'
+STATUSES=['MECHANICAL_PASS','SEMANTIC_PASS','CONDITIONAL','HUMAN_JUDGMENT_PENDING','GATE_BLOCKED','NOT_RUN','CURRENT','STALE','MISSING']
 
-def audit(root: Path) -> dict:
+def q_artifact_lineages(root,qid,manifest=None):
+    candidates=list((root/'planning').rglob(f'{qid}*.lineage.json'))+list((root/'results'/qid).rglob('*.lineage.json'))+list((root/'methods'/qid).rglob('*.lineage.json'))+list((root/'robustness'/qid).rglob('*.lineage.json'))
+    artifact_refs=[]
+    if isinstance(manifest,dict):
+        artifact_refs=[v for v in (manifest.get('artifacts') or {}).values() if isinstance(v,str) and (root/v).is_file()]
+    if not candidates and not artifact_refs:return {'status':'NOT_RUN','errors':[],'checked':0}
+    errors=[];statuses=[];lineage_names={p.name for p in candidates}
+    for ref in artifact_refs:
+        name=Path(ref).name
+        if f'{name}.lineage.json' not in lineage_names and not any(p.stem==name for p in candidates):
+            errors.append({'path':ref,'reason':'LINEAGE_MISSING'});statuses.append('MISSING')
+    for p in candidates:
+        try:d=assess_lineage(root,p);statuses.append(d.get('status'));errors.extend(d.get('stale_reasons',[]))
+        except Exception as exc:errors.append({'path':str(p),'reason':str(exc)});statuses.append('STALE')
+    if 'STALE' in statuses:return {'status':'STALE','errors':errors,'checked':len(candidates)}
+    if 'MISSING' in statuses:return {'status':'MISSING','errors':errors,'checked':len(candidates)}
+    return {'status':'CURRENT','errors':errors,'checked':len(candidates)}
+
+def q_independence(root,qid):
+    summaries=list((root/'results'/qid).rglob('run_summary.json')) if (root/'results'/qid).is_dir() else []
+    if not summaries:return {'status':'NOT_RUN','errors':[]}
+    statuses=[];errors=[]
+    for p in summaries:
+        try:
+            d=validate_independence(root,p);statuses.append(d.get('independence_status'));errors.extend(d.get('errors',[]))
+        except Exception as exc:statuses.append('NOT_VERIFIED');errors.append(str(exc))
+    if 'NOT_INDEPENDENT' in statuses:return {'status':'NOT_INDEPENDENT','errors':errors}
+    if 'RUNTIME_INDEPENDENT' in statuses:return {'status':'RUNTIME_INDEPENDENT','errors':errors}
+    if 'STATICALLY_DISTINCT' in statuses:return {'status':'STATICALLY_DISTINCT','errors':errors}
+    return {'status':'NOT_VERIFIED','errors':errors}
+
+def q_runs(root,qid):
+    runs=list((root/'results'/qid).rglob('run_metadata.json')) if (root/'results'/qid).is_dir() else []
+    if not runs:return {'status':'NOT_RUN','errors':[],'checked':0}
+    errors=[];states=[]
+    for p in runs:
+        try:d=validate_run(root,p.parent);states.append(d.get('status'));errors.extend(d.get('errors',[]))
+        except Exception as exc:states.append('FAIL');errors.append(str(exc))
+    return {'status':'PASS' if all(x=='PASS' for x in states) else 'CONDITIONAL','errors':errors,'checked':len(runs)}
+
+def audit(root):
     manifests=sorted((root/'planning'/'manifests').glob('Q*.json')) if (root/'planning'/'manifests').is_dir() else []
-    questions=[]; blockers=[]
+    if not manifests:return {'schema_version':2,'overall_status':'NOT_RUN','questions':[],'blocking_findings':[],'status_vocabulary':STATUSES}
+    questions=[];blocking=[]
     for p in manifests:
-        try:m=json.loads(p.read_text(encoding='utf-8-sig'))
+        qid=p.stem
+        try:
+            m=json.loads(p.read_text(encoding='utf-8-sig'));state=derive_state(root,qid);lineage=q_artifact_lineages(root,qid,m);runs=q_runs(root,qid);ind=q_independence(root,qid)
+            gate='GATE_BLOCKED' if state['blockers'] else state['gate']
+            mechanical='MECHANICAL_PASS' if not state['blockers'] and runs['status'] in {'PASS','NOT_RUN'} else 'CONDITIONAL'
+            semantic='SEMANTIC_PASS' if not state['blockers'] and ind['status'] in {'RUNTIME_INDEPENDENT','STATICALLY_DISTINCT','NOT_RUN'} and lineage['status'] in {'CURRENT','NOT_RUN'} else 'CONDITIONAL'
+            provenance='HUMAN_JUDGMENT_PENDING' if any(not state['checks'].get(x,False) for x in ('method_choice','result_verdict','stability_verdict','claim_scope')) else 'SEMANTIC_PASS'
+            issues=list(state['blockers'])+list(runs['errors'])+list(lineage['errors'])+list(ind['errors'])
+            if issues:blocking.extend(f'{qid}: {x}' for x in issues)
+            questions.append({'question_id':qid,'derived_gate':state['gate'],'gate_status':gate,'mechanical_status':mechanical,'semantic_status':semantic,'provenance_status':provenance,'lineage_status':lineage['status'],'independence_status':ind['status'],'run_status':runs['status'],'issues':issues})
         except Exception as exc:
-            questions.append({'question_id':p.stem,'gate_status':'GATE_BLOCKED','mechanical':'NOT_RUN','semantic':'NOT_RUN','provenance':'NOT_RUN','issues':[str(exc)]});blockers.append(f'invalid manifest {p}');continue
-        gate=m.get('current_gate','G1'); allowed=m.get('allowed',{}); issues=[]
-        if m.get('blockers'):issues.extend(m['blockers'])
-        gate_status='GATE_BLOCKED' if issues or allowed.get('freeze') is False and gate in {'G4','G5','G6'} else 'CURRENT'
-        questions.append({'question_id':p.stem,'gate':gate,'gate_status':gate_status,'mechanical':'PASS' if not issues else 'CONDITIONAL','semantic':'CONDITIONAL' if issues else 'NOT_RUN','provenance':'HUMAN_JUDGMENT_PENDING' if issues else 'NOT_RUN','issues':issues})
-        blockers.extend(f'{p.stem}: {x}' for x in issues)
-    overall='GATE_BLOCKED' if blockers else ('NOT_RUN' if not questions else 'CONDITIONAL')
-    return {'schema_version':1,'overall_status':overall,'questions':questions,'blocking_findings':blockers,'status_vocabulary':['MECHANICAL_PASS','SEMANTIC_PASS','CONDITIONAL','HUMAN_JUDGMENT_PENDING','GATE_BLOCKED','NOT_RUN']}
+            questions.append({'question_id':qid,'gate_status':'GATE_BLOCKED','mechanical_status':'NOT_RUN','semantic_status':'NOT_RUN','provenance_status':'NOT_RUN','lineage_status':'NOT_RUN','independence_status':'NOT_RUN','run_status':'NOT_RUN','issues':[str(exc)]});blocking.append(f'{qid}: {exc}')
+    overall='GATE_BLOCKED' if blocking or any(q['gate_status']=='GATE_BLOCKED' for q in questions) else ('CONDITIONAL' if any(q['semantic_status']=='CONDITIONAL' for q in questions) else 'SEMANTIC_PASS')
+    return {'schema_version':2,'overall_status':overall,'questions':questions,'blocking_findings':blocking,'status_vocabulary':STATUSES}
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('root',type=Path);ap.add_argument('--out',type=Path);args=ap.parse_args();data=audit(args.root.resolve());text=json.dumps(data,ensure_ascii=False,indent=2);print(text)
-    if args.out:args.out.write_text(text+'\n',encoding='utf-8')
+    ap=argparse.ArgumentParser();ap.add_argument('root',type=Path);ap.add_argument('--out',type=Path);a=ap.parse_args();d=audit(a.root.resolve());text=json.dumps(d,ensure_ascii=False,indent=2);print(text)
+    if a.out:a.out.write_text(text+'\n',encoding='utf-8')
     return 0
 if __name__=='__main__':raise SystemExit(main())

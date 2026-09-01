@@ -13,6 +13,10 @@ class WorkflowTests(unittest.TestCase):
         td=tempfile.TemporaryDirectory();root=Path(td.name)
         (root/'planning/manifests').mkdir(parents=True);(root/'methods/Q1').mkdir(parents=True)
         (root/'planning/manifests/Q1.json').write_text(json.dumps({'current_gate':gate}),encoding='utf-8')
+        if gate in {'G2','G2.5','G3','G4','G5','G6'}:
+            for rel,text in [('planning/parse/problem_parse.json',json.dumps({'data_inventory':[]})),('planning/classification/problem_classification.json','{}'),('workspace/data/data_profile.json','{}'),('methods/Q1/q1_method_card.md','# main_candidate usable_baseline\n## Baseline validity\n## Risk-probe summary'),('methods/Q1/probes/risk_probe_summary.json',json.dumps({'methods':{'M1':{'verdict':'PASS'}}}))]:
+                p=root/'planning/model_contract.json';p.write_text('{"schema_version": 1, "entities": [{"id": "entity"}], "inputs": [{"id": "input", "type": "numeric", "domain": "real", "unit": "unit", "source": "synthetic"}], "state_functions": [], "decision_variables": [{"id": "decision", "type": "numeric", "domain": "[0,1]", "unit": "unit"}], "hard_constraints": [{"id": "constraint", "expression_ref": "synthetic"}], "soft_constraints": [], "objective": {"sense": "MAXIMIZE", "value_ref": "score", "output_contract": {"type": "scalar"}}, "evaluator": {"evaluator_id": "synthetic", "implementation_ref": "verifier.py"}, "uncertainty": null, "validation_contract": {"independent_checks": ["main", "baseline", "verifier"], "tolerances": {"score": 1e-06}}}',encoding='utf-8')
+                p=root/rel;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(text,encoding='utf-8')
         if decision:
             (root/'methods/Q1/q1_decisions.jsonl').write_text(json.dumps({'decision_id':'d1','decision_type':'method_choice','status':'DECIDED','decided_by':'human','choice':'M1','rationale':'user supplied','evidence_refs':[],'recorded_at':'2026-09-01T00:00:00Z','source':{'source_type':'user_answer','user_message_id':'u1','user_verbatim_answer':'I choose M1'}})+'\n',encoding='utf-8')
         self.addCleanup(td.cleanup);return root
@@ -29,6 +33,14 @@ class WorkflowTests(unittest.TestCase):
     def test_freeze_requires_package_signoff(self):
         root=self.make_root('G4',True)
         with self.assertRaises(RuntimeError):require_gate(root,'Q1','frozen_numbers')
+
+    def test_unregistered_external_evidence_fails(self):
+        root=self.make_root();path=root/'methods/Q1/q1_decisions.jsonl';path.write_text(json.dumps({'decision_id':'d','decision_type':'method_choice','status':'DECIDED','decided_by':'human','rationale':'user supplied','choice':'M1','evidence_refs':['evidence:not-registered'],'recorded_at':'2026-09-01','source':{'source_type':'user_answer','user_message_id':'u1','user_verbatim_answer':'I choose M1'}})+'\n',encoding='utf-8')
+        self.assertTrue(validate(path,root))
+
+    def test_relative_evidence_path_must_exist(self):
+        root=self.make_root();path=root/'methods/Q1/q1_decisions.jsonl';path.write_text(json.dumps({'decision_id':'d','decision_type':'method_choice','status':'DECIDED','decided_by':'human','rationale':'user supplied','choice':'M1','evidence_refs':['methods/Q1/missing.json'],'recorded_at':'2026-09-01','source':{'source_type':'user_answer','user_message_id':'u1','user_verbatim_answer':'I choose M1'}})+'\n',encoding='utf-8')
+        self.assertTrue(validate(path,root))
 
     def test_decision_validator_rejects_fake_human(self):
         root=self.make_root();path=root/'methods/Q1/q1_decisions.jsonl';path.write_text(json.dumps({'decision_id':'d','decision_type':'method_choice','status':'DECIDED','decided_by':'human','rationale':'AI made this','choice':'M1','evidence_refs':[],'recorded_at':'2026-09-01','source':{'source_type':'ai_summary'}})+'\n',encoding='utf-8')

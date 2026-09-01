@@ -55,3 +55,8 @@ Required named checks use `PASS`, `FAIL`, or justified `NOT_APPLICABLE`. Runtime
 ## Independence and lineage checks
 
 Verify that MATLAB is an independent evaluator of the model contract rather than a reader of Python outputs. Check actual run snapshots, input/code/config hashes, and target-function agreement. Use `NOT_RUN` when execution evidence is absent; do not convert a static syntax check into a passing execution review.
+
+
+## v0.3 semantic checks
+
+Verify that MATLAB recomputes from declared inputs rather than reading Python results. Check the run snapshot, result/validation hashes, model contract hash, and independence status. Use `NOT_RUN` when runtime evidence is absent.

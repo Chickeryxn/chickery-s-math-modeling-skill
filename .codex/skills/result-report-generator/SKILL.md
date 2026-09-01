@@ -88,3 +88,8 @@ Include:
 ## Evidence strength
 
 Before reporting a result, resolve the current lineage and actual run snapshot. Do not call a candidate stable when the executed budget differs from the plan without recording the degradation. Separate numerical verification from global-optimality claims and human result judgment.
+
+
+## v0.3 evidence restrictions
+
+Resolve the current gate, run snapshot, lineage, and actual budget before writing a result report. Do not call a degraded run fully executed; do not call a numerically verified result globally optimal without a proof or an explicitly qualified claim.

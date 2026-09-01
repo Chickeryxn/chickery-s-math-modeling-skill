@@ -83,3 +83,8 @@ When a canonical source changes after freeze:
 ## Freeze gate enforcement
 
 Before generating frozen numbers, call the workflow guard for `frozen_numbers` and require a verifiable human package sign-off. Every frozen value must reference the current run, result, code, config, and input hashes. Never freeze a value from a stale or competing snapshot.
+
+
+## v0.3 freeze enforcement
+
+Before writing a package or frozen numbers, use the workflow guard and `validate_artifacts.py`. Require current lineage and a verifiable human `package_signoff`; stale or competing snapshots block freeze.

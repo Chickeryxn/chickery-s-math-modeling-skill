@@ -82,3 +82,8 @@ Follow the schema in `model-code-analyzer`. Include:
 ## Immutable run requirement
 
 Before and after execution, create an immutable run snapshot with `scripts/create_run_snapshot.py`. Record planned and actual budgets, hashes of inputs/config/code, command, environment, status, result reference, and validation reference. A degraded run must be marked `DEGRADED_SUCCESS` and may not be described as having completed the planned budget.
+
+
+## v0.3 runner requirement
+
+Run experiments through `scripts/create_run_snapshot.py run` so stdout, stderr, return code, output creation, hashes, planned/actual budgets, and degradation are captured. A successful snapshot must be runner-produced; manual finalize cannot claim `SUCCESS`. Add the snapshot path to `run_summary.json`.

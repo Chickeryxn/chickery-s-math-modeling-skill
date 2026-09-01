@@ -99,3 +99,8 @@ Migrate only completed human decisions. Preserve original timestamps and source 
 ## Verifiable human provenance
 
 A decision may be marked `DECIDED` only when its `source` object contains `source_type=user_answer`, `user_message_id`, and the verbatim user answer. Store any AI normalization in a separate `ai_summary` field. `decided_by=human` without a verifiable user source is invalid and must be rejected by `scripts/validate_decisions.py`. Never convert an AI suggestion or pending card into a decision.
+
+
+## v0.3 provenance contract
+
+Project-relative `evidence_refs` must resolve to files inside `PROJECT_ROOT`; escaping paths and missing files are invalid. `DECIDED` requires `source.source_type=user_answer`, `user_message_id`, and `user_verbatim_answer`. `SUPERSEDED` and `STALE` require a valid earlier `supersedes` record. Run `scripts/validate_decisions.py` before updating the manifest.

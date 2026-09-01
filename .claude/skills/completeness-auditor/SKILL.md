@@ -69,3 +69,8 @@ Globally require symbol table, assumptions, references, consistency audit, compl
 ## Status-aware completeness
 
 Classify each artifact as `CURRENT`, `STALE`, `MISSING`, or `INVALIDATED` using lineage evidence. Distinguish `MECHANICAL_PASS`, `SEMANTIC_PASS`, `HUMAN_JUDGMENT_PENDING`, `GATE_BLOCKED`, and `NOT_RUN`. Artifact count is not evidence of completion.
+
+
+## v0.3 evidence status
+
+Include current/stale/missing lineage, run snapshot status, decision provenance, and independence status in completeness. A present file with missing lineage is `INSUFFICIENT`, not `PRESENT`.

@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "required": ["artifact", "status", "created_from", "validated_by", "consumed_by", "decision_ids", "input_hash", "config_hash", "code_hash", "created_at"],
+  "status_values": ["CURRENT", "STALE", "MISSING", "INVALIDATED"],
+  "rules": [
+    "All project-relative paths resolve inside PROJECT_ROOT.",
+    "Hash changes in created_from, validated_by, input_hash, config_hash, or code_hash produce STALE; missing sources produce MISSING.",
+    "Canonical consumers must reject non-CURRENT lineage."
+  ]
+}

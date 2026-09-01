@@ -40,3 +40,8 @@ Do not require or emit them for new work when the new manifest, method card, JSO
 ## Executable integrity checks
 
 Use the same repository-local Python validators described in `scripts/README.md`. The project-level gate, decision, lineage, run-snapshot, and skill-tree contracts apply equally in Codex and Claude contexts.
+
+
+## Evidence-derived gates
+
+Use `scripts/workflow_guard.py derive Qx` before routing work. The derived gate is computed from canonical evidence and cannot be promoted by editing the manifest alone. Use the unified run snapshot, lineage, decision, artifact, independence, and QA validators described in `scripts/README.md`.

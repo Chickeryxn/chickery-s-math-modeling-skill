@@ -67,3 +67,8 @@ description: Perform the final submission-level audit of mathematical-modeling w
 ## Layered verdict
 
 Report mechanical, semantic, provenance, human-judgment, and gate status independently. The overall verdict must be `CONDITIONAL` or `GATE_BLOCKED` if any blocking evidence is missing, even when individual scripts return `PASS`. Sample source artifacts and run snapshots directly.
+
+
+## v0.3 layered verdict
+
+Use `scripts/qa_report.py` as a structured input, but sample canonical artifacts directly. Report mechanical, semantic, provenance, lineage, independence, human-judgment, and gate statuses separately. Overall `PASS` is forbidden when any blocking layer is missing, stale, not run, or awaiting human judgment.

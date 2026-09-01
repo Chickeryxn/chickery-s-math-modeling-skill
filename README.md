@@ -1,18 +1,10 @@
 # 数学建模工作区与 Codex 技能
 
-这是一个可直接克隆的数学建模竞赛工作区模板，包含：
+[简体中文](README.md) | [English](README.en.md)
 
-- Codex 项目技能：`.codex/skills/`
-- Claude 项目技能：`.claude/skills/`
-- 可安装的 `mathmodeling-skills` 插件：`plugins/mathmodeling-skills/`
-- 数学建模工作目录：`workspace/`、`methods/`、`code/`、`results/`、`paper/` 等
-- 门禁、可复现实验、冻结数字和论文审计规则：`AGENTS.md`
+本项目提供带有门禁检查、决策溯源、实验快照、产物谱系、独立性验证和分层 QA 工具的数学建模工作流模板。
 
-本仓库是**空题目工作区**，不包含任何旧赛题数据、旧代码、旧实验结果或旧论文。
-
-## 快速开始：作为项目使用
-
-适用于希望在 Codex 或 Claude 中直接打开整个数学建模工作区的用户。
+## 快速开始
 
 ```bash
 git clone https://github.com/Chickeryxn/chickery-s-math-modeling-skill.git
@@ -20,16 +12,14 @@ cd chickery-s-math-modeling-skill
 git checkout mathmodeling-new-skeleton
 ```
 
-然后在 Codex/Claude 中打开仓库根目录。将新赛题材料放入：
+在 Codex 或 Claude 中打开仓库根目录。将当前问题和附件放入：
 
 ```text
 workspace/problem.txt
-workspace/data_raw/<新题附件>
+workspace/data_raw/<题目附件>
 ```
 
-不要修改 `workspace/data_raw/` 中的原始附件；清洗副本应写入 `workspace/data_clean/`。
-
-首次工作流顺序：
+原始附件只读；清洗副本写入 `workspace/data_clean/`。默认工作流为：
 
 ```text
 problem-parser
@@ -38,135 +28,100 @@ problem-parser
 → workflow-orchestrator
 ```
 
-默认配置位于：
+会话配置位于 `planning/session_config.json`，默认使用 `learning + lean`。
+
+## G1–G6 工作流
 
 ```text
-planning/session_config.json
+G1 问题框架化
+→ G2 方法筛选
+→ G2.5 人工选型
+→ G3 代码与实验复核
+→ G4 结果判断与冻结
+→ G5 论文段落就绪
+→ G6 最终审计
 ```
 
-当前默认值是 `interaction_mode=learning`、`rigor_profile=lean`。
+门禁由 manifest 和 canonical evidence 共同判断；manifest 不能单独提升门禁。局部脚本通过不等于整体门禁通过。人工方法、结果、稳定性和主张范围必须记录在追加式 JSONL 决策日志中。
 
-## 作为 Codex 插件安装
+## 工作流完整性工具
 
-如果只想安装技能，而不把仓库作为当前项目打开，可以使用仓库自带的本地 marketplace：
-
-```bash
-# 在仓库根目录执行
-codex plugin marketplace add .
-codex plugin add mathmodeling-skills@chickery-s-math-modeling-skill
-```
-
-安装后建议新建一个 Codex 对话，使新技能在新会话中生效。
-
-Windows PowerShell 示例：
+常用命令：
 
 ```powershell
-cd "D:\path\to\chickery-s-math-modeling-skill"
-codex plugin marketplace add .
-codex plugin add mathmodeling-skills@chickery-s-math-modeling-skill
+python scripts/run_tests.py
+python scripts/validate_repo.py .
+python scripts/validate_skill_trees.py .
+python scripts/sync_plugin.py . --check
+python scripts/validate_model_contract.py planning/model_contract.example.json
+python scripts/workflow_guard.py . derive Q1
+python scripts/workflow_guard.py . require Q1 model_code
+python scripts/create_run_snapshot.py run . runs/<run_id> --command "python code/main.py" --result-ref results/result.json --validation-ref results/validation.json
+python scripts/lineage.py assess . path/to/artifact.lineage.json
 ```
 
-如果仓库被克隆到其他目录，仍使用 marketplace 名称
-`chickery-s-math-modeling-skill`，不要把本地绝对路径写入配置文件。
+详细参数见 `scripts/README.md`；合同定义见 `schemas/README.md`。
 
-## 作为 Claude 插件使用
+## 模型合同
 
-仓库也保留了 Claude 技能树和 Claude 插件清单：
+问题框架化阶段应创建项目专属 `model_contract.json`，声明实体、输入、状态函数、决策变量、硬约束、软约束、目标函数、评估器、不确定性处理和验证合同。`schemas/model_contract.schema.json` 是通用结构，不应写入任何具体题目实体或参数。
+
+主方法、usable baseline 和 verifier 必须引用同一模型合同及其哈希，但使用独立的实现和运行证据。
+
+## 实验快照与产物谱系
+
+实验应通过统一运行器记录计划预算、实际预算、预算差异、输入/代码/配置哈希、命令、环境、返回码、结果和验证文件。实际预算低于计划预算时，运行标记为 `DEGRADED_SUCCESS`，相关稳定性或最优性表述必须降级。
+
+关键产物使用 lineage 记录来源、验证者、消费者、代码/配置/输入哈希和决策 ID。上游哈希变化会使下游产物变为 `STALE`，stale 产物不能用于冻结或论文装配。
+
+## 人工决策与独立性
+
+`DECIDED` 只能绑定可验证的用户回答来源；AI 摘要不得替代用户原话。main、baseline、verifier 是不同角色，不能因为脚本文件名不同就声称独立。使用相应验证器检查静态文件、运行引用和独立实验记录。
+
+## 目录与插件
 
 ```text
+.codex/skills/
 .claude/skills/
+plugins/mathmodeling-skills/skills/
+planning/
+methods/
+code/
+results/
+robustness/
+paper/
+schemas/
+scripts/
+tests/
+workspace/
+```
+
+当前项目包含一个 marketplace catalog：
+
+```text
+.agents/plugins/marketplace.json
+```
+
+以及两个插件 manifest：
+
+```text
+plugins/mathmodeling-skills/.codex-plugin/plugin.json
 plugins/mathmodeling-skills/.claude-plugin/plugin.json
 ```
 
-在 Claude 环境中使用时，按该环境的插件安装方式加载
-`plugins/mathmodeling-skills/`，或直接将仓库作为项目打开。
+更新 `.codex/skills/` 后，运行 `python scripts/sync_plugin.py .` 同步 Claude 和插件分发副本。
 
-## 目录说明
+## Preset 与 references
 
-```text
-.
-├── .codex/skills/                  # Codex 项目技能
-├── .claude/skills/                 # Claude 项目技能
-├── plugins/mathmodeling-skills/   # Codex/Claude 插件分发副本
-├── planning/                       # 配置、解析、分类、门禁状态
-├── workspace/                      # 题目、原始数据和清洗数据
-├── methods/                        # 方法卡、风险探针和人工决策
-├── code/                           # Python/MATLAB 建模代码
-├── results/                        # 实验结果与冻结数字
-├── robustness/                     # 鲁棒性检查
-├── paper/                          # 论文、图表和审计
-└── references/                     # 只读流程知识库
-```
+`planning/presets/` 中的 preset 必须显式激活、带版本并标记为 advisory；preset 只能提供默认值，不能覆盖问题合同或人工决定。`references/` 中的内容是参考知识，不会自动成为新问题的强制约束。
 
-`.codex/skills/`、`.claude/skills/` 和
-`plugins/mathmodeling-skills/skills/` 应保持一致。技能修改后可运行：
-
-```bash
-bash scripts/sync-plugin.sh
-bash scripts/sync-plugin.sh --check
-```
-
-## 建模工作流原则
-
-- AI 负责机械正确性、代码运行、证据整理和一致性审计。
-- 建模取向、方法选择、必要假设、物理解释和最终贡献表述由人类确认。
-- 数据链保持：
-
-```text
-原始数据 → 清洗数据 → 模型代码 → 实验结果 → 冻结数字 → 论文
-```
-
-- 未通过相应门禁前，不生成后续阶段的正式产物。
-- 不把旧题目的结果或数字复制到新题目工作区。
-
-## 工作流可视化
-
-仓库附带由 [tt-a1i/archify](https://github.com/tt-a1i/archify) 生成的通用数学建模流程图：
-
-- [Archify 可视化说明](docs/diagrams/archify/README.md)
-- [交互式图示索引](docs/diagrams/archify/index.html)
-
-GitHub 首页使用 PNG 作为静态预览；交互版 HTML 和 JSON 源文件位于上述目录。
-
-### 工作区系统架构
-
-[![数学建模工作区系统架构](docs/diagrams/archify/assets/mm-workspace-architecture.png)](docs/diagrams/archify/assets/mm-workspace-architecture.png)
-
-### 通用 G1–G6 门控流水线
-
-[![数学建模通用门控流水线](docs/diagrams/archify/assets/mm-generic-workflow.png)](docs/diagrams/archify/assets/mm-generic-workflow.png)
-
-### 子问题门控生命周期
-
-[![子问题门控生命周期](docs/diagrams/archify/assets/mm-gate-lifecycle.png)](docs/diagrams/archify/assets/mm-gate-lifecycle.png)
-
-### 文档生成与冻结链
-
-[![数学建模文档生成与冻结链](docs/diagrams/archify/assets/mm-document-chain.png)](docs/diagrams/archify/assets/mm-document-chain.png)
-
-## 许可
-
-本项目按 MIT License 发布，见根目录 `LICENSE`。
-
-## 仓库分支
-
-当前模板分支：`mathmodeling-new-skeleton`
-
-主仓库：<https://github.com/Chickeryxn/chickery-s-math-modeling-skill>
-
-## Workflow integrity tooling
-
-The repository contains a domain-neutral execution layer in `scripts/` and `schemas/`. Use:
+## 测试与限制
 
 ```powershell
+python scripts/run_tests.py
 python scripts/validate_repo.py .
-python scripts/validate_skill_trees.py .
-python scripts/sync_plugin.py .
-python scripts/workflow_guard.py . require Q1 model_code
 ```
 
-`schemas/model_contract.schema.json` defines the generic model contract. A project-specific `model_contract.json` should be created during problem framing and must not be confused with the example schema.
+测试覆盖门禁、人工决策、运行快照、预算降级、lineage/stale、独立性、连续事件、模型合同、技能同步、分层 QA 和三类合成场景。
 
-The core workflow is deliberately separated from competition-specific presets. Optional presets belong under `planning/presets/` and may supply defaults, but they do not override a problem-specific contract or human decisions.
-
-For each experiment, use `scripts/create_run_snapshot.py` to record actual execution inputs, code, configuration, budgets, environment, and validation references. Use `scripts/lineage.py` to create or assess artifact lineage and stale status.
+项目提供工作流模板和执行校验工具；它不声称能够阻止所有绕过脚本的直接文件写入。项目本身不编码 offline/network policy。

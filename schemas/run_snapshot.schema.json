@@ -1,12 +1,12 @@
 {
-  "schema_version": 1,
-  "description": "Immutable experiment run snapshot contract.",
-  "required": ["run_id", "planned_budget", "actual_budget", "degraded", "input_manifest", "code_manifest", "config_hash", "command", "environment", "status", "result_ref", "validation_ref"],
+  "schema_version": 2,
+  "description": "Experiment snapshot produced by the unified runner.",
+  "required": ["run_id", "planned_budget", "actual_budget", "budget_delta", "degraded", "input_manifest", "code_manifest", "config_hash", "command", "environment", "status", "return_code", "result_ref", "validation_ref", "executed_by_runner"],
   "status_values": ["RUNNING", "SUCCESS", "FAILED", "INTERRUPTED", "DEGRADED_SUCCESS"],
   "rules": [
-    "planned_budget and actual_budget are both required; actual execution may not be inferred from planned values.",
-    "degraded must be true when actual_budget differs materially from planned_budget.",
-    "result_ref and validation_ref must resolve to files when status is SUCCESS or DEGRADED_SUCCESS.",
-    "The snapshot is immutable after completion; a rerun creates a new run_id."
+    "SUCCESS and DEGRADED_SUCCESS require execution by the unified runner and return_code=0.",
+    "Result and validation hashes must remain current.",
+    "A material budget delta automatically marks the run degraded.",
+    "A rerun creates a new run_id rather than rewriting completed metadata."
   ]
 }

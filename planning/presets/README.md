@@ -1,11 +1,23 @@
 # Optional presets
 
-Presets are optional, reviewable defaults for a contest, language, or delivery format. They are not part of the domain-neutral core contract.
+A preset is an explicitly activated, versioned set of defaults. It is advisory configuration, not a source of human decisions or problem semantics.
+
+Every preset should declare:
+
+```json
+{
+  "preset_id": "example",
+  "version": "1.0.0",
+  "activation": "explicit",
+  "authority": "advisory",
+  "defaults": {}
+}
+```
 
 Rules:
 
-- A preset may propose defaults but may not silently create human decisions.
-- A preset may not add entities, parameters, constraints, or objective semantics to a new problem.
-- The active problem contract and user decisions take precedence over a preset.
-- Record the preset name and version in the run snapshot when used.
-- Do not copy historical answers or frozen numbers into a preset.
+- A preset must be explicitly activated and recorded in the run snapshot.
+- A preset may provide defaults but may not silently create decisions.
+- A preset may not override the active problem model contract or a human decision.
+- A preset may not contain historical problem results or frozen numbers.
+- `references/` is advisory knowledge and is not an automatic requirement for a new problem.

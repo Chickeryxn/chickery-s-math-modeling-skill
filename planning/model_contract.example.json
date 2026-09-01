@@ -8,9 +8,12 @@
   "hard_constraints": [],
   "soft_constraints": [],
   "objective": {
-    "sense": "MAXIMIZE_OR_MINIMIZE",
+    "sense": "MAXIMIZE",
     "value_ref": "problem-specific",
-    "output_contract": {}
+    "output_contract": {
+      "type": "scalar",
+      "unit": "problem-defined"
+    }
   },
   "evaluator": {
     "evaluator_id": "problem-specific",
@@ -21,7 +24,13 @@
   "uncertainty": null,
   "validation_contract": {
     "invariants": [],
-    "tolerances": {},
-    "independent_checks": []
+    "tolerances": {
+      "objective": 1e-06
+    },
+    "independent_checks": [
+      "main",
+      "baseline",
+      "verifier"
+    ]
   }
 }

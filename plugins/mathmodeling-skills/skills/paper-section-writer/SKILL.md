@@ -78,3 +78,8 @@ Transcribe these from the decision ledger with provenance. If absent, invoke a c
 ## Writer gate enforcement
 
 Do not draft a final section from merely existing reports. Require current lineage, frozen-number references, human claim-scope provenance, and a passed G5 gate. If any prerequisite is absent, return `GATE_BLOCKED` with the exact producer and artifact needed.
+
+
+## v0.3 writer enforcement
+
+Require current frozen-number lineage, human claim-scope provenance, and the derived G5 gate before writing a final paper section. A result report alone is not a writer source.

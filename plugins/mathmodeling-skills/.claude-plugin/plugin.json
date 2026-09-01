@@ -1,6 +1,6 @@
 {
   "name": "mathmodeling-skills",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A gated mathematical-modeling contest workflow with human-owned modeling decisions, reproducible experiments, and submission audits.",
   "author": {
     "name": "Chickeryxn",

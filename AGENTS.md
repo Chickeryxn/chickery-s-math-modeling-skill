@@ -30,7 +30,7 @@
 - When a shared skill contract changes, update and validate both copies in the same change.
 - Runtime-specific wording may differ only when necessary, but each copy must remain standalone and behaviorally consistent with this policy.
 - `plugins/mathmodeling-skills/skills/` is the generated distribution copy used by both native plugin manifests. After the two standalone trees agree, refresh it with `scripts/sync-plugin.sh` and verify it with `scripts/sync-plugin.sh --check`.
-- Keep both plugin manifests and both marketplace catalogs aligned for every release. Bump the version in both plugin manifests and the Claude marketplace entry together.
+- Keep both plugin manifests and the marketplace catalog aligned for every release. Bump the version in both plugin manifests and keep the marketplace catalog aligned.
 
 # Workflow Discipline
 
@@ -255,17 +255,17 @@ Create `logs/` only when a failure, warning, or reproducibility need justifies i
 - Do not approve final assembly while any G6 auditor fails.
 
 
-# Machine-Enforced Workflow Integrity (v0.2)
+# Machine-Enforced Workflow Integrity (v0.3)
 
 The prose rules above are paired with repository-local validators under `scripts/`. Skills must treat these as the executable contract:
 
 - Run `python scripts/validate_repo.py .` for repository integrity checks.
-- Run `python scripts/workflow_guard.py . require Qx <artifact_kind>` before creating sensitive downstream artifacts.
+- Run `python scripts/workflow_guard.py . derive Qx` and `require Qx <artifact_kind>` before creating sensitive downstream artifacts; the derived state is authoritative over the manifest cache.
 - A `DECIDED` ledger record is valid only when it contains a nested `source` with `source_type=user_answer`, `user_message_id`, and `user_verbatim_answer`; AI-authored summaries are not sufficient.
 - Every completed experiment must have an immutable run snapshot containing planned and actual budgets, input/code/config hashes, command, environment, result reference, and validation reference.
 - Main, baseline, and verifier are separate roles. A baseline or verifier may not claim independence by reading the main result as its only numeric input.
 - Problem-specific semantics belong in a project `model_contract.json`; `schemas/model_contract.schema.json` remains domain-neutral.
-- Key artifacts should carry a sibling `.lineage.json` or an equivalent lineage object with source hashes and decision IDs. Changed source hashes make the artifact `STALE`.
-- QA must report mechanical, semantic, human-judgment, and gate status separately; a local check passing does not imply final assembly is allowed.
+- Key artifacts must carry a sibling `.lineage.json` or an equivalent lineage object with source, input, config, code hashes, and decision IDs. Run `scripts/validate_artifacts.py` and reject `MISSING`/`STALE` artifacts.
+- QA must report mechanical, semantic, provenance, lineage, independence, human-judgment, and gate status separately; a local check passing does not imply final assembly is allowed.
 
 The repository intentionally does not encode an offline/network policy. Network restrictions, if desired, remain an environment or user-level concern.

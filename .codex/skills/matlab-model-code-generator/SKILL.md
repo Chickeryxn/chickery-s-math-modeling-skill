@@ -69,3 +69,8 @@ Follow the `model-code-analyzer` contract, including approved decision ID, roles
 ## Immutable run requirement
 
 Before and after execution, create an immutable run snapshot with `scripts/create_run_snapshot.py` or an equivalent MATLAB-produced snapshot. Record planned and actual budgets, input/config/code hashes, exact command, runtime, status, result reference, and validation reference. Use `NOT_RUN` when no compatible runtime is available.
+
+
+## v0.3 runner requirement
+
+Record MATLAB execution through the unified run snapshot contract or an equivalent snapshot with runner evidence, return code, output hashes, budget delta, and validation reference. Static files do not prove execution.

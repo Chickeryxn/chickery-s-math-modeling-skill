@@ -67,3 +67,8 @@ Statuses are `PASS`, `FAIL`, or `NOT_APPLICABLE` with a reason. Any required `FA
 ## Independence and lineage checks
 
 In addition to the named checks, verify that main, baseline, and verifier have distinct implementation paths and that baseline/verifier do not use the main result as their only numeric input. Check the run snapshot and lineage hashes before accepting a result. Report `CONDITIONAL` or `GATE_BLOCKED` when the evidence is incomplete; do not infer independence from filenames.
+
+
+## v0.3 semantic checks
+
+Run `validate_independence.py` and `validate_run_snapshot.py` where applicable. Distinguish `STATICALLY_DISTINCT`, `RUNTIME_INDEPENDENT`, `NOT_INDEPENDENT`, and `NOT_VERIFIED`; do not infer runtime independence from different filenames. Check the model contract hash and lineage before passing output.

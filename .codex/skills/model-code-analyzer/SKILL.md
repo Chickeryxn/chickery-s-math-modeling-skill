@@ -114,3 +114,8 @@ Require:
 ## Contract and gate requirements
 
 Require a problem-specific `model_contract.json` validated by `scripts/validate_model_contract.py`. The contract must define the objective, hard constraints, variables, evaluator, and validation contract used by main, baseline, and verifier. Before writing a code plan, require a verifiable human method decision through `scripts/workflow_guard.py`.
+
+
+## v0.3 contract requirement
+
+Require a resolved problem-specific `model_contract.json`, validated by `scripts/validate_model_contract.py`. The contract must contain unique IDs, domains/units, objective sense/value/output contract, evaluator reference, tolerances, and independent checks. Main, baseline, and verifier must record the same contract hash.
