@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Source: nature-skills (Apache-2.0), commit ebd722e -- see references/upstream/nature-writing/UPSTREAM.md
 """Find mechanically detectable consistency risks in manuscript text files."""
 
 from __future__ import annotations

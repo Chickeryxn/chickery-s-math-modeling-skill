@@ -7,10 +7,10 @@
 | 徽章 | 值 |
 |---|---|
 | 许可 | [MIT](LICENSE) |
-| 版本 | 0.4.0（插件 manifest 同步） |
+| 版本 | 0.4.1（插件 manifest 同步） |
 | 运行环境 | Python 3（仅标准库，无第三方依赖） |
 | 平台 | Windows / Linux / macOS |
-| 测试 | 34 个用例，`python scripts/run_tests.py` 全绿 |
+| 测试 | 68 个用例，`python scripts/run_tests.py` 全绿 |
 
 ## 目录
 
@@ -223,7 +223,7 @@ problem-parser → problem-classifier → data-auditor-cleaner → workflow-orch
 
 ## 测试覆盖
 
-`python scripts/run_tests.py`（34 个用例，全标准库）覆盖：
+`python scripts/run_tests.py`（68 个用例，全标准库）覆盖：
 
 - 门禁证据推导与单调迁移（含完整 G1→G6 推进链到 `final_assembly`）
 - 人类决策溯源（伪造人类、未注册证据、路径逃逸均被拒绝）
@@ -233,6 +233,8 @@ problem-parser → problem-classifier → data-auditor-cleaner → workflow-orch
 - 模型契约结构、技能树同步、分层 QA
 - 三类合成场景（回归 / 排程 / 动态事件）端到端测试
 - 风险探针 list/dict 两种结构兼容
+- 论文装配（`latex_assembly`：装配/冻结宏转义/非安全值跳过/AI 声明）
+- 上游资产校验（`validate_upstream_assets`）与 AI 痕迹扫描（`ai_trace_checker`）
 
 ## 常见问题 FAQ
 

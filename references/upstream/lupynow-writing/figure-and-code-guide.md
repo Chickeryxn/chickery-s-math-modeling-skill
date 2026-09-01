@@ -1,3 +1,4 @@
+<!-- Source: Lupynow/math-modeling-skills (MIT), commit 3a9428c -- see references/upstream/lupynow-writing/UPSTREAM.md -->
 # 图表规范与代码附录要求
 
 基于 2018-2024 获奖论文的图表质量分析和最新比赛规则。
@@ -115,11 +116,11 @@ colors = ['#7EA8C4', '#C4A47E', '#A4C47E', '#C47EA8', '#7EC4A8', '#A87EC4']
    - 避免高饱和度颜色（大红大绿），偏向学术配色（蓝/灰/橙）
    - 子问题用同色系不同深浅区分
 
-4. **工具推荐**：
-   - **draw.io / diagrams.net**（免费，导出 SVG/PNG）
-   - **Visio**（如有正版）
-   - **MATLAB**：可用 `digraph` + `plot` 绘制有向图
-   - **Python**：`graphviz` 或 `networkx`
+4. **工具推荐（本仓库统一 matplotlib）**：
+   - 本仓库使用单一 matplotlib 引擎（Agg 后端，矢量导出）。
+   - 示意图/流程图：用 `matplotlib.patches`（FancyBboxPatch、FancyArrowPatch、Wedge）手绘；参考 `math-figure-generator/references/cleanroom-patterns.md`。
+   - 如需图论布局，可用 `networkx` 布局坐标 + matplotlib 绘制（不引入 networkx 运行时，仅生成坐标）。
+   - 原上游推荐（draw.io/Visio/MATLAB 绘图/R ggplot2/seaborn）与本仓库 matplotlib-only 原则冲突，已裁剪。
 
 5. **标注**：中英文均可，国赛用中文，美赛用英文。字号统一，避免过大过小。
 
@@ -345,11 +346,11 @@ colors = ['#7EA8C4', '#C4A47E', '#A4C47E', '#C47EA8', '#7EC4A8', '#A87EC4']
 | 箱线图 | 分布对比、异常值检测 | 标注中位数和 IQR |
 | ROC 曲线 | 二分类模型评估 | 标注 AUC 值 |
 
-### 工具推荐
+### 工具推荐（本仓库统一 matplotlib）
 
-- **Python**：matplotlib + seaborn（首选，输出 PDF 矢量图）
-- **MATLAB**：原生 plot 函数（导出为 .eps 或 .pdf）
-- **R**：ggplot2（最专业的统计图，美赛推荐）
+- 数据图：matplotlib 原生实现（rcParams 设 `svg.fonttype=none`、`pdf.fonttype=42` 保证矢量文字；300 dpi 或矢量输出）。
+- 复杂统计图（云雨图/ROC-CI/泰勒图/弦图等）：参考 `math-figure-generator/references/cleanroom-patterns.md` 的模板。
+- 不使用 seaborn / R ggplot2 / MATLAB 绘图路径（与目标仓库 matplotlib-only 引擎冲突）。
 
 ---
 
@@ -445,14 +446,7 @@ Output: 最优解 x* 及其目标函数值 f*
 - requirements.txt 或注释说明依赖包版本
 ```
 
-#### C++（B 题大规模计算时推荐）
-```
-优点：性能高，适合大规模搜索/模拟
-规范：
-- 每个策略/算法独立函数
-- 关键参数用 const 声明并注释来源
-- 输出格式清晰，方便直接复制到论文
-```
+（原上游还包含 C++ 语言推荐，与本仓库 Python/MATLAB 双语言范围不符，已裁剪。）
 
 ### 附录中不需要的
 

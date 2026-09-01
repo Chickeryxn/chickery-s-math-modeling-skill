@@ -7,10 +7,10 @@
 | Badge | Value |
 |---|---|
 | License | [MIT](LICENSE) |
-| Version | 0.4.0 (plugin manifests in sync) |
+| Version | 0.4.1 (plugin manifests in sync) |
 | Runtime | Python 3 (standard library only, no third-party dependencies) |
 | Platforms | Windows / Linux / macOS |
-| Tests | 34 cases, `python scripts/run_tests.py` all green |
+| Tests | 68 cases, `python scripts/run_tests.py` all green |
 
 ## Table of Contents
 
@@ -223,7 +223,7 @@ See [`scripts/README.md`](scripts/README.md) for detailed arguments and [`schema
 
 ## Test coverage
 
-`python scripts/run_tests.py` (34 cases, standard library only) covers:
+`python scripts/run_tests.py` (68 cases, standard library only) covers:
 
 - Evidence-derived gate computation and monotonic transitions (including a full G1→G6 progression to `final_assembly`)
 - Human-decision provenance (fake human, unregistered evidence, escaping paths all rejected)
@@ -233,6 +233,8 @@ See [`scripts/README.md`](scripts/README.md) for detailed arguments and [`schema
 - Model-contract shape, skill-tree synchronization, layered QA
 - Three synthetic scenario families (regression / scheduling / dynamic events) end to end
 - Risk-probe list/dict shape compatibility
+- Paper assembly (`latex_assembly`: assembly, frozen-macro escaping, unsafe-value skipping, AI declaration)
+- Upstream asset validation (`validate_upstream_assets`) and AI-trace scanning (`ai_trace_checker`)
 
 ## FAQ
 

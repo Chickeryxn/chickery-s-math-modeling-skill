@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """Quantifiable AI-trace checker for academic text.
 
-Counts AI-sounding words/phrases and em-dash frequency against per-1000-word
-limits inspired by de-AI-writing methodology (see
+Counts AI-sounding words/phrases and em-dash frequency against absolute
+whole-text limits inspired by de-AI-writing methodology (see
 `references/upstream/lupynow-writing/de-ai-writing.md`). Pure standard library.
 
-Rules (self-authored, advisory):
-  - `furthermore` / `moreover` / 此外 : <= 2 per 1000 words
-  - `notably` / `crucially` / 值得一提的是 / 值得注意的是 : <= 1 per 1000 words
-  - `significantly` / 显著地 (without a stated test) : <= 1 per 1000 words
+Rules (self-authored subset, aligned with the upstream caps):
+  - `furthermore` / `moreover` / 此外 : <= 2 total; furthermore+moreover combined <= 2
+  - `notably` / `crucially` / 值得一提的是 / 值得注意的是 : <= 1 total
+  - `significantly` / 显著地 / 关键的 : <= 1 total
   - zero-tolerance phrases: `delve`, `it is worth noting`, `it should be noted`,
-    `in conclusion`, `综上所述`
-  - em dash `--`/`—` : <= 2 per 1000 words
+    `in conclusion`, `综上所述`, `深入探讨`, `重要的是`, `不可忽视的`, `高度复杂的`
+  - em dash `--`/`—` : <= 2 total
 
 Usage:
   python scripts/ai_trace_checker.py path/to/section.md [--strict] [--json]
@@ -27,14 +27,20 @@ try:
 except Exception:
     pass
 
-# token -> per-1000-word limit
+# token -> absolute count limit for the whole text (aligned with the upstream
+# de-ai-writing caps, e.g. "此外 全文 ≤2 次", "moreover+furthermore 合计 ≤2")
 LIMITS = {
-    "furthermore": 2.0, "moreover": 2.0, "此外": 2.0, "其次，": 2.0,
-    "notably": 1.0, "crucially": 1.0, "值得一提的是": 1.0, "值得注意的是": 1.0,
-    "significantly": 1.0, "显著地": 1.0,
-    "delve": 0.0, "it is worth noting": 0.0, "it should be noted": 0.0,
-    "in conclusion": 0.0, "综上所述": 0.0,
+    "furthermore": 2, "moreover": 2, "此外": 2, "其次，": 2,
+    "notably": 1, "crucially": 1, "值得一提的是": 1, "值得注意的是": 1,
+    "significantly": 1, "显著地": 1, "关键的": 1,
+    "delve": 0, "it is worth noting": 0, "it should be noted": 0,
+    "in conclusion": 0, "综上所述": 0,
+    "深入探讨": 0, "重要的是": 0, "不可忽视的": 0, "高度复杂的": 0,
 }
+# grouped tokens -> combined absolute limit
+GROUPS = [
+    (["furthermore", "moreover"], 2),   # upstream de-ai-writing: moreover+furthermore <= 2 total
+]
 EM_DASH_RE = re.compile(r"[—–]|(?<!-)--(?!-)")
 
 def count_words(text: str) -> int:
@@ -50,14 +56,13 @@ def analyze(text: str) -> dict:
     hits = []
     for token, limit in LIMITS.items():
         count = lower.count(token.lower())
-        allowed = limit * words / 1000.0
-        ok = count <= allowed
-        hits.append({"token": token, "count": count, "limit_per_1k": limit,
-                     "observed_per_1k": round(count * 1000.0 / words, 2), "ok": ok})
+        hits.append({"token": token, "count": count, "limit": limit, "ok": count <= limit})
+    for group, limit in GROUPS:
+        count = sum(lower.count(t.lower()) for t in group)
+        hits.append({"token": "+".join(group) + " (combined)", "count": count,
+                     "limit": limit, "ok": count <= limit})
     em = len(EM_DASH_RE.findall(text))
-    em_limit = 2.0 * words / 1000.0
-    hits.append({"token": "em-dash", "count": em, "limit_per_1k": 2.0,
-                 "observed_per_1k": round(em * 1000.0 / words, 2), "ok": em <= em_limit})
+    hits.append({"token": "em-dash", "count": em, "limit": 2, "ok": em <= 2})
     problems = [h for h in hits if not h["ok"]]
     verdict = "PASS" if not problems else "WARN"
     return {"word_count": words, "verdict": verdict, "hits": hits, "problems": problems}
@@ -76,8 +81,7 @@ def main():
     else:
         for h in report["hits"]:
             flag = "OK " if h["ok"] else ">> "
-            print(f"{flag}{h['token']:<24} {h['count']:>3}  (limit {h['limit_per_1k']}/1k, "
-                  f"observed {h['observed_per_1k']}/1k)")
+            print(f"{flag}{h['token']:<32} {h['count']:>3}  (limit {h['limit']})")
         print(f"verdict: {report['verdict']}")
     if not report["problems"]:
         return 0

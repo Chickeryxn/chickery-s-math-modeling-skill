@@ -1,3 +1,4 @@
+<!-- Source: nature-skills (Apache-2.0), commit ebd722e -- see references/upstream/nature-writing/UPSTREAM.md -->
 # Nature Communications 2025 — Diction & Connector Calibration
 
 Use this file during the sentence-level polish pass when you want **empirical,

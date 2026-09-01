@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.1 — 2026-09-01
+
+- Fixed `cleanroom-patterns.md` raincloud rendering bug (mixed scalar/array plot) and verified all six patterns execute end to end.
+- Hardened `latex_assembly.py`: frozen values are type-checked and LaTeX-escaped (dict/list values skipped and reported); added frozen-reference warnings, `refs.bib` → `\bibitem` injection, and a weighted page estimate.
+- Trimmed the imported `figure-and-code-guide.md` to matplotlib-only guidance (draw.io/Visio/R/seaborn/C++ recommendations removed) and aligned its UPSTREAM.md declaration.
+- Expanded `ai_trace_checker.py` rule set to the upstream de-AI-writing caps (absolute counts, moreover+furthermore combined limit) and added unit tests.
+- Enhanced `validate_upstream_assets.py`: per-file SHA-256 drift guard (`hashes.json`, `--write-hashes`), stricter license check, and NOTICE.md cross-validation; added unit tests.
+- Added unit tests for `ai_trace_checker`, `validate_upstream_assets`, and the imported `check_consistency.py` (68 total).
+- Added source headers to all 22 upstream-imported files; added archify CLI regeneration notes; extended the method index with mixed-type routing and anti-homogenization rules.
+- Fixed README test-count (34→68) and removed the stale dual-engine routing note in `references/README.md`.
+
 ## 0.4.0 — 2026-09-01
 
 - Added the upstream integration layer: `references/upstream/` with provenance-tracked knowledge assets (nature-skills figure/writing/statistics rules under Apache-2.0; Lupynow de-AI-writing/self-review/phrase-bank/decision matrix under MIT; clean-room method index and XiaoMaColtAI methodology mapping).

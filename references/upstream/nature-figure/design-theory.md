@@ -1,3 +1,4 @@
+<!-- Source: nature-skills (Apache-2.0), commit ebd722e -- see references/upstream/nature-figure/UPSTREAM.md -->
 # Nature Figure Design Theory
 
 ## Contents

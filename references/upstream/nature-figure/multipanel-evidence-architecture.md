@@ -1,3 +1,4 @@
+<!-- Source: nature-skills (Apache-2.0), commit ebd722e -- see references/upstream/nature-figure/UPSTREAM.md -->
 # Multi-panel evidence architecture
 
 Use this reference when planning, restructuring, or auditing a manuscript

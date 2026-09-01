@@ -1,4 +1,5 @@
-﻿# Common statistical failure modes
+<!-- Source: nature-skills (Apache-2.0), commit ebd722e -- see references/upstream/nature-writing/UPSTREAM.md -->
+# Common statistical failure modes
 
 ## Contents
 

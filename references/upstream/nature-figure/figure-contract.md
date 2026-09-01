@@ -1,3 +1,4 @@
+<!-- Source: nature-skills (Apache-2.0), commit ebd722e -- see references/upstream/nature-figure/UPSTREAM.md -->
 # Figure Contract
 
 Use this reference before writing plotting code. The goal is to make the figure

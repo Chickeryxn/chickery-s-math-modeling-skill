@@ -1,3 +1,4 @@
+<!-- Source: nature-skills (Apache-2.0), commit ebd722e -- see references/upstream/nature-writing/UPSTREAM.md -->
 # Terminology Ledger
 
 A manuscript must use one name for one thing. The same method, model, dataset,

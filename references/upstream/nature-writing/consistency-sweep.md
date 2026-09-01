@@ -1,3 +1,4 @@
+<!-- Source: nature-skills (Apache-2.0), commit ebd722e -- see references/upstream/nature-writing/UPSTREAM.md -->
 # Consistency Sweep
 
 A retrospective audit of a manuscript that already exists. `terminology-ledger.md` is preventive:

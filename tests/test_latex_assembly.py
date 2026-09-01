@@ -7,7 +7,9 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from latex_assembly import (scan_sections, load_frozen_numbers, ai_declaration,
-                            render_main, build_report, sanitize_macro_name)
+                            render_main, build_report, sanitize_macro_name,
+                            macros_for_frozen, macro_value, latex_escape,
+                            parse_bib_to_bibitems, check_frozen_references, estimate_pages)
 
 
 def make_workspace():
@@ -24,7 +26,7 @@ def make_workspace():
         json.dumps({"decision_id": "d", "decision_type": "submission_authorization",
                     "status": "DECIDED", "choice": "ok"}) + "\n", encoding="utf-8")
     (root / "templates" / "paper" / "main.tex").write_text(
-        "A __INPUTS__\nB __FROZEN_MACROS__\nC __AI_DECLARATION__\n", encoding="utf-8")
+        "A __INPUTS__\nB __FROZEN_MACROS__\nC __AI_DECLARATION__\nD __REFERENCES__\n", encoding="utf-8")
     return td, root
 
 
@@ -71,6 +73,76 @@ class LatexAssemblyTests(unittest.TestCase):
         self.assertEqual(report["section_count"], 1)
         self.assertEqual(report["frozen_count"], 1)
         self.assertEqual(report["frozen_macros"], ["q1mainrmse"])
+        self.assertEqual(report["skipped_claims"], [])
+        td.cleanup()
+
+    def test_macro_value_skips_unsafe_and_escapes(self):
+        self.assertEqual(macro_value({"value": 2.4}), "2.4")
+        self.assertEqual(macro_value({"value": "0.88"}), "0.88")
+        self.assertIsNone(macro_value({"value": {"a": 1}}))
+        self.assertIsNone(macro_value({"value": None}))
+        self.assertIsNone(macro_value({"value": True}))
+        self.assertIsNone(macro_value({}))
+        self.assertEqual(latex_escape("a&b_%c#d{e}f~g^h$i\\j"),
+                         r"a\&b\_\%c\#d\{e\}f\textasciitilde{}g\textasciicircum{}h\$i\textbackslash{}j")
+
+    def test_macros_for_frozen_skips_bad_values(self):
+        frozen = {"ok": {"value": 1.5, "unit": "m"},
+                  "bad": {"value": {"x": 1}},
+                  "txt": {"value": "a%b", "unit": ""}}
+        macros, skipped = macros_for_frozen(frozen)
+        self.assertEqual(skipped, ["bad"])
+        self.assertIn("\\newcommand{\\ok}{1.5}\\text{m}", macros)
+        self.assertIn("\\newcommand{\\txt}{a\\%b}", macros)
+        self.assertNotIn("bad", macros)
+
+    def test_parse_bib_to_bibitems(self):
+        td, root = make_workspace()
+        bib = root / "paper" / "refs.bib"
+        bib.write_text("""@article{Wang2023,
+  author = {Wang, X.},
+  title = {A method},
+  journal = {J. Modeling},
+  year = {2023}
+}
+@misc{COMAP2026,
+  title = {Problem Statement},
+  howpublished = {Contest},
+  year = {2026}
+}""", encoding="utf-8")
+        items = parse_bib_to_bibitems(bib)
+        self.assertEqual(len(items), 2)
+        self.assertTrue(any(i.startswith("\\bibitem{Wang2023}") and "Wang, X." in i for i in items))
+        self.assertTrue(any(i.startswith("\\bibitem{COMAP2026}") for i in items))
+        td.cleanup()
+
+    def test_parse_bib_missing_returns_empty(self):
+        td, root = make_workspace()
+        self.assertEqual(parse_bib_to_bibitems(root / "paper" / "refs.bib"), [])
+        td.cleanup()
+
+    def test_check_frozen_references_warns(self):
+        td, root = make_workspace()
+        # q1.tex currently references \\q1mainrmse -> no warning for it
+        (root / "paper" / "sections" / "q2.tex").write_text("裸数字 2.4 出现。", encoding="utf-8")
+        frozen = {"q1_main_rmse": {"value": 2.4}, "q2_other": {"value": 9.9}}
+        warns = check_frozen_references(root, ["paper/sections/q1.tex", "paper/sections/q2.tex"], frozen)
+        self.assertFalse(any("q1_main_rmse" in w for w in warns))      # referenced via macro
+        self.assertTrue(any("q2_other" in w for w in warns))           # never referenced
+        td.cleanup()
+
+    def test_render_main_injects_references(self):
+        td, root = make_workspace()
+        out = render_main(root / "templates" / "paper" / "main.tex", root,
+                          ["paper/sections/q1.tex"], {}, [], ["\\bibitem{k} A. T. 2023"])
+        self.assertIn("\\bibitem{k} A. T. 2023", out)
+        self.assertNotIn("__REFERENCES__", out)
+        td.cleanup()
+
+    def test_estimate_pages(self):
+        td, root = make_workspace()
+        (root / "paper" / "sections" / "long.tex").write_text("字" * 1700, encoding="utf-8")
+        self.assertEqual(estimate_pages(root, ["paper/sections/long.tex"]), 2)
         td.cleanup()
 
 

@@ -1,4 +1,5 @@
-﻿# Statistical reporting checklist
+<!-- Source: nature-skills (Apache-2.0), commit ebd722e -- see references/upstream/nature-writing/UPSTREAM.md -->
+# Statistical reporting checklist
 
 Use this file when drafting or auditing a Statistical analysis, Methods, Results, or Supplementary Methods section.
 

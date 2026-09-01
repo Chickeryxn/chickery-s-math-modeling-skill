@@ -7,7 +7,7 @@
   - `de-ai-writing.md` — from `skills/math-modeling-paper/references/`; quantifiable AI-trace rules (frequency caps, banned phrases, result-description rules).
   - `self-review-framework.md` — from `skills/math-modeling-paper/references/`; four-round self review + Claim-Evidence map.
   - `common-phrases.md` — from `skills/math-modeling-paper/references/`; bilingual phrase bank with anti-templating variants.
-  - `figure-and-code-guide.md` — from `skills/math-modeling-paper/references/`; Figure Contract + matplotlib rcParams; other-tool recommendations stripped.
+  - `figure-and-code-guide.md` — from `skills/math-modeling-paper/references/`; Figure Contract + matplotlib rcParams. **Trimmed for this repository**: draw.io/Visio/MATLAB-drawing/R-ggplot2/seaborn tool recommendations replaced with matplotlib-only guidance; the C++ language section removed (Python/MATLAB only).
   - `model-selection-matrix.md` — from `skills/math-modeling-solver/references/`; decision matrix + anti-homogenization conflict-resolution rules.
 - **Scope**: Markdown rule layer only. The upstream code templates (29 files) depend on third-party packages and carry no tests; they are NOT imported (see `references/upstream/method-index/` for the clean-room method index instead).
 - **Drift note**: Content references contest-year facts and third-party tools; treat as advisory.

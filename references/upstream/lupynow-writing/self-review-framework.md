@@ -1,3 +1,4 @@
+<!-- Source: Lupynow/math-modeling-skills (MIT), commit 3a9428c -- see references/upstream/lupynow-writing/UPSTREAM.md -->
 # 论文自审框架
 
 > 交付前四轮系统性自审，替代简单的排版检查清单。每轮有明确的检查项、方法和判定标准。

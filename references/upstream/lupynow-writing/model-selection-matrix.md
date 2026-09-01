@@ -1,3 +1,4 @@
+<!-- Source: Lupynow/math-modeling-skills (MIT), commit 3a9428c -- see references/upstream/lupynow-writing/UPSTREAM.md -->
 # 模型决策矩阵
 
 ## 使用方式

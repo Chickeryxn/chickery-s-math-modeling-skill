@@ -20,6 +20,19 @@
 - 在线交互查看：将仓库的 `docs/` 目录配置为 GitHub Pages 发布目录，然后打开 Pages 首页。
 - 二次编辑：在 Archify 中加载 `sources/` 下的 JSON 文件，再重新导出 HTML、SVG 或 PNG。
 
+## 再生成（CLI，需 Node ≥ 18）
+
+仓库内已提交 JSON 源与生成物；修改 `sources/*.json` 后可用 archify CLI 再生成并校验（archify 为外部工具，运行时零 npm 依赖，MIT 许可，建议锁定版本 2.16.0）：
+
+```bash
+# 校验 JSON 源（质量门 showcase：0 错误 0 警告，可入 CI 做门禁）
+node <path-to>/archify/bin/archify.mjs validate workflow sources/mm-generic-workflow.workflow.json --quality showcase --json
+# 原子交付：渲染 + 全检 + 覆盖 HTML
+node <path-to>/archify/bin/archify.mjs deliver workflow sources/mm-generic-workflow.workflow.json interactive/mm-generic-workflow.workflow.html --quality showcase --json
+```
+
+PNG/SVG 需在浏览器中打开生成后的 HTML，用 Viewer 的 Export 菜单导出（CLI 不直出位图）。更新提醒与 Google Fonts 外链为上游可选触点，可在集成时按需禁用。版本锁定的来源记录见 `NOTICE.md`（archify commit `7a16d30`，v2.x 线）。
+
 交互 HTML 使用内嵌的 SVG、CSS 和脚本，不依赖仓库外的本机文件或本地浏览器安装路径。HTML 中的在线字体仅是可选增强，系统字体回退仍可用。
 
 ## 来源与范围

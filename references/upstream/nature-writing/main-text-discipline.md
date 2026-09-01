@@ -1,3 +1,4 @@
+<!-- Source: nature-skills (Apache-2.0), commit ebd722e -- see references/upstream/nature-writing/UPSTREAM.md -->
 # Main-Text Discipline for Scientific Papers
 
 Use this shared contract when drafting, restructuring, compressing, or revising

@@ -89,35 +89,152 @@ def ai_declaration(root: Path) -> tuple[list[str], list[str]]:
     return blocks, sources
 
 
+LATEX_SPECIALS = str.maketrans({
+    "\\": r"\textbackslash{}",
+    "%": r"\%", "&": r"\&", "#": r"\#", "_": r"\_",
+    "{": r"\{", "}": r"\}", "~": r"\textasciitilde{}",
+    "^": r"\textasciicircum{}", "$": r"\$",
+})
+
+
+def latex_escape(s: str) -> str:
+    """Escape LaTeX special characters in a string value."""
+    return s.translate(LATEX_SPECIALS)
+
+
+def macro_value(c: dict):
+    """Return a LaTeX-safe string for a frozen claim value, or None if unsafe."""
+    v = c.get("value")
+    if isinstance(v, bool) or v is None:
+        return None
+    if isinstance(v, (int, float)):
+        return str(v)
+    if isinstance(v, str):
+        return latex_escape(v)
+    return None  # dict / list / other structured values are skipped
+
+
+def macros_for_frozen(frozen: dict) -> tuple[str, list[str]]:
+    """Build the frozen-number macro block and the list of skipped claim ids."""
+    lines, skipped = [], []
+    for cid, c in sorted(frozen.items()):
+        val = macro_value(c)
+        if val is None:
+            skipped.append(cid)
+            continue
+        unit = latex_escape(str(c.get("unit", ""))) if c.get("unit") else ""
+        lines.append(f"\\newcommand{{\\{sanitize_macro_name(cid)}}}{{{val}}}"
+                     + (f"\\text{{{unit}}}" if unit else ""))
+    return "\n".join(lines), skipped
+
+
+BIB_ENTRY_START_RE = re.compile(r"@(\w+)\s*\{")
+BIB_FIELD_RE = re.compile(r"(\w+)\s*=\s*\{([^}]*)\}", flags=re.S)
+
+
+def parse_bib_to_bibitems(path: Path) -> list[str]:
+    """Parse a small .bib file into \\bibitem entries (balanced-brace scan)."""
+    if not path.is_file():
+        return []
+    text = path.read_text(encoding="utf-8-sig")
+    items = []
+    for m in BIB_ENTRY_START_RE.finditer(text):
+        start = m.end()
+        key_end = text.find(",", start)
+        if key_end < 0:
+            continue
+        key = text[start:key_end].strip()
+        depth, j = 1, key_end + 1
+        while j < len(text) and depth:
+            if text[j] == "{":
+                depth += 1
+            elif text[j] == "}":
+                depth -= 1
+            j += 1
+        if depth:
+            continue
+        fields = {k.lower(): v.strip() for k, v in BIB_FIELD_RE.findall(text[key_end + 1:j - 1])}
+        author = fields.get("author", "")
+        title = fields.get("title", "")
+        year = fields.get("year", "")
+        venue = (fields.get("journal") or fields.get("booktitle")
+                 or fields.get("publisher") or fields.get("howpublished") or "")
+        parts = [p for p in (author, title, venue, year) if p]
+        items.append(f"\\bibitem{{{key}}} {'. '.join(parts)}")
+    return items
+
+
+def check_frozen_references(root: Path, section_refs: list[str], frozen: dict) -> list[str]:
+    """Warn when a frozen claim is never referenced via its macro, or when its
+    raw value appears as a bare number in the sections."""
+    if not frozen:
+        return []
+    _, skipped = macros_for_frozen(frozen)
+    warnings = []
+    text = "\n".join(
+        (root / s).read_text(encoding="utf-8-sig") for s in section_refs if (root / s).is_file()
+    )
+    for cid, c in sorted(frozen.items()):
+        if cid in skipped:
+            continue
+        macro = "\\" + sanitize_macro_name(cid)
+        if macro in text:
+            continue
+        val = c.get("value")
+        raw = str(val) if isinstance(val, (int, float, str)) and not isinstance(val, bool) else None
+        if raw and raw in text:
+            warnings.append(
+                f"frozen claim {cid}: raw value {raw!r} appears in the text; reference {macro} instead")
+        else:
+            warnings.append(f"frozen claim {cid}: never referenced via {macro} in the sections")
+    return warnings
+
+
+def estimate_pages(root: Path, section_refs: list[str]) -> int:
+    """Rough page estimate: CJK chars / 850 + latin tokens / 1100 per A4 page."""
+    cjk = latin = 0
+    for s in section_refs:
+        p = root / s
+        if not p.is_file():
+            continue
+        t = p.read_text(encoding="utf-8-sig")
+        cjk += len(re.findall(r"[\u4e00-\u9fff]", t))
+        latin += len(re.findall(r"[A-Za-z0-9]+", t))
+    return max(1, round(cjk / 850 + latin / 1100))
+
+
 def render_main(template: Path, root: Path, section_refs: list[str], frozen: dict,
-                ai_blocks: list[str]) -> str:
+                ai_blocks: list[str], bib_items: list[str] | None = None) -> str:
     template_text = template.read_text(encoding="utf-8")
     inputs = "\n".join(f"\\input{{{ref}}}" for ref in section_refs)
-    macros = "\n".join(
-        f"\\newcommand{{\\{sanitize_macro_name(cid)}}}"
-        f"{{{c.get('value')}}}" + (f"\\text{{{c.get('unit','')}}}" if c.get("unit") else "")
-        for cid, c in sorted(frozen.items())
-    )
+    macros, _ = macros_for_frozen(frozen)
     ai = "\n\n".join(ai_blocks)
+    refs = "\n".join(bib_items or [])
     return (
         template_text
         .replace("__INPUTS__", inputs)
         .replace("__FROZEN_MACROS__", macros)
         .replace("__AI_DECLARATION__", ai)
+        .replace("__REFERENCES__", refs)
     )
 
 
 def build_report(root: Path, section_refs: list[str], frozen: dict, sources: list[str]) -> dict:
     total_chars = sum((root / s).stat().st_size for s in section_refs if (root / s).is_file())
+    _, skipped = macros_for_frozen(frozen)
+    bibitems = parse_bib_to_bibitems(root / "paper" / "refs.bib")
     return {
         "schema_version": 1,
         "sections": section_refs,
         "section_count": len(section_refs),
-        "frozen_macros": sorted(sanitize_macro_name(cid) for cid in frozen),
+        "frozen_macros": sorted(sanitize_macro_name(cid) for cid in frozen if cid not in skipped),
         "frozen_count": len(frozen),
+        "skipped_claims": skipped,
+        "frozen_reference_warnings": check_frozen_references(root, section_refs, frozen),
+        "bibitem_count": len(bibitems),
         "ai_declaration_sources": sources,
         "approx_paper_chars": total_chars,
-        "approx_pages_est": max(1, round(total_chars / 1600)),  # rough CJK chars/page
+        "approx_pages_est": estimate_pages(root, section_refs),
         "note": "Page estimate is a rough guide; enforce contest limits with a LaTeX build audit.",
     }
 
@@ -143,11 +260,13 @@ def main():
                 "or supply --template (e.g. your own CUMCMThesis-based main.tex fetched per docs/paper-build.md)."
             )
         report = build_report(root, sections, frozen, ai_sources)
+        bibitems = parse_bib_to_bibitems(root / "paper" / "refs.bib")
         if a.dry_run:
             print(json.dumps(report, ensure_ascii=False, indent=2))
             return 0
         main_tex = root / "paper" / "main.tex"
-        main_tex.write_text(render_main(template, root, sections, frozen, ai_blocks), encoding="utf-8")
+        main_tex.write_text(render_main(template, root, sections, frozen, ai_blocks, bibitems),
+                            encoding="utf-8")
         (root / "paper" / "build_report.json").write_text(
             json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print(json.dumps({"status": "PASS", "main_tex": str(main_tex.relative_to(root)),

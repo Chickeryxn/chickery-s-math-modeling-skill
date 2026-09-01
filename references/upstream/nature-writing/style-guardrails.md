@@ -1,3 +1,4 @@
+<!-- Source: nature-skills (Apache-2.0), commit ebd722e -- see references/upstream/nature-writing/UPSTREAM.md -->
 # Style Guardrails
 
 Use this file for mechanical and stylistic checks after the main rewrite. This file should refine prose and correctness, not override the main writing strategy in `SKILL.md`.

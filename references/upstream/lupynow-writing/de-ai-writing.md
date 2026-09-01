@@ -1,3 +1,4 @@
+<!-- Source: Lupynow/math-modeling-skills (MIT), commit 3a9428c -- see references/upstream/lupynow-writing/UPSTREAM.md -->
 # 去AI味写作指南
 
 > 基于 Wikipedia "Signs of AI writing" 研究整理，针对数学建模竞赛论文的 AI 痕迹识别与去除方法论。

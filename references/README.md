@@ -22,8 +22,8 @@ G1 PROBLEM_FRAMED（问题框架化）→ G2 METHOD_SCREENED（方法筛选，�
 ## 数字唯一真相源
 论文中出现的每个数字必须来自 results/Qx/reports/frozen_numbers.json；任何改动都要记录变更并重新冻结，禁止手改。
 
-## 双图引擎路由
-常规图/示意图 → sci-box；期刊级/发表质量图 → nature-figure；诊断图（类型1）永不进论文。
+## 绘图引擎（现行）
+本仓库统一由 `math-figure-generator`（matplotlib）按 Type 1–4 图型生成并渲染校验（Type 1 诊断图永不进论文）。上游 sci-box / nature-figure 仅作理念溯源，不引入其引擎或模板代码（无许可证，见 `references/upstream/README.md`）。
 
 ## 上游知识资产层（upstream/）
 

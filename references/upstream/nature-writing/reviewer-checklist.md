@@ -1,4 +1,5 @@
-﻿# Reviewer checklist for statistical reporting
+<!-- Source: nature-skills (Apache-2.0), commit ebd722e -- see references/upstream/nature-writing/UPSTREAM.md -->
+# Reviewer checklist for statistical reporting
 
 Use this file before final delivery. It converts the audit into reviewer-facing risk and concrete author actions.
 

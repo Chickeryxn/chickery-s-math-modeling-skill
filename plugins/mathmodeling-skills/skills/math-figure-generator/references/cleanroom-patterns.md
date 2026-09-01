@@ -30,7 +30,8 @@ def paired_raincloud(ax, a, b, label_a='Group A', label_b='Group B'):
         grid = np.linspace(x.min() - 1, x.max() + 1, 200)
         dens = kde(x, grid) / kde(x, grid).max() * 0.35
         ax.fill_betweenx(grid, i, i + dens, alpha=0.35, color=color)
-        ax.plot([i, i + dens], grid, lw=0.8, color=color)
+        ax.plot([i] * len(grid), grid, lw=0.8, color=color)
+        ax.plot((i + dens).tolist(), grid, lw=0.8, color=color)
         jit = rng.uniform(-0.08, 0.08, size=len(x))
         ax.scatter(i + jit, x, s=8, alpha=0.5, color=color, edgecolors='none')
         ax.boxplot(x, positions=[i + 0.42], widths=0.12, showfliers=False, patch_artist=True,
@@ -149,4 +150,5 @@ def correlation_pairgrid(fig, X, names):
 
 - All patterns are **simulated-data examples**: replace the data with the model's real outputs; never claim these simulated figures reproduce any source study.
 - Type 1 diagnostics stay internal; only Type 3/4 versions (with real data, render-checked) enter the paper.
-- See also the publication rules in the repository-level `references/upstream/nature-figure/` (figure contract, QA contract, PALETTE) and `references/upstream/lupynow-writing/figure-and-code-guide.md` (Figure Contract).
+- **Color**: the canonical palette for this skill is `references/color-systems.md` (primary `#1A6FC4`, baseline grey). The upstream `references/upstream/nature-figure/api.md` `DEFAULT_COLORS` are reference material only — do not mix two palettes in one figure.
+- See also the publication rules in the repository-level `references/upstream/nature-figure/` (figure contract, QA contract) and `references/upstream/lupynow-writing/figure-and-code-guide.md` (Figure Contract, matplotlib-only).
