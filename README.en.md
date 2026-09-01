@@ -7,10 +7,10 @@
 | Badge | Value |
 |---|---|
 | License | [MIT](LICENSE) |
-| Version | 0.4.1 (plugin manifests in sync) |
+| Version | 0.4.2 (plugin manifests in sync) |
 | Runtime | Python 3 (standard library only, no third-party dependencies) |
 | Platforms | Windows / Linux / macOS |
-| Tests | 68 cases, `python scripts/run_tests.py` all green |
+| Tests | 81 cases, `python scripts/run_tests.py` all green |
 
 ## Table of Contents
 
@@ -26,6 +26,7 @@
 - [FAQ](#faq)
 - [Glossary](#glossary)
 - [Upstream integration](#upstream-integration)
+- [Learning and review](#learning-and-review)
 - [Limitations](#limitations)
 - [License and acknowledgements](#license-and-acknowledgements)
 
@@ -107,7 +108,7 @@ Every subquestion (Q1, Q2, …) advances independently through the same gates. G
 - Every number in the paper must come from `results/Qx/reports/frozen_numbers.json`; changing a value requires "thaw → update the source → rerun → re-freeze" with a change log entry, never manual edits.
 - Figures are typed: Type 1 diagnostics never enter the paper; only Type 3/4 may, and only after passing render checks.
 
-More diagrams: [gate lifecycle](docs/diagrams/archify/assets/mm-gate-lifecycle.png) · [28-skill architecture](docs/diagrams/archify/assets/mm-workspace-architecture.png) · [document freeze chain](docs/diagrams/archify/assets/mm-document-chain.png) (interactive versions under `docs/diagrams/archify/interactive/`).
+More diagrams: [gate lifecycle](docs/diagrams/archify/assets/mm-gate-lifecycle.png) · [28-skill architecture](docs/diagrams/archify/assets/mm-workspace-architecture.png) · [document freeze chain](docs/diagrams/archify/assets/mm-document-chain.png) (interactive HTML is generated on demand with Node ≥ 18; see `docs/diagrams/archify/README.md`).
 
 ## Skill catalog 28
 
@@ -217,13 +218,13 @@ See [`scripts/README.md`](scripts/README.md) for detailed arguments and [`schema
 ├── references/                    # Upstream knowledge base (historical decisions, advisory, not required)
 ├── schemas/                       # Domain-neutral contracts (4 schemas + README)
 ├── scripts/                       # 14 standard-library-only runner/validator scripts
-├── docs/diagrams/archify/         # Generic flow diagrams (PNG/SVG/interactive HTML/JSON sources)
+├── docs/diagrams/archify/         # Generic flow diagrams (PNG/SVG/JSON sources; interactive HTML generated on demand)
 └── tests/                         # 34 test cases
 ```
 
 ## Test coverage
 
-`python scripts/run_tests.py` (68 cases, standard library only) covers:
+`python scripts/run_tests.py` (81 cases, standard library only) covers:
 
 - Evidence-derived gate computation and monotonic transitions (including a full G1→G6 progression to `final_assembly`)
 - Human-decision provenance (fake human, unregistered evidence, escaping paths all rejected)
@@ -235,6 +236,13 @@ See [`scripts/README.md`](scripts/README.md) for detailed arguments and [`schema
 - Risk-probe list/dict shape compatibility
 - Paper assembly (`latex_assembly`: assembly, frozen-macro escaping, unsafe-value skipping, AI declaration)
 - Upstream asset validation (`validate_upstream_assets`) and AI-trace scanning (`ai_trace_checker`)
+- AI-trace scanning (`ai_trace_checker`, `--config` thresholds)
+- Abstract quality (`abstract_checker`) and learning summary (`learning_summary`)
+
+## Learning and review
+
+- [Learning path](docs/learning-path.md): six stations (read the problem, frame, choose methods, code/experiments, results/paper, reviewer's eye) explaining why each gate exists, with exercises and self-checks.
+- [Post-contest review](docs/post-contest-review.md): revisit which modeling judgments were validated or overturned; `python scripts/learning_summary.py .` generates a review skeleton.
 
 ## FAQ
 

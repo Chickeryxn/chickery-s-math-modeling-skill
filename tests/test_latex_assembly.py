@@ -9,7 +9,8 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from latex_assembly import (scan_sections, load_frozen_numbers, ai_declaration,
                             render_main, build_report, sanitize_macro_name,
                             macros_for_frozen, macro_value, latex_escape,
-                            parse_bib_to_bibitems, check_frozen_references, estimate_pages)
+                            parse_bib_to_bibitems, check_frozen_references, estimate_pages,
+                            scan_bare_numbers)
 
 
 def make_workspace():
@@ -143,6 +144,24 @@ class LatexAssemblyTests(unittest.TestCase):
         td, root = make_workspace()
         (root / "paper" / "sections" / "long.tex").write_text("字" * 1700, encoding="utf-8")
         self.assertEqual(estimate_pages(root, ["paper/sections/long.tex"]), 2)
+        td.cleanup()
+
+    def test_scan_bare_numbers_skips_frozen_and_years(self):
+        td, root = make_workspace()
+        (root / "paper" / "sections" / "q1.tex").write_text(
+            "结果 \\q1mainrmse 与 2026 年；另有裸值 3.14 与 2.4（应被冻结宏覆盖）。", encoding="utf-8")
+        frozen = {"q1_main_rmse": {"value": 2.4}}
+        r = scan_bare_numbers(root, ["paper/sections/q1.tex"], frozen)
+        self.assertGreaterEqual(r["count"], 1)
+        self.assertTrue(any("3.14" in s for s in r["sample"]))
+        self.assertFalse(any("2026" in s for s in r["sample"]))
+        td.cleanup()
+
+    def test_build_report_includes_bare_scan(self):
+        td, root = make_workspace()
+        report = build_report(root, ["paper/sections/q1.tex"], load_frozen_numbers(root), [])
+        self.assertIn("bare_number_scan", report)
+        self.assertIn("frozen_reference_warnings", report)
         td.cleanup()
 
 

@@ -7,10 +7,10 @@
 | 徽章 | 值 |
 |---|---|
 | 许可 | [MIT](LICENSE) |
-| 版本 | 0.4.1（插件 manifest 同步） |
+| 版本 | 0.4.2（插件 manifest 同步） |
 | 运行环境 | Python 3（仅标准库，无第三方依赖） |
 | 平台 | Windows / Linux / macOS |
-| 测试 | 68 个用例，`python scripts/run_tests.py` 全绿 |
+| 测试 | 81 个用例，`python scripts/run_tests.py` 全绿 |
 
 ## 目录
 
@@ -26,6 +26,7 @@
 - [常见问题 FAQ](#常见问题-faq)
 - [术语表](#术语表)
 - [上游融合](#上游融合)
+- [学习与复盘](#学习与复盘)
 - [限制与边界](#限制与边界)
 - [许可与致谢](#许可与致谢)
 
@@ -107,7 +108,7 @@ problem-parser → problem-classifier → data-auditor-cleaner → workflow-orch
 - 论文中出现的每个数字必须来自 `results/Qx/reports/frozen_numbers.json`；改数要走「解冻 → 改源头 → 重跑 → 重冻结」并记录变更日志，禁止手改。
 - 图分四型：Type 1 诊断图只做内部调试，永不进论文；Type 3/4 才进论文并须通过渲染校验。
 
-更多状态机与证据链图示：[门禁生命周期](docs/diagrams/archify/assets/mm-gate-lifecycle.png) · [28 技能架构](docs/diagrams/archify/assets/mm-workspace-architecture.png) · [文档冻结链](docs/diagrams/archify/assets/mm-document-chain.png)（交互版见 `docs/diagrams/archify/interactive/`）。
+更多状态机与证据链图示：[门禁生命周期](docs/diagrams/archify/assets/mm-gate-lifecycle.png) · [28 技能架构](docs/diagrams/archify/assets/mm-workspace-architecture.png) · [文档冻结链](docs/diagrams/archify/assets/mm-document-chain.png)（交互 HTML 为生成物不入库，可按需用 Node 本地再生成，见 `docs/diagrams/archify/README.md`）。
 
 ## 技能清单 28 个
 
@@ -223,7 +224,7 @@ problem-parser → problem-classifier → data-auditor-cleaner → workflow-orch
 
 ## 测试覆盖
 
-`python scripts/run_tests.py`（68 个用例，全标准库）覆盖：
+`python scripts/run_tests.py`（81 个用例，全标准库）覆盖：
 
 - 门禁证据推导与单调迁移（含完整 G1→G6 推进链到 `final_assembly`）
 - 人类决策溯源（伪造人类、未注册证据、路径逃逸均被拒绝）
@@ -233,8 +234,15 @@ problem-parser → problem-classifier → data-auditor-cleaner → workflow-orch
 - 模型契约结构、技能树同步、分层 QA
 - 三类合成场景（回归 / 排程 / 动态事件）端到端测试
 - 风险探针 list/dict 两种结构兼容
-- 论文装配（`latex_assembly`：装配/冻结宏转义/非安全值跳过/AI 声明）
-- 上游资产校验（`validate_upstream_assets`）与 AI 痕迹扫描（`ai_trace_checker`）
+- 论文装配（`latex_assembly`：装配/冻结宏转义/非安全值跳过/AI 声明/裸数字扫描）
+- 上游资产校验（`validate_upstream_assets`，含 SHA-256 漂移与 NOTICE 交叉）
+- AI 痕迹扫描（`ai_trace_checker`，含 `--config` 自定义阈值）
+- 摘要质量检查（`abstract_checker`）与学习摘要生成（`learning_summary`）
+
+## 学习与复盘
+
+- [学习路径](docs/learning-path.md)：6 站路线（读题→框架→选法→实验→论文→审稿视角），讲清每个门禁的"为什么"，配练习与自检——把"机械正确性交给 AI、建模判断练成自己的本事"。
+- [赛后复盘](docs/post-contest-review.md)：用决策账本回看"哪些建模判断被结果验证/推翻"，`python scripts/learning_summary.py .` 生成复盘骨架。
 
 ## 常见问题 FAQ
 

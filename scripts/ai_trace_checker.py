@@ -50,22 +50,50 @@ def count_words(text: str) -> int:
     return cjk + latin
 
 
-def analyze(text: str) -> dict:
+def analyze(text: str, limits=None, groups=None, em_dash_limit: int = 2) -> dict:
     lower = text.lower()
     words = max(count_words(text), 1)
+    limits = limits if limits is not None else LIMITS
+    groups = groups if groups is not None else GROUPS
     hits = []
-    for token, limit in LIMITS.items():
+    for token, limit in limits.items():
         count = lower.count(token.lower())
         hits.append({"token": token, "count": count, "limit": limit, "ok": count <= limit})
-    for group, limit in GROUPS:
+    for group, limit in groups:
         count = sum(lower.count(t.lower()) for t in group)
         hits.append({"token": "+".join(group) + " (combined)", "count": count,
                      "limit": limit, "ok": count <= limit})
     em = len(EM_DASH_RE.findall(text))
-    hits.append({"token": "em-dash", "count": em, "limit": 2, "ok": em <= 2})
+    hits.append({"token": "em-dash", "count": em, "limit": em_dash_limit, "ok": em <= em_dash_limit})
     problems = [h for h in hits if not h["ok"]]
     verdict = "PASS" if not problems else "WARN"
     return {"word_count": words, "verdict": verdict, "hits": hits, "problems": problems}
+
+
+def load_config(path: Path) -> dict:
+    """Load an optional JSON config: {"limits": {...}, "groups": [[...], n], "em_dash_limit": n}."""
+    if not path.is_file():
+        return {}
+    data = json.loads(path.read_text(encoding="utf-8-sig"))
+    cfg = {}
+    if isinstance(data.get("limits"), dict):
+        cfg["limits"] = {str(k): int(v) for k, v in data["limits"].items()}
+    raw_groups = data.get("groups")
+    if isinstance(raw_groups, list):
+        parsed_groups = []
+        well_formed = True
+        for g in raw_groups:
+            if (isinstance(g, list) and len(g) == 2 and isinstance(g[0], list)
+                    and all(isinstance(t, str) for t in g[0]) and isinstance(g[1], int)):
+                parsed_groups.append(([str(t) for t in g[0]], int(g[1])))
+            else:
+                well_formed = False
+                break
+        if well_formed and parsed_groups:
+            cfg["groups"] = parsed_groups
+    if isinstance(data.get("em_dash_limit"), int):
+        cfg["em_dash_limit"] = data["em_dash_limit"]
+    return cfg
 
 
 def main():
@@ -73,9 +101,12 @@ def main():
     ap.add_argument("file", nargs="?", help="text file to scan (default: stdin)")
     ap.add_argument("--strict", action="store_true", help="exit 2 when any limit is exceeded")
     ap.add_argument("--json", action="store_true", help="print JSON report")
+    ap.add_argument("--config", type=Path, default=None,
+                    help="JSON config overriding limits/groups/em_dash_limit")
     a = ap.parse_args()
     text = Path(a.file).read_text(encoding="utf-8") if a.file else sys.stdin.read()
-    report = analyze(text)
+    cfg = load_config(a.config) if a.config else {}
+    report = analyze(text, **cfg)
     if a.json:
         print(json.dumps(report, ensure_ascii=False, indent=2))
     else:

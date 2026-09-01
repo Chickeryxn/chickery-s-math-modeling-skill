@@ -164,6 +164,43 @@ def parse_bib_to_bibitems(path: Path) -> list[str]:
     return items
 
 
+NUMBER_TOKEN_RE = re.compile(r"(?<![\w.])(\d+(?:\.\d+)?)(?![\w.])")
+YEAR_RE = re.compile(r"^(19|20)\d{2}$")
+
+
+def scan_bare_numbers(root: Path, section_refs: list[str], frozen: dict, cap: int = 20) -> dict:
+    """Heuristically find bare numbers in the sections that do not match any
+    frozen macro value. Advisory only: years and non-data numbers are skipped.
+    Returns {count, sample: [...]}."""
+    _, skipped = macros_for_frozen(frozen)
+    macro_values = set()
+    for cid, c in sorted(frozen.items()):
+        if cid in skipped:
+            continue
+        v = c.get("value")
+        if isinstance(v, (int, float)) and not isinstance(v, bool):
+            macro_values.add(str(v))
+        elif isinstance(v, str):
+            macro_values.add(v)
+    sample, total = [], 0
+    for s in section_refs:
+        p = root / s
+        if not p.is_file():
+            continue
+        for no, line in enumerate(p.read_text(encoding="utf-8-sig").splitlines(), 1):
+            if "\\" in line:
+                # strip LaTeX comments (naive: from % to end of line)
+                line = line.split("%", 1)[0]
+            for m in NUMBER_TOKEN_RE.finditer(line):
+                token = m.group(1)
+                if YEAR_RE.match(token) or token in macro_values:
+                    continue
+                total += 1
+                if len(sample) < cap:
+                    sample.append(f"{s}:{no}: {token}")
+    return {"count": total, "sample": sample}
+
+
 def check_frozen_references(root: Path, section_refs: list[str], frozen: dict) -> list[str]:
     """Warn when a frozen claim is never referenced via its macro, or when its
     raw value appears as a bare number in the sections."""
@@ -231,6 +268,7 @@ def build_report(root: Path, section_refs: list[str], frozen: dict, sources: lis
         "frozen_count": len(frozen),
         "skipped_claims": skipped,
         "frozen_reference_warnings": check_frozen_references(root, section_refs, frozen),
+        "bare_number_scan": scan_bare_numbers(root, section_refs, frozen),
         "bibitem_count": len(bibitems),
         "ai_declaration_sources": sources,
         "approx_paper_chars": total_chars,
@@ -243,6 +281,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("root", type=Path)
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--check-only", action="store_true",
+                    help="run all checks and print the report without writing paper/main.tex")
+    ap.add_argument("--strict", action="store_true",
+                    help="with --check-only: exit 2 when frozen-reference or bare-number findings exist")
     ap.add_argument("--template", type=Path, default=None)
     a = ap.parse_args()
     root = a.root.resolve()
@@ -261,8 +303,11 @@ def main():
             )
         report = build_report(root, sections, frozen, ai_sources)
         bibitems = parse_bib_to_bibitems(root / "paper" / "refs.bib")
-        if a.dry_run:
+        if a.dry_run or a.check_only:
             print(json.dumps(report, ensure_ascii=False, indent=2))
+            if a.check_only and a.strict and (report["frozen_reference_warnings"]
+                                              or report["bare_number_scan"]["count"] > 0):
+                return 2
             return 0
         main_tex = root / "paper" / "main.tex"
         main_tex.write_text(render_main(template, root, sections, frozen, ai_blocks, bibitems),

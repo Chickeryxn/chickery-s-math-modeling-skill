@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.2 — 2026-09-01
+
+- **Size**: shrunk the repository without changing functionality — optimized the 4 diagram PNGs (re-save) and moved the 4 archify interactive HTML files (2.85 MB) out of git into on-demand regeneration (`generated/`, Node ≥ 18; JSON sources + SVG/PNG remain committed); updated README/archify docs and added `docs/diagrams/archify/generated/` to `.gitignore`.
+- **Learning/capability layer**: added `docs/learning-path.md` (6-station learning path explaining why each gate exists), `docs/post-contest-review.md` (post-contest review with decision-ledger playback), and a practice-problem index in `method-index.md`.
+- **Quality tooling**: added `scripts/abstract_checker.py` (abstract length / per-subquestion-number / AI-trace checks); `ai_trace_checker.py` supports `--config` custom thresholds; `latex_assembly.py` gained a bare-number scan (advisory), `--check-only`/`--strict` modes, and its report now includes the scan; `scripts/learning_summary.py` generates a post-contest review skeleton from ledgers + frozen numbers.
+- **Method card**: added a rationale chain (why chosen / why not / falsification condition) and a main-vs-baseline comparison-evidence table to the method-card contract.
+- Tests grew to 81 (abstract checker, learning summary, latex bare-number scan, ai-trace config, upstream-asset hash/NOTICE).
+
 ## 0.4.1 — 2026-09-01
 
 - Fixed `cleanroom-patterns.md` raincloud rendering bug (mixed scalar/array plot) and verified all six patterns execute end to end.

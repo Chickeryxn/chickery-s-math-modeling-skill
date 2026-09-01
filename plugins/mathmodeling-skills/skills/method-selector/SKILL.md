@@ -82,7 +82,21 @@ If these are missing, return to the producer skill rather than guessing.
 - Experiment budget:
 
 ## Shortlist
-| ID | Role | Mathematical idea | Why eligible | Main risk | Implementation cost |
+| ID | Role | Mathematical idea | Why eligible | Why not chosen (if not main) | Main risk | Implementation cost |
+
+## Rationale chain (teaching aid)
+For the main candidate, write one evidence-linked sentence per item — this is what the human will defend in the paper and what you should be able to explain to a teammate:
+- Why this method fits the output form and data (assumption match):
+- Why the baseline is a fair comparison:
+- What would make this choice wrong (falsification condition):
+
+## Main-vs-baseline comparison evidence (G2)
+| Dimension | Main candidate | Usable baseline | Note |
+|---|---|---|---|
+| Metric difference (probe) | | | quantified, not adjectives |
+| Complexity cost | | | runtime / implementation burden |
+| Interpretability | | | who can explain it |
+| Risk profile | | | from the risk probe |
 
 ## Baseline validity
 - Real task completed:

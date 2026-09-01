@@ -5,7 +5,7 @@ import sys, unittest
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-from ai_trace_checker import analyze, count_words
+from ai_trace_checker import analyze, count_words, load_config
 
 
 def hit(report, token):
@@ -64,6 +64,23 @@ class AiTraceCheckerTests(unittest.TestCase):
     def test_count_words_mixed(self):
         self.assertEqual(count_words("abc def"), 2)
         self.assertEqual(count_words("模型A与B"), 3 + 2)  # 3 CJK + 2 latin tokens
+
+    def test_config_overrides_limits(self):
+        cfg = load_config(Path(__import__("tempfile").mkdtemp()) / "x")
+        self.assertEqual(cfg, {})
+        import json, tempfile
+        td = tempfile.TemporaryDirectory()
+        p = Path(td.name) / "cfg.json"
+        p.write_text(json.dumps({"limits": {"furthermore": 5},
+                                 "groups": [[["notably", "crucially"], 0]],
+                                 "em_dash_limit": 5}), encoding="utf-8")
+        cfg = load_config(p)
+        self.assertEqual(cfg["limits"]["furthermore"], 5)
+        self.assertEqual(cfg["groups"], [(['notably', 'crucially'], 0)])
+        self.assertEqual(cfg["em_dash_limit"], 5)
+        r = analyze("Furthermore a. Furthermore b. Furthermore c.", **cfg)
+        self.assertEqual(r["verdict"], "PASS")  # 3 <= 5 under custom limit
+        td.cleanup()
 
 
 if __name__ == "__main__":
