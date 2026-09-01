@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "mode": "closed",
+  "rounds": 3,
+  "target_skills": ["mathematical", "innovation", "figure", "expression", "evidence", "completeness"],
+  "problem_source": "resource-library/assets/problems/",
+  "resource_categories": ["papers", "ideas", "figures", "formulas", "tables"],
+  "output_dir": "results/training",
+  "rules": {
+    "closed_phase_forbidden_paths": ["resource-library/"],
+    "reflector_must_cite": true,
+    "audit_dimensions": ["mathematical", "innovation", "figure", "expression", "evidence", "completeness"]
+  }
+}

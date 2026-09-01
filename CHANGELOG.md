@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0 — 2026-09-01
+
+- **Training mode (literacy training loop)**: added `resource-library/` — six showcase categories (papers/ideas/figures/formulas/tables/assets) with per-category READMEs and self-written example templates, plus `scripts/resource_index.py` (scans the library and (re)builds `index.json`; `--check` verifies it). The library is a literacy benchmark, never an answer key: the normal contest flow never reads it.
+- **Closed-book training skills ×3**: `training-solver` (solves a training problem without reading `resource-library/`), `training-reflector` (open-book literacy comparison per dimension, citing paths), `training-auditor` (runs mechanical checks, drafts the 6-dimension scorecard, aggregates the summary for human direction). Synced 3-way (`.codex` → `.claude` + plugin distribution).
+- **Scorecard tooling**: `scripts/training_scorecard.py` — scaffolds/validates each round's `scorecard.json` (six literacy dimensions with agent self-score + evidence path, null user scores, mechanical-check list) and aggregates rounds into `summary.json` (radar, ranking, mechanical tally).
+- **Configuration & docs**: `planning/training_config.json` (mode `closed`, 3 rounds, target skills, closed-phase forbidden paths) and `docs/training.md` (phase A closed-book solve → phase B literacy reflection → phase C multi-dimensional audit + human direction; artifacts under `results/training/roundN/`).
+- Tests grew to 124 (resource index, training scorecard).
+
 ## 0.4.4 — 2026-09-01
 
 - **Model diversity & abstraction**: added `references/abstraction-patterns.md` (abstraction four-step + 2–3 modeling paradigms per problem type + simplification ladder); `method-selector` now requires ≥2 modeling paradigms in the shortlist (unless the output locks one) and references the cookbooks; `method-index` gained the multi-paradigm/simplification section.

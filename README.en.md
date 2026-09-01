@@ -2,15 +2,15 @@
 
 [简体中文](README.md) | [English](README.en.md)
 
-**Math Modeling Skill** — an Agent skill library and executable workflow framework for mathematical-modeling contests (CUMCM / MCM/ICM): 28 Claude/Codex skills plus 14 standard-library-only validation scripts turn "AI writes code, humans make decisions, everything reproducible and auditable" into a machine-enforced process contract.
+**Math Modeling Skill** — an Agent skill library and executable workflow framework for mathematical-modeling contests (CUMCM / MCM/ICM): 31 Claude/Codex skills plus 14 standard-library-only validation scripts turn "AI writes code, humans make decisions, everything reproducible and auditable" into a machine-enforced process contract.
 
 | Badge | Value |
 |---|---|
 | License | [MIT](LICENSE) |
-| Version | 0.4.4 (plugin manifests in sync) |
+| Version | 0.5.0 (plugin manifests in sync) |
 | Runtime | Python 3 (standard library only, no third-party dependencies) |
 | Platforms | Windows / Linux / macOS |
-| Tests | 111 cases, `python scripts/run_tests.py` all green |
+| Tests | 124 cases, `python scripts/run_tests.py` all green |
 
 ## Table of Contents
 
@@ -18,7 +18,7 @@
 - [Features](#features)
 - [Quick start](#quick-start)
 - [Workflow and gates](#workflow-and-gates)
-- [Skill catalog 28](#skill-catalog-28)
+- [Skill catalog 31](#skill-catalog-31)
 - [Contract system](#contract-system)
 - [Command reference](#command-reference)
 - [Directory layout](#directory-layout)
@@ -27,6 +27,7 @@
 - [Glossary](#glossary)
 - [Upstream integration](#upstream-integration)
 - [Learning and review](#learning-and-review)
+- [Training mode](#training-mode)
 - [Limitations](#limitations)
 - [License and acknowledgements](#license-and-acknowledgements)
 
@@ -41,7 +42,7 @@ AI assistance is allowed in modeling contests, but letting an agent "free-wheel"
 
 ### The approach
 
-This project splits a contest into six gate stages (G1–G6). Passing each gate requires **evidence artifacts** that can be verified on disk; the validators under `scripts/` check them automatically, so gates are driven by evidence and can never be self-declared. Meanwhile, 28 single-purpose skills cover every step from reading the problem to delivering the paper, with a clear division of labor between AI and human.
+This project splits a contest into six gate stages (G1–G6). Passing each gate requires **evidence artifacts** that can be verified on disk; the validators under `scripts/` check them automatically, so gates are driven by evidence and can never be self-declared. Meanwhile, 31 single-purpose skills cover every step from reading the problem to delivering the paper, with a clear division of labor between AI and human.
 
 ### Three core principles
 
@@ -108,11 +109,11 @@ Every subquestion (Q1, Q2, …) advances independently through the same gates. G
 - Every number in the paper must come from `results/Qx/reports/frozen_numbers.json`; changing a value requires "thaw → update the source → rerun → re-freeze" with a change log entry, never manual edits.
 - Figures are typed: Type 1 diagnostics never enter the paper; only Type 3/4 may, and only after passing render checks.
 
-More diagrams: [gate lifecycle](docs/diagrams/archify/assets/mm-gate-lifecycle.png) · [28-skill architecture](docs/diagrams/archify/assets/mm-workspace-architecture.png) · [document freeze chain](docs/diagrams/archify/assets/mm-document-chain.png) (interactive HTML is generated on demand with Node ≥ 18; see `docs/diagrams/archify/README.md`).
+More diagrams: [gate lifecycle](docs/diagrams/archify/assets/mm-gate-lifecycle.png) · [skill architecture](docs/diagrams/archify/assets/mm-workspace-architecture.png) · [document freeze chain](docs/diagrams/archify/assets/mm-document-chain.png) (interactive HTML is generated on demand with Node ≥ 18; see `docs/diagrams/archify/README.md`).
 
-## Skill catalog 28
+## Skill catalog 31
 
-The skill tree ships as two complete standalone copies under `.codex/skills/` and `.claude/skills/` (`plugins/mathmodeling-skills/skills/` is the distribution copy). Grouped by pipeline stage:
+The skill tree ships as two complete standalone copies under `.codex/skills/` and `.claude/skills/` (`plugins/mathmodeling-skills/skills/` is the distribution copy). Grouped by pipeline stage, plus a training-mode group:
 
 ### Problem understanding
 
@@ -167,6 +168,14 @@ The skill tree ships as two complete standalone copies under `.codex/skills/` an
 | `consistency-auditor` | Cross-media checks of numbers, symbols, parameters, decisions, and files | `paper/audits/cross_media_consistency_audit.md` |
 | `quality-assurance-auditor` | Final five-dimension audit (workflow/evidence/method/paper/presentation) | `paper/qa_report.md` |
 
+### Training mode
+
+| Skill | One-line responsibility | Main outputs |
+|---|---|---|
+| `training-solver` | Closed-book solve of a training problem: never reads `resource-library/` | `results/training/roundN/solution/` |
+| `training-reflector` | Open-book literacy comparison against the resource library, per dimension | `results/training/roundN/reflection.md` |
+| `training-auditor` | Runs mechanical checks, drafts the 6-dimension literacy scorecard, aggregates for human direction | `results/training/roundN/scorecard.json`, `summary.json` |
+
 ## Contract system
 
 Domain-neutral contracts live in `schemas/` and are enforced by the validators in `scripts/`; **new problems must not modify the schemas** — problem semantics go into the separate `planning/model_contract.json`.
@@ -202,7 +211,7 @@ See [`scripts/README.md`](scripts/README.md) for detailed arguments and [`schema
 
 ```text
 .
-├── .codex/skills/                 # Codex skill tree (28 skills; sync source)
+├── .codex/skills/                 # Codex skill tree (31 skills; sync source)
 ├── .claude/skills/                # Claude skill tree (complete standalone copy)
 ├── plugins/mathmodeling-skills/   # Distribution package (two manifests + skills + hooks)
 ├── .agents/plugins/marketplace.json  # marketplace catalog entry
@@ -212,19 +221,21 @@ See [`scripts/README.md`](scripts/README.md) for detailed arguments and [`schema
 ├── methods/Qx/                    # Method cards, decision ledgers, risk probes, final explanations
 ├── code/                          # Model code and reviews (code/Qx/, code/matlab/Qx/)
 ├── results/Qx/                    # Experiment rounds, reports, solution package, frozen_numbers.json
+├── results/training/              # Training-mode artifacts (roundN/ and summary.json)
 ├── robustness/Qx/                 # Robustness evidence
 ├── paper/                         # Sections, figures, references, and the three final audits
 ├── workspace/                     # problem.txt, data_raw/ (read-only), data_clean/, papers/
+├── resource-library/              # Training-mode showcase library (papers/ideas/figures/formulas/tables/assets)
 ├── references/                    # Upstream knowledge base (historical decisions, advisory, not required)
 ├── schemas/                       # Domain-neutral contracts (4 schemas + README)
-├── scripts/                       # 14 standard-library-only runner/validator scripts
+├── scripts/                       # 16 standard-library-only runner/validator scripts
 ├── docs/diagrams/archify/         # Generic flow diagrams (PNG/SVG/JSON sources; interactive HTML generated on demand)
-└── tests/                         # 34 test cases
+└── tests/                         # 124 test cases
 ```
 
 ## Test coverage
 
-`python scripts/run_tests.py` (111 cases, standard library only) covers:
+`python scripts/run_tests.py` (124 cases, standard library only) covers:
 
 - Evidence-derived gate computation and monotonic transitions (including a full G1→G6 progression to `final_assembly`)
 - Human-decision provenance (fake human, unregistered evidence, escaping paths all rejected)
@@ -241,6 +252,7 @@ See [`scripts/README.md`](scripts/README.md) for detailed arguments and [`schema
 - Model quality gate (`model_quality_gate`), leakage heuristics (`leakage_check`), and claim coverage (`claim_coverage`)
 - Figure-set consistency (`figure_consistency_check`) and paper section-structure check (`section_structure_check`)
 - Abstract/conclusion quality (`abstract_checker`, with subquestion conclusion coverage)
+- Resource-library index (`resource_index`) and training scorecard (`training_scorecard`: template, evidence-path validation, cross-round aggregation, drift detection)
 
 ## Learning and review
 
@@ -249,6 +261,16 @@ See [`scripts/README.md`](scripts/README.md) for detailed arguments and [`schema
 - [Modeling self-review](docs/modeling-self-review.md): structured review between G2 and G4 (assumptions / complexity / interpretability / fairness / result baseline).
 - Time budget template: `planning/timeline.md` (72h/96h breakdown across the six stages).
 - Agent capability resources: `references/abstraction-patterns.md` (multi-paradigm abstraction), `references/publication-gallery.md` (publication figure standards), `references/paper-skeleton.md` (paper skeleton), `references/upstream/lupynow-cookbook/` (8 algorithm cookbooks), `references/upstream/nature-figure/` (incl. render audit scripts).
+
+## Training mode
+
+A dedicated literacy-training loop for high-quality modeling answers (full manual: [`docs/training.md`](docs/training.md)):
+
+- **Showcase library**: `resource-library/` keeps excellent papers, creative ideas, good figures, formulas, and tables in separate folders (`index.json` generated/verified by `python scripts/resource_index.py .`) — a literacy benchmark, not an answer key.
+- **Closed-book solve**: `training-solver` solves a training problem **without reading the library** (enforced by `planning/training_config.json` → `closed_phase_forbidden_paths` plus the skill's own rules).
+- **Open-book reflection**: `training-reflector` compares the solution with the showcase per dimension (mathematical / innovation / figure / expression / evidence / completeness) and writes transferable gaps.
+- **Multi-dimensional audit**: `training-auditor` first runs the mechanical checks (quality gate / claim coverage / abstract / AI-trace / leakage / figure consistency / section structure), then drafts the 6-dimension scorecard (`python scripts/training_scorecard.py round|summary ...`) so you can pick the next direction and finalize scores.
+- Each round lands in `results/training/roundN/` (solution/, reflection.md, scorecard.json); aggregation in `results/training/summary.json`. Normal contest flow never reads the library.
 
 ## FAQ
 
@@ -301,7 +323,7 @@ This project merges six upstream projects (XiaoMaColtAI, CUMCMThesis, Lupynow, n
 
 ## Upstream integration
 
-Without changing the governance core (AGENTS.md / schemas / scripts, G1–G6 gates, 28 skills, zero third-party runtime dependencies, single matplotlib engine), this project integrates the knowledge-rule layer and pure-standard-library tool layer of six upstream projects:
+Without changing the governance core (AGENTS.md / schemas / scripts, G1–G6 gates, the 28-skill skeleton plus 3 training skills, zero third-party runtime dependencies, single matplotlib engine), this project integrates the knowledge-rule layer and pure-standard-library tool layer of six upstream projects:
 
 | Upstream | What is integrated | How |
 |---|---|---|

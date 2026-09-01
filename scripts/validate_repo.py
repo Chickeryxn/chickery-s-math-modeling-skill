@@ -5,10 +5,12 @@ import argparse,json,subprocess,sys
 from pathlib import Path
 
 def run(cmd,cwd):
-    p=subprocess.run(cmd,cwd=cwd,text=True,capture_output=True)
+    p=subprocess.run(cmd,cwd=cwd,text=True,capture_output=True,encoding='utf-8',errors='replace')
     return {'command':cmd,'returncode':p.returncode,'stdout':p.stdout[-3000:],'stderr':p.stderr[-3000:]}
 
 def main():
+    try:sys.stdout.reconfigure(encoding='utf-8',errors='replace')
+    except Exception:pass
     ap=argparse.ArgumentParser();ap.add_argument('root',type=Path);a=ap.parse_args();r=a.root.resolve();reports=[];errors=[];py=sys.executable
     def add(cmd, required=True):
         rep=run(cmd,r);reports.append(rep)

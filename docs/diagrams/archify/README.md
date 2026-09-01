@@ -8,7 +8,7 @@
 
 | 图示 | 说明 | 静态预览 | JSON 源文件 |
 |---|---|---|---|
-| 工作区系统架构 | 展示 28 个 skills、调度层、人类决策区和产物目录 | [PNG](assets/mm-workspace-architecture.png) / [SVG 文件](assets/mm-workspace-architecture.svg) | [JSON](sources/mm-workspace-architecture.architecture.json) |
+| 工作区系统架构 | 展示 31 个 skills、调度层、人类决策区和产物目录 | [PNG](assets/mm-workspace-architecture.png) / [SVG 文件](assets/mm-workspace-architecture.svg) | [JSON](sources/mm-workspace-architecture.architecture.json) |
 | 通用门控流水线 | 展示 G1–G6 从问题理解到最终审计的主流程 | [PNG](assets/mm-generic-workflow.png) / [SVG 文件](assets/mm-generic-workflow.svg) | [JSON](sources/mm-generic-workflow.workflow.json) |
 | 门控生命周期 | 展示单个子问题在 G1–G6 之间的状态迁移和人工等待点 | [PNG](assets/mm-gate-lifecycle.png) / [SVG 文件](assets/mm-gate-lifecycle.svg) | [JSON](sources/mm-gate-lifecycle.lifecycle.json) |
 | 文档生成与冻结链 | 展示从问题解析、方法、代码、实验到论文审计的证据链 | [PNG](assets/mm-document-chain.png) / [SVG 文件](assets/mm-document-chain.svg) | [JSON](sources/mm-document-chain.dataflow.json) |

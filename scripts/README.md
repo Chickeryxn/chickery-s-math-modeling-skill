@@ -27,6 +27,8 @@ python scripts/validate_run_snapshot.py . results/Q1/experiments/run1
 - `validate_model_contract.py`: problem-specific contract shape check.
 - `qa_report.py`: layered status summary; it never upgrades a blocked gate.
 - `sync_plugin.py`: portable skill-tree synchronization and hash check.
+- `resource_index.py`: scans `resource-library/` and (re)builds `index.json`; `--check` verifies the index matches disk.
+- `training_scorecard.py`: literacy training scorecard contract. `round <dir>` scaffolds/validates one round's `scorecard.json` (six dimensions, agent self-scores with evidence paths, null user scores, mechanical-check list); `summary <dir>` aggregates rounds into `summary.json` (radar, ranking, mechanical tally); `--check` modes validate without writing.
 
 ## Run lifecycle
 

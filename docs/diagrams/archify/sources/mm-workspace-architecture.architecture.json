@@ -2,7 +2,7 @@
   "schema_version": 1,
   "diagram_type": "architecture",
   "meta": {
-    "title": "数学建模工作区系统架构（28 skills）",
+    "title": "数学建模工作区系统架构（31 skills）",
     "locale": "zh-CN",
     "quality_profile": "showcase",
     "views": [
@@ -37,6 +37,6 @@
   "cards": [
     { "dot": "cyan", "title": "主路径", "items": ["问题理解→方法筛选→代码生成→实验与结果→论文写作→审计与交付", "产物统一落盘 planning/methods/code/results/paper 等目录"] },
     { "dot": "emerald", "title": "调度层", "items": ["workflow-orchestrator 是唯一门控调度器", "它不亲自建模、写码或写论文，只路由下一动作"] },
-    { "dot": "rose", "title": "人类决策区", "items": ["人类模型师位于信任边界外，拥有建模判断权", "28 个 skill 按职责分为七组 + 产物目录"] }
+    { "dot": "rose", "title": "人类决策区", "items": ["人类模型师位于信任边界外，拥有建模判断权", "31 个 skill 按职责分为六组 + 产物目录"] }
   ]
 }

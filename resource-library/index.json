@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "categories": {
+    "assets": {
+      "entries": [],
+      "docs": [
+        "README.md"
+      ]
+    },
+    "figures": {
+      "entries": [
+        "example.md"
+      ],
+      "docs": [
+        "README.md"
+      ]
+    },
+    "formulas": {
+      "entries": [
+        "example-formula.md"
+      ],
+      "docs": [
+        "README.md"
+      ]
+    },
+    "ideas": {
+      "entries": [
+        "example-idea.md"
+      ],
+      "docs": [
+        "README.md"
+      ]
+    },
+    "papers": {
+      "entries": [
+        "example.md"
+      ],
+      "docs": [
+        "README.md"
+      ]
+    },
+    "tables": {
+      "entries": [
+        "example-table.md"
+      ],
+      "docs": [
+        "README.md"
+      ]
+    }
+  }
+}
