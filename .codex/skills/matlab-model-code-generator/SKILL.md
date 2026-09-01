@@ -64,3 +64,8 @@ Follow the `model-code-analyzer` contract, including approved decision ID, roles
 - Compatibility, seed, inputs, warnings, and errors are recorded.
 - Required concentration/degeneracy checks are saved.
 - Next handoff is `code-reviewer`.
+
+
+## Immutable run requirement
+
+Before and after execution, create an immutable run snapshot with `scripts/create_run_snapshot.py` or an equivalent MATLAB-produced snapshot. Record planned and actual budgets, input/config/code hashes, exact command, runtime, status, result reference, and validation reference. Use `NOT_RUN` when no compatible runtime is available.

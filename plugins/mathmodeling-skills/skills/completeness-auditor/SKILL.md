@@ -64,3 +64,8 @@ Globally require symbol table, assumptions, references, consistency audit, compl
 - Every gap names the missing evidence and producer/owner.
 - Staleness links to a material changed source.
 - Final verdict is `PASSED` only when all submission requirements are satisfied.
+
+
+## Status-aware completeness
+
+Classify each artifact as `CURRENT`, `STALE`, `MISSING`, or `INVALIDATED` using lineage evidence. Distinguish `MECHANICAL_PASS`, `SEMANTIC_PASS`, `HUMAN_JUDGMENT_PENDING`, `GATE_BLOCKED`, and `NOT_RUN`. Artifact count is not evidence of completion.

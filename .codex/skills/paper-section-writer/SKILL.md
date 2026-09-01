@@ -73,3 +73,8 @@ Transcribe these from the decision ledger with provenance. If absent, invoke a c
 - Physical meaning and contribution are human-owned.
 - Limitations and uncertainty are visible.
 - No Type 1 figure appears.
+
+
+## Writer gate enforcement
+
+Do not draft a final section from merely existing reports. Require current lineage, frozen-number references, human claim-scope provenance, and a passed G5 gate. If any prerequisite is absent, return `GATE_BLOCKED` with the exact producer and artifact needed.

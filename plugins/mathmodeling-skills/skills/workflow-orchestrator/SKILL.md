@@ -202,3 +202,10 @@ Do not paste a full dashboard or large JSON structure unless the user asks.
 - Code generation, freeze, paper writing, and final assembly flags match the gates.
 - Audit scope matches semantic impact.
 - Manifest and reported next action agree.
+
+
+## Executable enforcement
+
+Before routing a producer, call `scripts/workflow_guard.py` for the intended artifact kind. Treat the guard result as authoritative. Do not route around a blocked gate by writing the artifact first and backfilling the manifest. Gate status is separate from local check status; `PASS` for one audit does not advance a gate.
+
+Manifests must reference the current run snapshot, lineage, and named semantic checks. A transition must be monotonic and validated by `workflow_guard.py transition`.

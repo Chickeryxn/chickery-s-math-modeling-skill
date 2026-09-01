@@ -153,3 +153,20 @@ GitHub 首页使用 PNG 作为静态预览；交互版 HTML 和 JSON 源文件�
 当前模板分支：`mathmodeling-new-skeleton`
 
 主仓库：<https://github.com/Chickeryxn/chickery-s-math-modeling-skill>
+
+## Workflow integrity tooling
+
+The repository contains a domain-neutral execution layer in `scripts/` and `schemas/`. Use:
+
+```powershell
+python scripts/validate_repo.py .
+python scripts/validate_skill_trees.py .
+python scripts/sync_plugin.py .
+python scripts/workflow_guard.py . require Q1 model_code
+```
+
+`schemas/model_contract.schema.json` defines the generic model contract. A project-specific `model_contract.json` should be created during problem framing and must not be confused with the example schema.
+
+The core workflow is deliberately separated from competition-specific presets. Optional presets belong under `planning/presets/` and may supply defaults, but they do not override a problem-specific contract or human decisions.
+
+For each experiment, use `scripts/create_run_snapshot.py` to record actual execution inputs, code, configuration, budgets, environment, and validation references. Use `scripts/lineage.py` to create or assess artifact lineage and stale status.

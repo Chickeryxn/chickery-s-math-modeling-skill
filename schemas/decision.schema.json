@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "description": "Human decision provenance contract.",
+  "required": ["decision_id", "decision_type", "status", "source", "choice", "evidence_refs", "recorded_at"],
+  "status_values": ["SUGGESTED", "PENDING", "DECIDED", "SUPERSEDED", "STALE"],
+  "source_required_for_decided": ["source_type", "user_message_id", "user_verbatim_answer"],
+  "rules": [
+    "Only a source_type=user_answer record may be DECIDED.",
+    "AI summaries are metadata and may not replace user_verbatim_answer.",
+    "A superseding decision appends a new record and never overwrites history.",
+    "Evidence references must resolve to existing files or explicit user-provided evidence IDs."
+  ]
+}

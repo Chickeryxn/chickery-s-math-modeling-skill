@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "description": "Example only; replace with a problem-specific model contract during G1.",
+  "entities": [],
+  "inputs": [],
+  "state_functions": [],
+  "decision_variables": [],
+  "hard_constraints": [],
+  "soft_constraints": [],
+  "objective": {
+    "sense": "MAXIMIZE_OR_MINIMIZE",
+    "value_ref": "problem-specific",
+    "output_contract": {}
+  },
+  "evaluator": {
+    "evaluator_id": "problem-specific",
+    "implementation_ref": "problem-specific",
+    "event_policy": "problem-specific",
+    "aggregation": "problem-specific"
+  },
+  "uncertainty": null,
+  "validation_contract": {
+    "invariants": [],
+    "tolerances": {},
+    "independent_checks": []
+  }
+}

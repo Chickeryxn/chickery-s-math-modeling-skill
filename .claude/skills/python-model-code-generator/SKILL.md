@@ -77,3 +77,8 @@ Follow the schema in `model-code-analyzer`. Include:
 - Seed, inputs, versions, warnings, and errors are recorded.
 - Required concentration/degeneracy checks are saved.
 - Next handoff is `code-reviewer`.
+
+
+## Immutable run requirement
+
+Before and after execution, create an immutable run snapshot with `scripts/create_run_snapshot.py`. Record planned and actual budgets, hashes of inputs/config/code, command, environment, status, result reference, and validation reference. A degraded run must be marked `DEGRADED_SUCCESS` and may not be described as having completed the planned budget.

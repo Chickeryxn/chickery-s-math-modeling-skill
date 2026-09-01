@@ -78,3 +78,8 @@ When a canonical source changes after freeze:
 - Every package number matches the freeze.
 - Every modeling judgment traces to a human decision.
 - Writer can use the package without searching scattered results.
+
+
+## Freeze gate enforcement
+
+Before generating frozen numbers, call the workflow guard for `frozen_numbers` and require a verifiable human package sign-off. Every frozen value must reference the current run, result, code, config, and input hashes. Never freeze a value from a stale or competing snapshot.

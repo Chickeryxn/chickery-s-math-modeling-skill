@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "description": "Generic, problem-agnostic contract for mathematical-modeling workflows.",
+  "required": ["schema_version", "entities", "inputs", "state_functions", "decision_variables", "hard_constraints", "soft_constraints", "objective", "evaluator", "uncertainty", "validation_contract"],
+  "field_contract": {
+    "entities": "array of named entities; no domain-specific vocabulary is required",
+    "inputs": "array of objects with id, type, domain, unit, source",
+    "state_functions": "array of objects with id, arguments, output, definition_ref",
+    "decision_variables": "array of objects with id, type, domain, unit",
+    "hard_constraints": "array of machine-checkable constraints with id and expression_ref",
+    "soft_constraints": "array of constraints with id and penalty_ref",
+    "objective": "object with sense, value_ref, output_contract",
+    "evaluator": "object with evaluator_id, implementation_ref, event_policy, aggregation",
+    "uncertainty": "object describing uncertainty handling or null applicability",
+    "validation_contract": "object defining invariant tests, tolerances, and required independent checks"
+  },
+  "rules": [
+    "The contract is domain-neutral and must not encode a particular contest problem.",
+    "Every decision variable and hard constraint used by code must resolve to this contract.",
+    "Main, baseline, and verifier must declare the same objective and hard-constraint contract.",
+    "A missing or unresolved contract reference blocks downstream code generation."
+  ]
+}

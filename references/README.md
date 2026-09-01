@@ -24,3 +24,8 @@ G1 PROBLEM_FRAMED（问题框架化）→ G2 METHOD_SCREENED（方法筛选，�
 
 ## 合规
 AI 只负责机械正确性；建模判断、数字含义、假设框架、贡献论述由用户承担。每轮可输出 ai_use_disclosure.md 记录 AI 参与范围。
+
+
+## Core versus preset boundary
+
+This directory is a read-only index of historical and upstream knowledge. Its entries are not automatic requirements for a new problem. The executable core contract lives in `AGENTS.md`, `schemas/`, and `scripts/`; competition-specific choices must be explicitly activated as an optional preset under `planning/presets/` and remain subordinate to the current problem contract and human decisions.

@@ -83,3 +83,8 @@ Include:
 - Output concentration and fallback trigger are addressed.
 - Reports are generated only at decision points or final mode.
 - Human verdicts are read from or appended to the canonical JSONL ledger.
+
+
+## Evidence strength
+
+Before reporting a result, resolve the current lineage and actual run snapshot. Do not call a candidate stable when the executed budget differs from the plan without recording the degradation. Separate numerical verification from global-optimality claims and human result judgment.

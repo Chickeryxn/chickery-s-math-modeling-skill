@@ -35,3 +35,8 @@ During migration, skills may read these legacy artifacts:
 - `code/Qx/reviews/qx_<lang>_review.md`
 
 Do not require or emit them for new work when the new manifest, method card, JSONL decision ledger, probe summary, and JSON review exist.
+
+
+## Executable integrity checks
+
+Use the same repository-local Python validators described in `scripts/README.md`. The project-level gate, decision, lineage, run-snapshot, and skill-tree contracts apply equally in Codex and Claude contexts.

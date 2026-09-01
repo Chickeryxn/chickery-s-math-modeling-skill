@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "description": "Immutable experiment run snapshot contract.",
+  "required": ["run_id", "planned_budget", "actual_budget", "degraded", "input_manifest", "code_manifest", "config_hash", "command", "environment", "status", "result_ref", "validation_ref"],
+  "status_values": ["RUNNING", "SUCCESS", "FAILED", "INTERRUPTED", "DEGRADED_SUCCESS"],
+  "rules": [
+    "planned_budget and actual_budget are both required; actual execution may not be inferred from planned values.",
+    "degraded must be true when actual_budget differs materially from planned_budget.",
+    "result_ref and validation_ref must resolve to files when status is SUCCESS or DEGRADED_SUCCESS.",
+    "The snapshot is immutable after completion; a rerun creates a new run_id."
+  ]
+}

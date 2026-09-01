@@ -94,3 +94,8 @@ Migrate only completed human decisions. Preserve original timestamps and source 
 - Record is append-only and uniquely identified.
 - Human ownership and evidence are accurate.
 - Supersession and staleness preserve history.
+
+
+## Verifiable human provenance
+
+A decision may be marked `DECIDED` only when its `source` object contains `source_type=user_answer`, `user_message_id`, and the verbatim user answer. Store any AI normalization in a separate `ai_summary` field. `decided_by=human` without a verifiable user source is invalid and must be rejected by `scripts/validate_decisions.py`. Never convert an AI suggestion or pending card into a decision.

@@ -62,3 +62,8 @@ description: Perform the final submission-level audit of mathematical-modeling w
 - Blocking findings are explicit and actionable.
 - QA verdict agrees with consistency/completeness verdicts and sampled evidence.
 - Final assembly is recommended only when all three audits pass.
+
+
+## Layered verdict
+
+Report mechanical, semantic, provenance, human-judgment, and gate status independently. The overall verdict must be `CONDITIONAL` or `GATE_BLOCKED` if any blocking evidence is missing, even when individual scripts return `PASS`. Sample source artifacts and run snapshots directly.

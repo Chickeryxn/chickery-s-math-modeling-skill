@@ -109,3 +109,8 @@ Require:
 - Probe risks and fallback trigger are represented in `run_summary.json`.
 - Paths follow the experiment contract.
 - Handoff targets the correct language generator.
+
+
+## Contract and gate requirements
+
+Require a problem-specific `model_contract.json` validated by `scripts/validate_model_contract.py`. The contract must define the objective, hard constraints, variables, evaluator, and validation contract used by main, baseline, and verifier. Before writing a code plan, require a verifiable human method decision through `scripts/workflow_guard.py`.

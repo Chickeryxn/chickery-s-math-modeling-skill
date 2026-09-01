@@ -50,3 +50,8 @@ Required named checks use `PASS`, `FAIL`, or justified `NOT_APPLICABLE`. Runtime
 - Compatibility constraints are checked.
 - Run summary and outputs agree.
 - Verdict follows required check statuses and runtime evidence.
+
+
+## Independence and lineage checks
+
+Verify that MATLAB is an independent evaluator of the model contract rather than a reader of Python outputs. Check actual run snapshots, input/code/config hashes, and target-function agreement. Use `NOT_RUN` when execution evidence is absent; do not convert a static syntax check into a passing execution review.

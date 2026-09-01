@@ -1,4 +1,12 @@
 {
+  "schema_version": 1,
   "interaction_mode": "learning",
-  "rigor_profile": "lean"
+  "rigor_profile": "lean",
+  "network_policy": "unspecified",
+  "artifact_policy": {
+    "require_lineage": true,
+    "require_run_snapshot": true,
+    "require_human_decision_source": true,
+    "allow_downstream_on_blocked_gate": false
+  }
 }

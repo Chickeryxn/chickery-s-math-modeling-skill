@@ -57,3 +57,8 @@ Use legacy decision logs or Markdown reviews only during migration.
 - Every divergence identifies source, consumer, and expected repair.
 - Final audit covers all six check classes.
 - Verdict follows actual evidence rather than an item count.
+
+
+## Lineage and status checks
+
+Check sibling lineage records and source hashes for every canonical artifact. A changed source makes a consumer `STALE`; do not repair or silently select among competing snapshots. Report numerical consistency separately from gate eligibility and human-decision provenance.

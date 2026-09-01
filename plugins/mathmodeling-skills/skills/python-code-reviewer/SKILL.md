@@ -62,3 +62,8 @@ Statuses are `PASS`, `FAIL`, or `NOT_APPLICABLE` with a reason. Any required `FA
 - Main and baseline are approved and comparable.
 - Run summary and on-disk outputs agree.
 - Review verdict follows check statuses.
+
+
+## Independence and lineage checks
+
+In addition to the named checks, verify that main, baseline, and verifier have distinct implementation paths and that baseline/verifier do not use the main result as their only numeric input. Check the run snapshot and lineage hashes before accepting a result. Report `CONDITIONAL` or `GATE_BLOCKED` when the evidence is incomplete; do not infer independence from filenames.
