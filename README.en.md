@@ -7,10 +7,10 @@
 | Badge | Value |
 |---|---|
 | License | [MIT](LICENSE) |
-| Version | 0.6.0 (plugin manifests in sync) |
+| Version | 0.6.1 (plugin manifests in sync) |
 | Runtime | Python 3.10+ (standard library only, no third-party dependencies) |
 | Platforms | Windows / Linux / macOS |
-| Tests | 138 cases, `python scripts/run_tests.py` all green |
+| Tests | 154 cases, `python scripts/run_tests.py` all green |
 
 ## Table of Contents
 
@@ -235,12 +235,12 @@ See [`scripts/README.md`](scripts/README.md) for detailed arguments and [`schema
 ├── schemas/                       # Domain-neutral contracts (4 schemas + README)
 ├── scripts/                       # 27 standard-library-only scripts (incl. 1 bash-compatible wrapper)
 ├── docs/diagrams/archify/         # Generic flow diagrams (PNG/SVG/JSON sources; interactive HTML generated on demand)
-└── tests/                         # 138 test cases
+└── tests/                         # 154 test cases
 ```
 
 ## Test coverage
 
-`python scripts/run_tests.py` (138 cases, standard library only) covers:
+`python scripts/run_tests.py` (154 cases, standard library only) covers:
 
 - Evidence-derived gate computation and monotonic transitions (including a full G1→G6 progression to `final_assembly`)
 - Human-decision provenance (fake human, unregistered evidence, escaping paths all rejected)

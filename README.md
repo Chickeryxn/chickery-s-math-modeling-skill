@@ -7,10 +7,10 @@
 | 徽章 | 值 |
 |---|---|
 | 许可 | [MIT](LICENSE) |
-| 版本 | 0.6.0（插件 manifest 同步） |
+| 版本 | 0.6.1（插件 manifest 同步） |
 | 运行环境 | Python 3.10+（仅标准库，无第三方依赖） |
 | 平台 | Windows / Linux / macOS |
-| 测试 | 138 个用例，`python scripts/run_tests.py` 全绿 |
+| 测试 | 154 个用例，`python scripts/run_tests.py` 全绿 |
 
 ## 目录
 
@@ -235,12 +235,12 @@ problem-parser → problem-classifier → data-auditor-cleaner → workflow-orch
 ├── schemas/                       # 领域无关契约（4 个 schema + 说明）
 ├── scripts/                       # 27 个纯标准库脚本（含 1 个 bash 兼容包装）
 ├── docs/diagrams/archify/         # 通用流程图（PNG/SVG/交互 HTML/JSON 源）
-└── tests/                         # 138 个测试用例
+└── tests/                         # 154 个测试用例
 ```
 
 ## 测试覆盖
 
-`python scripts/run_tests.py`（138 个用例，全标准库）覆盖：
+`python scripts/run_tests.py`（154 个用例，全标准库）覆盖：
 
 - 门禁证据推导与单调迁移（含完整 G1→G6 推进链到 `final_assembly`）
 - 人类决策溯源（伪造人类、未注册证据、路径逃逸均被拒绝）

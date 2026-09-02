@@ -17,7 +17,7 @@ Log after each of these moments (do not log before work exists):
 - a session ends: one `log` entry summarizing the session and its next step;
 - a review/retro is due: `work_record.py retro "<title>"`.
 
-At session start, run `work_record.py check` once; if the index is stale, `work_record.py index`.
+At session start, run `work_record.py check` once; if the index is stale, `work_record.py index`. To bootstrap a session draft from existing artifacts (manifests/ledgers/run summaries/frozen numbers), run `work_record.py replay` (prints) or `work_record.py replay --write` (stores `sessions/<date>-replay.md` as an annotated draft — never a substitute for real entries).
 
 # Rules
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.1 — 2026-09-02
+
+- **Doc-claims regression net**: `tests/test_doc_claims.py` asserts README skill/test/script counts and plugin versions match disk, so the past "14/16 scripts" style drift fails CI instead of rotting.
+- **Hook guard**: `plugins/mathmodeling-skills/hooks/guard_frozen.py` — a PreToolUse hook (pure stdlib) that blocks writes to `frozen_numbers.json` and `workspace/data_raw/` (exit 2 + reason) while allowing everything else; wired into `hooks.json` (Claude reads it directly; DSH via the optional cordis patch in `docs/dsh-compatibility.md`); 9 tests.
+- **Work-record replay**: `work_record.py replay [--date] [--write]` regenerates a session draft from manifests, decision ledgers, run summaries, and frozen numbers (draft is `replay: true`, never appended to by `log`); 2 tests.
+- DSH smoke checklist added to `docs/dsh-compatibility.md`; archify 32-skill architecture JSON re-validated (showcase: 0 errors/0 warnings) and interactive HTML regenerated locally (not committed).
+- Tests grew to 154.
+
 ## 0.6.0 — 2026-09-01
 
 - **Work record tree**: added `records/` — a human-readable, evidence-linked process log (sessions/subjects/gates/decisions/retros) managed by `scripts/work_record.py` (init/log/gate/decision/retro/index/check; pure stdlib; advisory only, never gate-blocking); new `work-logger` skill (32nd) guiding when and what to record; manual `docs/work-record.md`.

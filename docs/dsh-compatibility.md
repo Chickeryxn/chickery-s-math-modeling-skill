@@ -48,9 +48,14 @@
 7. 图示再生成（可选）：archify CLI 需 Node ≥ 18，见 `docs/diagrams/archify/README.md`。
 8. 论文构建（可选）：xelatex 与 CUMCMThesis，见 `docs/paper-build.md`。
 
-## 五、可选：启用 SessionStart 守护横幅（hooks）
+## 五、可选：启用 hooks（守护横幅 + 冻结/原始数据守卫）
 
-DSH 0.7.0 默认不挂载任何钩子；需要复现 Claude 版 `hooks/hooks.json` 的启动横幅时，在 `<userData>\harness\cordis.patch.yml`（即 `$DSH_HOME/cordis.patch.yml`）追加：
+DSH 0.7.0 默认不挂载任何钩子。本仓库的 `plugins/mathmodeling-skills/hooks/hooks.json` 现在携带两类钩子：
+
+1. **SessionStart 横幅**（提醒，exit 0）：输出一行守护横幅。
+2. **PreToolUse 守卫**（拦截，exit 2）：`guard_frozen.py` 在写工具命中 `frozen_numbers.json` 或 `workspace/data_raw/` 时阻断并给出理由（冻结数字与原始数据不可改，见 AGENTS.md）。
+
+在 `<userData>\harness\cordis.patch.yml`（即 `$DSH_HOME/cordis.patch.yml`）追加以下补丁即可同时启用两者（Claude 插件侧无需补丁，读 hooks.json 即生效；Codex 不执行本项目 hooks）：
 
 ```yaml
 # 挂载 Claude 钩子桥，指向本仓库的 hooks 配置
@@ -60,16 +65,25 @@ plugins:
       configPath: "<仓库绝对路径>/plugins/mathmodeling-skills/hooks/hooks.json"
 ```
 
-或使用 Codex 桥（`@deepseek-ai/dsh-hooks-codex`，事件：SessionStart/UserPromptSubmit/PreToolUse/PostToolUse/Stop；仅同步命令钩子）。钩子经 shell 执行，JSON 载荷在 stdin；退出码 0=放行、2=阻断。**默认不启用**：零配置即可用完整工作流。
+或使用 Codex 桥（`@deepseek-ai/dsh-hooks-codex`，事件：SessionStart/UserPromptSubmit/PreToolUse/PostToolUse/Stop；仅同步命令钩子）。钩子经 shell 执行，JSON 载荷在 stdin；退出码 0=放行、2=阻断。`guard_frozen.py` 支持 `--check` 自测（`python plugins/mathmodeling-skills/hooks/guard_frozen.py --check`）。**默认不启用**：零配置即可用完整工作流。
 
-## 六、验证命令
+## 六、DSH 冒烟清单（约 10 分钟）
+
+1. 用 DSH 打开仓库根目录 → 会话技能目录应出现 32 个技能（含 `work-logger`）。
+2. `python scripts/validate_repo.py .` → `status: PASS`。
+3. `python scripts/run_tests.py` → 154 用例全绿。
+4. `python scripts/work_record.py init .`、`log "smoke" . --runtime dsh`、`check .` → 记录树可用；`log` 不带 `--runtime` 时应自动探测为 `dsh`。
+5. 打开一个决策点（或任意问答）后检查：若启用了 hooks 补丁，SessionStart 横幅与 PreToolUse 守卫按预期工作。
+6. 沙箱确认：默认 `workspace-write` 下可写仓库；尝试写仓库外路径应被拒绝并提示升级权限。
+
+## 七、验证命令
 
 ```powershell
 python scripts/validate_repo.py .                 # 仓库级总检（含 4 树）
 python scripts/sync_plugin.py . --check           # 4 树哈希一致性
 python scripts/validate_skill_trees.py .          # 4 树 + manifest 版本 + marketplace
 python scripts/work_record.py check .             # 记录树一致性
-python scripts/run_tests.py                       # 138 用例
+python scripts/run_tests.py                       # 154 用例
 ```
 
 ## 七、边界与保留项

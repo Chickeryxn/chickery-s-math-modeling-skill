@@ -23,6 +23,7 @@ Commands:
   python scripts/work_record.py gate Qx <G#> [root] --evidence p1,p2 [--note "..."]
   python scripts/work_record.py decision Qx <decision_id> [root] [--ledger path]
   python scripts/work_record.py retro "<title>" [root]
+  python scripts/work_record.py replay [root] [--date YYYY-MM-DD] [--write]
   python scripts/work_record.py index [root]
   python scripts/work_record.py check [root]
 
@@ -104,7 +105,7 @@ def gate_rank(g: str) -> int:
 def next_session_path(root: Path, date: str) -> Path:
     sdir = rec(root, "sessions")
     sdir.mkdir(parents=True, exist_ok=True)
-    existing = sorted(sdir.glob(f"{date}-*.md"))
+    existing = sorted(p for p in sdir.glob(f"{date}-*.md") if not p.name.endswith("-replay.md"))
     if existing:
         return existing[-1]
     return sdir / f"{date}-001.md"
@@ -278,6 +279,82 @@ def build_index(root: Path) -> str:
         f"## 复盘（{counts.get('retros', 0)}）\n\n{rows('retros')}")
 
 
+def cmd_replay(args) -> int:
+    """Replay machine-readable artifacts into a session-log draft.
+
+    Facts are collected from manifests, decision ledgers, run summaries, and
+    frozen numbers. The draft is a starting point: the agent verifies and
+    annotates it; it never replaces the real record. --write stores the draft
+    as sessions/<date>-replay.md; without --write it prints to stdout.
+    """
+    root = root_of(args)
+    if not rec(root).is_dir():
+        print("records/ missing; run `work_record.py init`", file=sys.stderr)
+        return 2
+    date = args.date or datetime.now().strftime("%Y-%m-%d")
+    entries = []
+    for p in sorted((root / "planning" / "manifests").glob("*.json")):
+        try:
+            d = json.loads(p.read_text(encoding="utf-8-sig"))
+        except Exception:
+            continue
+        if not isinstance(d, dict):
+            continue
+        gate = d.get("gate") or d.get("derived_gate") or d.get("stage")
+        entries.append((str(d.get("updated_at") or d.get("recorded_at") or ""),
+                        f"{p.stem} manifest: gate={gate}"))
+    for p in sorted((root / "methods").glob("*/q*_decisions.jsonl")):
+        q = p.parent.name
+        for no, line in enumerate(p.read_text(encoding="utf-8-sig").splitlines(), 1):
+            if not line.strip():
+                continue
+            try:
+                r = json.loads(line)
+            except Exception:
+                continue
+            if not isinstance(r, dict):
+                continue
+            ts = r.get("recorded_at", "")
+            entries.append((ts, f"{q} decision {r.get('decision_id')}: "
+                                f"{r.get('decision_type')} {r.get('status')} -> {r.get('choice')} "
+                                f"(ledger {p.relative_to(root).as_posix()}:{no})"))
+    for p in sorted((root / "results").glob("*/experiments/*/run_summary.json")):
+        try:
+            d = json.loads(p.read_text(encoding="utf-8-sig"))
+        except Exception:
+            continue
+        if not isinstance(d, dict):
+            continue
+        entries.append((str(d.get("recorded_at") or ""),
+                        f"run {d.get('question')} round{d.get('round')}: "
+                        f"{d.get('status')} methods={d.get('methods')}"))
+    for p in sorted((root / "results").glob("*/reports/frozen_numbers.json")):
+        try:
+            d = json.loads(p.read_text(encoding="utf-8-sig"))
+        except Exception:
+            continue
+        claims = d.get("claims") if isinstance(d, dict) else None
+        n = len(claims) if isinstance(claims, list) else 0
+        entries.append(("", f"frozen {p.parent.parent.name}: {n} claim(s)"))
+    entries.sort(key=lambda e: e[0])
+    body = (f"---\ndate: {date}\nsession: {date}-replay\nruntime: {detect_runtime()}\n"
+            f"replay: true\n---\n\n# 回放草稿 {date}\n\n"
+            f"> 由工件自动生成（manifests/账本/run_summary/frozen），供审阅补注；非正式记录。\n\n")
+    if not entries:
+        body += "（当日无工件条目）\n"
+    for ts, text in entries:
+        t = ts[11:19] if len(ts) >= 19 else "00:00:00"
+        body += f"## {t} - {text}\n\n"
+    if args.write:
+        out = rec(root, "sessions") / f"{date}-replay.md"
+        out.write_text(body, encoding="utf-8")
+        print(json.dumps({"status": "REPLAY_WRITTEN", "file": out.name,
+                          "entries": len(entries)}, ensure_ascii=False))
+    else:
+        print(body, end="")
+    return 0
+
+
 def cmd_index(args) -> int:
     root = root_of(args)
     if not rec(root).is_dir():
@@ -391,6 +468,12 @@ def main():
     p_retro.add_argument("title")
     p_retro.add_argument("root", nargs="?", type=Path, default=None)
     p_retro.set_defaults(func=cmd_retro)
+    p_replay = sub.add_parser("replay")
+    p_replay.add_argument("root", nargs="?", type=Path, default=None)
+    p_replay.add_argument("--date")
+    p_replay.add_argument("--write", action="store_true",
+                          help="write sessions/<date>-replay.md instead of printing")
+    p_replay.set_defaults(func=cmd_replay)
     args = ap.parse_args()
     return args.func(args)
 

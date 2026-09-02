@@ -189,5 +189,57 @@ class IndexCheckTests(unittest.TestCase):
         td.cleanup()
 
 
+class ReplayTests(unittest.TestCase):
+    def make_artifacts(self, root):
+        m = root / "planning" / "manifests" / "Q1.json"
+        m.parent.mkdir(parents=True)
+        m.write_text(json.dumps({"question": "Q1", "gate": "G2"}), encoding="utf-8")
+        led = root / "methods" / "Q1" / "q1_decisions.jsonl"
+        led.parent.mkdir(parents=True)
+        led.write_text(json.dumps({"decision_id": "q1_method_choice", "decision_type": "method_choice",
+                                   "status": "DECIDED", "choice": "M2",
+                                   "recorded_at": "2026-09-01T10:00:00+00:00"}) + "\n", encoding="utf-8")
+        rs = root / "results" / "Q1" / "experiments" / "round1" / "run_summary.json"
+        rs.parent.mkdir(parents=True)
+        rs.write_text(json.dumps({"question": "Q1", "round": 1, "status": "SUCCESS",
+                                  "methods": ["M2"]}), encoding="utf-8")
+        fz = root / "results" / "Q1" / "reports" / "frozen_numbers.json"
+        fz.parent.mkdir(parents=True)
+        fz.write_text(json.dumps({"claims": [{"claim_id": "c1"}, {"claim_id": "c2"}]}), encoding="utf-8")
+
+    def test_replay_write_and_check(self):
+        td, root = make_root()
+        wr.cmd_init(type("A", (), {"root": root})())
+        self.make_artifacts(root)
+        rc = wr.cmd_replay(type("A", (), {"root": root, "date": "2026-09-01", "write": True})())
+        self.assertEqual(rc, 0)
+        f = root / "records" / "sessions" / "2026-09-01-replay.md"
+        content = f.read_text(encoding="utf-8")
+        self.assertIn("gate=G2", content)
+        self.assertIn("q1_method_choice", content)
+        self.assertIn("round1", content)
+        self.assertIn("2 claim(s)", content)
+        wr.cmd_index(type("A", (), {"root": root})())
+        self.assertEqual(wr.cmd_check(type("A", (), {"root": root})()), 0)
+        td.cleanup()
+
+    def test_log_after_replay_uses_new_session(self):
+        td, root = make_root()
+        wr.cmd_init(type("A", (), {"root": root})())
+        self.make_artifacts(root)
+        wr.cmd_replay(type("A", (), {"root": root, "date": "2026-09-01", "write": True})())
+        wr.cmd_log(type("A", (), {"root": root, "text": "manual entry", "subject": None,
+                                  "artifacts": [], "tags": None, "runtime": None})())
+        sessions = list((root / "records" / "sessions").glob("*.md"))
+        names = [p.name for p in sessions]
+        self.assertTrue(any(n.endswith("-replay.md") for n in names))
+        manual = [p for p in sessions if not p.name.endswith("-replay.md")]
+        self.assertEqual(len(manual), 1)
+        self.assertIn("manual entry", manual[0].read_text(encoding="utf-8"))
+        replay = [p for p in sessions if p.name.endswith("-replay.md")][0]
+        self.assertNotIn("manual entry", replay.read_text(encoding="utf-8"))
+        td.cleanup()
+
+
 if __name__ == "__main__":
     unittest.main()

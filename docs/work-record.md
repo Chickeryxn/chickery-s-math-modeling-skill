@@ -29,9 +29,12 @@ python scripts/work_record.py log "<文本>" [root] [--subject Qx] [--artifacts 
 python scripts/work_record.py gate Qx <G#> [root] --evidence p1,p2 [--note "..."]   # G1..G6 / G2.5
 python scripts/work_record.py decision Qx <decision_id> [root] [--ledger 路径]       # 从账本镜像决策卡
 python scripts/work_record.py retro "<标题>" [root]                                  # 复盘骨架
+python scripts/work_record.py replay [root] [--date YYYY-MM-DD] [--write]            # 从工件回放会话草稿
 python scripts/work_record.py index [root]                       # 重建 records/README.md
 python scripts/work_record.py check [root]                       # 校验：索引同步/链接/时间单调/门禁不回退
 ```
+
+- `replay` 从 `planning/manifests/`、`methods/*/q*_decisions.jsonl`、`results/*/experiments/*/run_summary.json`、`results/*/reports/frozen_numbers.json` 自动生成当日会话草稿：默认打印到 stdout，`--write` 写入 `sessions/YYYY-MM-DD-replay.md`（frontmatter 标记 `replay: true`，`log` 不会误追加到草稿文件）。草稿供人工/agent 审阅补注，**不替代正式记录**。
 
 - `--runtime` 缺省自动探测：DSH 会话（`$env:DSH_SESSION_ID`）→ `dsh`；Claude 环境 → `claude`；否则 `codex`。
 - 退出码：0 PASS / 2 FAIL（与其余校验脚本一致）。
