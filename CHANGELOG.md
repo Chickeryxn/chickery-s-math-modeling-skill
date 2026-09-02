@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.1 — 2026-09-02
+
+- **README readability rewrite (structure C)**: README.md/README.en.md changed from an 18-section maintenance reference (~370 lines) to a landing page (~130 lines) — "what this is (30s)" → "quick start (4 steps)" → "core concepts (60s)" → documentation map → FAQ essentials. Skills full table, contracts, command reference, directory layout, test coverage, glossary, upstream, and limitations moved to the new `docs/reference.md`; a new `docs/README.md` indexes all manuals by goal (learning-path / training / work-record / post-contest-review / paper-build / dsh-compatibility / modeling-self-review / reference). No external links referenced README anchors, so no breakage; `test_doc_claims` still guards badge counts (32 skills / 171 tests / 28 scripts / version).
+
 ## 0.7.0 — 2026-09-02
 
 Full-audit hardening (7-angle parallel audit + empirical reproduction of every P1):
