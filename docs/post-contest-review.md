@@ -28,7 +28,7 @@
 
 ## 三、可复用资产沉淀（15 分钟）
 
-- 把本题的"方法—风险—教训"三条写成一行，追加到 `references/upstream/method-index/method-index.md` 的真题演练索引（或你的私人题库）。
+- 把本题的"方法—风险—教训"三条写成一行，追加到**可写区**：`resource-library/ideas/`（训练资源库，见其 README 格式）或 `planning/lessons/`（新建的个人题库目录）。不要把复盘条目写进 `references/upstream/method-index/method-index.md`——`references/` 是只读知识库且受 `hashes.json` 哈希保护，追加会破坏 `validate_upstream_assets` 校验（见 `references/README.md` 与 `planning/examples/README.md` 边界说明）。
 - 把"这次最好的一段结果分析/一张图"标记为模板（复制到你的作品集）。
 - 把"下次绝不这样做"写成一条红线（如：不验证假设就选模型）。
 

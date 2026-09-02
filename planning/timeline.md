@@ -1,7 +1,7 @@
 # 竞赛时间预算模板（Timeline）
 
 > 用途：把 72 小时（国赛）/ 96 小时（美赛）拆到 6 个门禁阶段，防止"前期磨蹭、后期赶工"。按你的 `rigor_profile`（lean/submission）调整密度；`learning` 模式提问多，各阶段适当放宽。
-> 记录方式：在 `planning/session_config.json` 同级放 `planning/timeline.md`，每阶段实际用时写在"实际"列；严重超支时回看 `docs/post-contest-review.md` 归因。
+> 记录方式：把本文件放在 `planning/timeline.md`，每阶段实际用时写在"实际"列；严重超支时回看 `docs/post-contest-review.md` 归因。
 
 ## 时间预算表（以 72h 为例；96h 可按比例 ×1.33）
 

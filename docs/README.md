@@ -6,7 +6,7 @@
 
 | 目标 | 文档 |
 |---|---|
-| 理解这套工作流为什么存在、怎么上手 | [学习路径](learning-path.md)（6 站：读题→框架→选法→实验→论文→审稿视角） |
+| 理解这套工作流为什么存在、怎么上手 | [学习路径](learning-path.md)（站 0–6 共 7 站；"6 站"通常指站 1–6 主体：读题→框架→选法→实验→论文→审稿视角） |
 | 跑一场真实竞赛 | [README](../README.md) 快速开始 → AGENTS.md 门禁 G1–G6 |
 | 用 DeepSeek Harness 桌面版 | [DSH 适配报告](dsh-compatibility.md)（技能发现/沙箱/冒烟清单/可选 hooks） |
 | 构建论文（xelatex + CUMCMThesis） | [论文构建](paper-build.md) |

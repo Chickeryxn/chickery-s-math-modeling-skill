@@ -1,0 +1,18 @@
+{
+  "schema_version": 2,
+  "artifact": "planning/examples/frozen_numbers.example.json",
+  "status": "CURRENT",
+  "created_from": [
+    {"path": "planning/examples/run_summary.example.json", "exists": true, "sha256": null}
+  ],
+  "validated_by": [
+    {"path": "planning/examples/python_review.example.json", "exists": true, "sha256": null}
+  ],
+  "consumed_by": ["paper-section-writer"],
+  "decision_ids": ["package_signoff-example"],
+  "input_hash": {},
+  "config_hash": {},
+  "code_hash": {},
+  "created_at": "2026-09-02T04:00:00+00:00",
+  "note": "示例（教学自引用）：真实工作区的 lineage 由 scripts/lineage.py make 生成（含 SHA-256 与 CURRENT/STALE/MISSING 状态），本文件仅示范字段结构，不属于任何真实门禁推导。"
+}

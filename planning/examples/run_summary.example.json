@@ -18,7 +18,7 @@
       "metrics_summary": {"cv": 0.18, "unique_scores": 40},
       "result_ref": "results/Q1/experiments/round1/metrics/main.json",
       "validation_ref": "results/Q1/experiments/round1/metrics/main_validation.json",
-      "run_snapshot": "results/Q1/experiments/round1/run_metadata.json",
+      "run_snapshot": "runs/round1/run_metadata.json",
       "warnings": [],
       "errors": []
     },
@@ -34,7 +34,7 @@
       "metrics_summary": {"cv": 0.12, "unique_scores": 40},
       "result_ref": "results/Q1/experiments/round1/metrics/baseline.json",
       "validation_ref": "results/Q1/experiments/round1/metrics/baseline_validation.json",
-      "run_snapshot": "results/Q1/experiments/round1/run_metadata.json",
+      "run_snapshot": "runs/round1/run_metadata.json",
       "warnings": [],
       "errors": []
     }
@@ -43,7 +43,7 @@
     "script": "code/Q1/q1_verifier.py",
     "result_ref": "results/Q1/experiments/round1/metrics/verifier.json",
     "validation_ref": "results/Q1/experiments/round1/metrics/verifier_validation.json",
-    "run_snapshot": "results/Q1/experiments/round1/run_metadata.json"
+    "run_snapshot": "runs/round1/run_metadata.json"
   },
   "independence": {"runtime_status": "STATICALLY_DISTINCT"},
   "comparison": {"main_vs_baseline": "主方法 CV 0.18 > 基线 0.12（区分度更强），扰动稳定性更优"},

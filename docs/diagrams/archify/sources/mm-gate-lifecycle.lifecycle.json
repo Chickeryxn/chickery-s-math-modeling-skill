@@ -9,7 +9,8 @@
       { "id": "main-rail", "label": "主流程", "focus": ["unframed","framed","screened","coding","frozen","audited"], "note": "从建模到终审的主状态推进。" },
       { "id": "human-waits", "label": "人类等待点", "focus": ["awaiting_choice","awaiting_judge"], "note": "等待人类定方法与判结果的两个挂起点。" },
       { "id": "recovery", "label": "回退与重试", "focus": ["coding","screened","frozen"], "note": "fallback 回 G2、解冻后重跑。" }
-    ]
+    ],
+    "note": "本图省略了 G5（PAPER_SECTION_READY，论文章节就绪）独立状态：frozen(G4) 后经 submission 装配直接到 audited(G6)。G5 在引擎与 AGENTS.md 中是独立门禁，此处仅因状态机图简化而并入。门禁编号口径：G1–G6 六关卡 + G2.5 人工选型点。"
   },
   "lanes": [
     { "id": "main", "label": "主流程状态" },

@@ -11,7 +11,7 @@
 | 综合评价 | TOPSIS、灰色关联、秩和比、FCE、DEA | 多指标打分/排名 | 方向/权重不当、分数集中 |
 | 排序稳定性 | 扰动分析、top-k 重叠 | 任何排名结果 | 排名脆弱 |
 
-参考：[Lupynow model-selection-matrix](../../references/upstream/lupynow-writing/model-selection-matrix.md)、[nature-figure 图契约](../../references/upstream/nature-figure/figure-contract.md)。
+参考：[Lupynow model-selection-matrix](../../lupynow-writing/model-selection-matrix.md)、[nature-figure 图契约](../../nature-figure/figure-contract.md)。
 
 ## 预测/估计类（prediction / estimation）
 
@@ -22,7 +22,7 @@
 | 机器学习 | RF、XGBoost、LightGBM、SVM | 特征多、非线性 | 数据量不足、泄漏、不可解释 |
 | 深度学习 | BP、LSTM（小数据慎用） | 序列/图像、数据量大 | 过拟合、可解释性差 |
 
-参考：XiaoMaColtAI `assets/02-预测类算法说明.md`（无许可证，仅按链接查阅）、Lupynow `cookbook-ml.md`（MIT，已并入写作层？未并入，仅参考）。
+参考：XiaoMaColtAI `assets/02-预测类算法说明.md`（无许可证，仅按链接查阅）、Lupynow `cookbook-ml.md`（MIT，仅参考，未并入写作层）。
 
 ## 优化/决策类（optimization / decision）
 

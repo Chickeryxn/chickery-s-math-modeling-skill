@@ -1,5 +1,6 @@
 # Upstream: nature-skills (writing / statistics / shared)
 
+> Reviewed at: 2026-09-02 (repository maintenance pass)
 - **Source repository**: https://github.com/Yuan1z0825/nature-skills
 - **Fixed commit**: `ebd722e18808442688bd205917a3e774195c258f` (shallow clone HEAD, reviewed 2026-09)
 - **License**: Apache-2.0 (root LICENSE). Imported verbatim; see `LICENSES/Apache-2.0.txt` and `NOTICE.md`.

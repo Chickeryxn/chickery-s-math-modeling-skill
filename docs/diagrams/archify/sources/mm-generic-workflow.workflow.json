@@ -9,7 +9,8 @@
       { "id": "main-path", "label": "子问题主路径", "focus": ["qx_g1","qx_g2","qx_g25","qx_g3","qx_g4","qx_g56"], "note": "任一子问题 Qx 走完整 G1→G6 门控链。" },
       { "id": "human-chain", "label": "人类决策链", "focus": ["cc1","decide","cc2","judge"], "note": "筛选前卡片→定方法→首轮后卡片→判结果。" },
       { "id": "lean-loop", "label": "lean 回环", "focus": ["qx_g3","qx_g4","qx_g56"], "note": "lean 在 G4 迭代，submission 才前进 G5/G6。" }
-    ]
+    ],
+    "note": "展示说明：门禁编号口径 = G1–G6 六道关卡 + G2.5 人工选型点（与 docs/reference.md 术语表一致）。图中把 G5（论文章节就绪）与 G6（三审通过）合并为一个阶段节点以压缩版面，二者在引擎与文档中仍是独立门禁；G2.5 是人工裁决点而非独立关卡，故不计入'六道门'。"
   },
   "lanes": [
     { "id": "qx", "label": "子问题 Qx" },

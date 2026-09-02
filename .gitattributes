@@ -6,6 +6,7 @@
 *.md      text eol=lf
 *.py      text eol=lf
 *.sh      text eol=lf
+*.m       text eol=lf
 *.json    text eol=lf
 *.jsonl   text eol=lf
 *.yml     text eol=lf
@@ -13,6 +14,9 @@
 *.tex     text eol=lf
 *.bib     text eol=lf
 *.txt     text eol=lf
+*.html    text eol=lf
+*.css     text eol=lf
+*.js      text eol=lf
 *.svg     text eol=lf
 *.gitignore text eol=lf
 .gitattributes text eol=lf

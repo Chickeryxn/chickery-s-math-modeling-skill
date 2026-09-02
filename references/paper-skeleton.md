@@ -25,7 +25,7 @@
 - **模型构建**：先写"为什么是这个结构"（引用方法卡 Rationale chain），再写公式；公式与代码变量必须一一对应。
 - **结果分析**：每段"数值→含义→与 baseline 对比→稳健性"四步；数字必须来自冻结宏（`\q1...`）。
 - **结论**：不得引入新数字；每问一个带数字的结论 + 一句适用边界。
-- **措辞**：用 `ai_trace_checker` 扫描；hedging 与证据强度匹配（见 paper-polisher 12 点）。
+- **措辞**：用 `ai_trace_checker` 扫描；hedging 与证据强度匹配（`paper-polisher` 的 12 点润色清单——该清单定义在 `.codex/skills/paper-polisher/SKILL.md` 内）。
 
 ## 使用流程（agent）
 

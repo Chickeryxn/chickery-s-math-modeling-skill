@@ -19,7 +19,9 @@ Licensed under the Apache License, Version 2.0. See `LICENSES/Apache-2.0.txt`.
 
 Source: https://github.com/Lupynow/math-modeling-skills · commit `3a9428c006cc1b977c6a72a531b739a62868a4bc`
 
-Imported verbatim (copyright retained) under `references/upstream/lupynow-writing/`: `de-ai-writing.md`, `self-review-framework.md`, `common-phrases.md`, `figure-and-code-guide.md`, `model-selection-matrix.md`.
+Imported verbatim (copyright retained) under `references/upstream/lupynow-writing/`: `de-ai-writing.md`, `self-review-framework.md`, `common-phrases.md`, `model-selection-matrix.md`.
+
+Modified import (copyright retained; trimmed to matplotlib-only guidance and annotated "已裁剪" in-file) under `references/upstream/lupynow-writing/`: `figure-and-code-guide.md`.
 
 Imported verbatim (copyright retained) under `references/upstream/lupynow-cookbook/` (8 algorithm cookbooks): `cookbook-optimization.md`, `cookbook-ml.md`, `cookbook-evaluation.md`, `cookbook-mechanistic.md`, `cookbook-statistical.md`, `cookbook-network.md`, `cookbook-clustering.md`, `cookbook-game-theory.md`.
 
@@ -40,7 +42,7 @@ Source: https://github.com/tt-a1i/archify · commit `7a16d30322f5bd09c832386faa9
 
 ## Self-authored
 
-`references/upstream/method-index/` (`method-index.md`, `xiaomacoltai-methodology.md`) and the skill reference files under `.codex/skills/*/references/` are original content written for this repository (MIT).
+`references/upstream/method-index/` (`method-index.md`, `xiaomacoltai-methodology.md`) and the skill reference files under each standalone tree's `skills/*/references/` (`.codex/`, `.claude/`, `.agents/`, and the synced `plugins/mathmodeling-skills/skills/` copies — the four trees are byte-identical) are original content written for this repository (MIT).
 
 ## Reporting
 

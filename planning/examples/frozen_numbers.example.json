@@ -1,9 +1,9 @@
 {
   "claims": [
     {
-      "claim_id": "q1_top_score",
-      "value": 0.873,
-      "unit": "无量纲综合得分",
+      "claim_id": "q1_cv_main",
+      "value": 0.18,
+      "unit": "无量纲（变异系数 CV）",
       "source_file": "planning/examples/run_summary.example.json",
       "source_locator": "$.methods[0].metrics_summary.cv",
       "frozen_at": "2099-01-01T00:00:00Z",

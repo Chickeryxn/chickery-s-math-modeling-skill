@@ -1,5 +1,6 @@
 # Upstream: nature-skills (figure rules)
 
+> Reviewed at: 2026-09-02 (repository maintenance pass)
 - **Source repository**: https://github.com/Yuan1z0825/nature-skills
 - **Fixed commit**: `ebd722e18808442688bd205917a3e774195c258f` (shallow clone HEAD, reviewed 2026-09)
 - **License**: Apache-2.0 (root LICENSE). Files below are imported verbatim from the upstream repo; Apache-2.0 requires retaining this notice and the license text (see `LICENSES/Apache-2.0.txt` and `NOTICE.md`).

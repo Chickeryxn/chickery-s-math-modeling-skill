@@ -41,7 +41,17 @@ def parse_upstream_md(text: str) -> dict:
         m = re.match(r"^-\s*\*\*([^*]+)\*\*[^:]*:\s*(.*)$", line.strip())
         if m:
             fields[m.group(1).strip()] = m.group(2).strip()
-    imported = re.findall(r"^\s*-\s*`([^`]+)`", text, flags=re.MULTILINE)
+    # Only collect ``- `file` `` bullets AFTER the "Imported files" field line,
+    # so backticked filenames mentioned in other fields (e.g. inside a License
+    # description) are not misread as imported files.
+    lines = text.splitlines()
+    imported = []
+    start = next((i for i, ln in enumerate(lines) if re.match(r"^-\s*\*\*Imported files\*\*", ln.strip())), None)
+    if start is not None:
+        for ln in lines[start:]:
+            m = re.match(r"^\s*-\s*`([^`]+)`", ln)
+            if m:
+                imported.append(m.group(1))
     return {"fields": fields, "imported": imported}
 
 
@@ -89,14 +99,25 @@ def validate(root: Path, notice_check: bool = True) -> dict:
             except Exception as exc:
                 errors.append(f"{rel}: invalid hashes.json: {exc}")
                 recorded = {}
+            if not isinstance(recorded, dict):
+                errors.append(f"{rel}: hashes.json must be a mapping of file -> sha256")
+                recorded = {}
             for name in imported:
                 p = sub / name
                 if not p.is_file():
                     continue
                 cur = sha256(p)
-                if recorded.get(name) and recorded.get(name) != cur:
+                if name not in recorded:
+                    errors.append(f"{rel}: imported file {name} missing from hashes.json "
+                                  f"— re-run with --write-hashes after a deliberate import update")
+                elif recorded.get(name) != cur:
                     errors.append(f"{rel}: hash drift for {name} (recorded {recorded.get(name)[:12]}…, "
                                   f"actual {cur[:12]}…) — re-import or update hashes.json")
+            # every recorded digest must map to a declared imported file
+            for name in recorded:
+                if name not in imported:
+                    errors.append(f"{rel}: hashes.json records undeclared file {name} "
+                                  f"(not listed under 'Imported files')")
         checked.append({"dir": rel, "files": len(imported),
                         "license": lic, "source": fields.get("Source repository", "")})
     if notice_check:

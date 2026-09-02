@@ -26,3 +26,4 @@
 ## 边界
 
 - 需要真实工作区上下文的校验（`validate_artifacts` 的血缘对账、`qa_report` 的 manifest 驱动审计、`check_frozen_freshness` 的 mtime 新鲜度）**不适用于示例目录**——示例文件路径是自引用的教学材料，不模拟真实门禁推进。
+- `frozen_numbers.example.json` 中的 `frozen_at: 2099-...` 是示例占位（避免教学文件因本地 mtime 被判 STALE）；真实冻结必须使用实际冻结时刻的 ISO-8601 时间戳（见 AGENTS.md Frozen Numbers）。示例内部数字、`source_locator`、`decision_id` 与账本记录相互一致，由 `tests/test_examples.py` 的跨示例断言守护。

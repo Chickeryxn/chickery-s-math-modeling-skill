@@ -6,7 +6,7 @@
 
 ## Goal and success criteria
 
-对 40 个城市按 12 项指标综合评价排序；要求权重客观、排序在 ±10% 权重扰动下 Top-10 稳定。
+对 40 个城市按 12 项指标综合评价排序；要求权重客观、排序在 ±5% 权重扰动下 Top-10 稳定（示例统一使用 ±5%：探针扰动、falsification 条件与对比证据表均同口径）。
 
 ## Human constraints
 
@@ -55,7 +55,7 @@
 
 ## Fallback trigger
 
-- Trigger: M1 探针中权重集中度（最大权重占比）> 0.8，或 ±5% 扰动 Top-10 重叠 < 0.8
+- Trigger: M1 探针显示（a）输出区分度退化（如唯一得分远小于对象数、CV 低于 0.15），或（b）指标冗余导致权重失真（`assumption_checks.indicator_redundancy` 的 max_corr 超过阈值 0.9，当前实测 0.62 未触发），或（c）±5% 扰动 Top-10 重叠 < 0.8。触发条件一律引用探针 JSON 里真实存在的字段，不引用探针未测量的量。
 - Evidence to evaluate: 复用 risk_probe_summary.example.json 的 perturbation_sensitivity 与 output_degeneracy 输出；触发后先跑 M2 探针再提交 human choice
 
 ## Compact history

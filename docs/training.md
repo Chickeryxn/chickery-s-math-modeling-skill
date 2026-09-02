@@ -61,7 +61,7 @@
 
 资源库不是训练闭环的硬性前提，可用**"以己为师"**冷启动：
 
-1. 把历次竞赛的归档（`workspace/archived/`）与赛题原件整理为第一批素材（论文/思路/图表），版权零风险；
+1. 把历次竞赛的归档（`workspace/archived/`）与赛题原件整理为第一批素材（论文/思路/图表），版权零风险；赛题原件同时可放入 `resource-library/assets/problems/`（即 `problem_source` 默认目录，首次使用需自建/已有占位说明）。
 2. 训练后把"本轮最佳片段"沉淀进资源库（`docs/post-contest-review.md` §三），让库随使用增长；
 3. 引入任何第三方素材前，确认你有权使用并标注来源（格式见 `resource-library/` 各类 README）。
 

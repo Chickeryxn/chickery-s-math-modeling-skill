@@ -1,5 +1,6 @@
 # Method index (clean-room)
 
+> Reviewed at: 2026-09-02 (repository maintenance pass)
 - **Source repository**: self-authored (inspired by XiaoMaColtAI/math-modeling-skill and Lupynow cookbooks; no upstream files copied)
 - **Nature**: Original content written for this repository. It summarizes method families and engineering practices **inspired by** upstream projects that carry no license or proprietary licenses, so their original files are NOT copied here:
   - XiaoMaColtAI/math-modeling-skill (root has no LICENSE; `tools/docx|pdf|xlsx` are Anthropic proprietary) — algorithm-library structure and the "M1/P1/P2/W1/W2" gate timing, re-expressed as mapping tables against this repository's G1–G6 gates.

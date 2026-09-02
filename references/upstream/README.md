@@ -21,10 +21,23 @@
 
 ## 使用约定
 
-- 技能引用时用相对路径（如 `../../references/upstream/nature-figure/figure-contract.md`）。
+- 技能引用时用相对路径，从技能目录起算：`../../references/upstream/nature-figure/figure-contract.md`（技能位于 `<tree>/skills/<skill>/`，上溯两级到仓库根；从 `references/upstream/` 内部则用 `../nature-figure/...`——不要写成 `../../references/upstream/...`，那会解析到不存在的 `references/references/upstream/`）。
 - 不修改被引入的上游文件内容；如需改编，复制到技能自己的 `references/` 再改并在头部注明来源。
 - 上游规则中的数字/断言（如"However 51 ≫ Furthermore 22"、Nature 图注 <250 词）为语料/历史统计，引用时标注时点。
 - 每个 `UPSTREAM.md` 可附加可选的 `Reviewed at: YYYY-MM-DD` 行，记录维护者最近一次复核时间（advisory，不强校验）；语料统计类断言继续标注时点引用。
+
+## 用法映射（四态清单）
+
+哪些文件可以直接用、哪些只可参考、哪些引用了本仓库未 vendor 的脚本：
+
+| 状态 | 含义 | 清单 |
+|---|---|---|
+| **已吸收** | 已改写入技能自有 references 或本库自有层，agent 优先用本地版 | `lupynow-writing/de-ai-writing.md`（→ `ai_trace_checker`/`paper-polisher`）、`model-selection-matrix.md`（→ `method-selector`）、`lupynow-cookbook/*`（→ `method-selector`/代码生成器）、`nature-writing/consistency-sweep.md`/`terminology-ledger.md`/`main-text-discipline.md`（→ `consistency-auditor`/`paper-polisher`） |
+| **可直读** | 与竞赛论文直接相关，按需加载原文 | `nature-figure/figure-contract.md`、`qa-contract.md`、`design-theory.md`、`api.md`、`multipanel-evidence-architecture.md`、`nature-figure` 三个审计脚本、`nature-writing/style-guardrails.md` 等（注意是 Nature 期刊向规则，套用 CUMCM 中文论文时只取"语言服务论证"原则） |
+| **含未 vendor 引用** | 原文提到本仓库未引入的脚本/资源，照做会 FileNotFound | `nature-figure/qa-contract.md`（`audit_figure_collisions.py`/`figure_safety.py`）、`api.md`（`panel_alignment.R`）、`design-theory.md`、`multipanel-evidence-architecture.md`（`../../nature-shared/...`）——agent 应忽略这些命令，改用已 vendor 的 `audit_panel_alignment.py`/`audit_pdf_text.py`/`validate_figure.py` 或 `scripts/figure_render_audit.py` |
+| **仅参考** | 只取理念，不直接套用 | Nature 投稿流程文件（`reviewer-checklist.md`、`technical-concern-taxonomy.md` 等 40KB 面向 Nature 投稿）、上游所有"网络核验"步骤 |
+
+> 新增/更新本清单时保持简洁：宁可让 agent 读错一份文件，也不要让它在缺失脚本上浪费时间。
 
 ## 明确未引入（许可证或边界原因）
 

@@ -36,6 +36,14 @@ def readme_en() -> str:
     return (ROOT / "README.en.md").read_text(encoding="utf-8")
 
 
+def reference_doc() -> str:
+    return (ROOT / "docs" / "reference.md").read_text(encoding="utf-8")
+
+
+def dsh_doc() -> str:
+    return (ROOT / "docs" / "dsh-compatibility.md").read_text(encoding="utf-8")
+
+
 class DocClaimTests(unittest.TestCase):
     def test_skill_counts(self):
         n = count_skills()
@@ -48,6 +56,26 @@ class DocClaimTests(unittest.TestCase):
         n = count_tests()
         for text in (readme_zh(), readme_en()):
             self.assertIn(str(n), text, f"README missing test count {n}")
+
+    def test_reference_and_dsh_test_counts(self):
+        # Regression: docs/reference.md's directory-tree note and
+        # docs/dsh-compatibility.md smoke counts both drifted to older test
+        # counts (171/215) after releases; the README badge alone was guarded.
+        n = count_tests()
+        ref = reference_doc()
+        dsh = dsh_doc()
+        self.assertIn(f"{n} 个用例", ref,
+                      "docs/reference.md missing current test count in coverage section")
+        self.assertRegex(ref, rf"tests/\s+# {n} 个测试用例",
+                         "docs/reference.md directory-tree test count drifted")
+        self.assertIn(f"{n} 用例", dsh,
+                      "docs/dsh-compatibility.md smoke count drifted")
+
+    def test_archify_index_skill_count(self):
+        # The committed archify gallery page once advertised "28 skills".
+        html = (ROOT / "docs" / "diagrams" / "archify" / "index.html").read_text(
+            encoding="utf-8")
+        self.assertIn(f"展示 {count_skills()} 个 skills", html)
 
     def test_script_counts(self):
         n = count_scripts()

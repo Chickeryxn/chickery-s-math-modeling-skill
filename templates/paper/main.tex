@@ -34,8 +34,10 @@ __FROZEN_MACROS__
 __ABSTRACT__
 \end{abstract}
 
-% Contest convention: no table of contents.
-\tableofcontents\addtocontents{toc}{\protect\thispagestyle{empty}}% keep empty; remove line to omit TOC
+% Contest convention: no table of contents in the clean-room baseline.
+% If your contest template requires a TOC, uncomment the next line instead of
+% using \addtocontents hacks:
+% \tableofcontents
 \newpage
 
 % Sections are \input fragments produced by paper-section-writer

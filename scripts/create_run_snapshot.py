@@ -106,12 +106,12 @@ def validate(root,run_dir):
 def add_common(p):
  p.add_argument('root',type=Path);p.add_argument('run_dir',type=Path);p.add_argument('--config',action='append',default=[]);p.add_argument('--inputs',action='append',default=[]);p.add_argument('--code',action='append',default=[]);p.add_argument('--planned-budget');p.add_argument('--actual-budget');p.add_argument('--degraded',action='store_true');p.add_argument('--degradation-reason');p.add_argument('--acceptance-impact',action='append',default=[]);p.add_argument('--claim-restriction',action='append',default=[]);p.add_argument('--command',required=True)
 def main():
- ap=argparse.ArgumentParser();sub=ap.add_subparsers(dest='mode',required=True);b=sub.add_parser('begin');add_common(b);r=sub.add_parser('run');add_common(r);r.add_argument('--result-ref',required=True);r.add_argument('--validation-ref',required=True);f=sub.add_parser('finalize');f.add_argument('root',type=Path);f.add_argument('run_dir',type=Path);f.add_argument('--status',required=True);f.add_argument('--result-ref',required=True);f.add_argument('--validation-ref',required=True);f.add_argument('--return-code',type=int,required=True);v=sub.add_parser('validate');v.add_argument('root',type=Path);v.add_argument('run_dir',type=Path);a=ap.parse_args();root=a.root.resolve();rd=a.run_dir.resolve()
+ ap=argparse.ArgumentParser();sub=ap.add_subparsers(dest='mode',required=True);b=sub.add_parser('begin');add_common(b);r=sub.add_parser('run');add_common(r);r.add_argument('--result-ref',required=True);r.add_argument('--validation-ref',required=True);f=sub.add_parser('finalize');f.add_argument('root',type=Path);f.add_argument('run_dir',type=Path);f.add_argument('--status',required=True);f.add_argument('--result-ref',required=True);f.add_argument('--validation-ref',required=True);f.add_argument('--return-code',type=int,required=True);v=sub.add_parser('validate');v.add_argument('root',type=Path);v.add_argument('run_dir',type=Path);a=ap.parse_args();root=a.root.resolve();run_dir=safe(root,str(a.run_dir).replace('\\','/'))
  try:
-  if a.mode=='begin':out=begin(root,safe(root,str(a.run_dir).replace('\\','/')),a)
-  elif a.mode=='run':out=run(root,safe(root,str(a.run_dir).replace('\\','/')),a)
-  elif a.mode=='finalize':out=finish(root,safe(root,str(a.run_dir).replace('\\','/')),a.status,a.result_ref,a.validation_ref,a.return_code,False)
-  else:out=validate(root,safe(root,str(a.run_dir).replace('\\','/')))
+  if a.mode=='begin':out=begin(root,run_dir,a)
+  elif a.mode=='run':out=run(root,run_dir,a)
+  elif a.mode=='finalize':out=finish(root,run_dir,a.status,a.result_ref,a.validation_ref,a.return_code,False)
+  else:out=validate(root,run_dir)
   print(json.dumps(out,ensure_ascii=False,indent=2));return 0 if out.get('status')!='FAIL' else 2
  except Exception as e:print(str(e),file=sys.stderr);return 2
 if __name__=='__main__':raise SystemExit(main())
