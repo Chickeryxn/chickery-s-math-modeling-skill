@@ -33,11 +33,23 @@ def manifest(root:Path,paths:list[str])->dict:
  return dict(sorted(out.items()))
 def budget_delta(planned,actual):
  keys=sorted(set(planned)|set(actual));return {k:{'planned':planned.get(k),'actual':actual.get(k)} for k in keys if planned.get(k)!=actual.get(k)}
+def vcs_snapshot(root):
+ """Optional version-control context: git HEAD and dirty files when the
+ workspace is a git repository. Best-effort; never blocks the run."""
+ try:
+  if not (root/'.git').exists():return None
+  head=subprocess.run(['git','rev-parse','HEAD'],cwd=root,capture_output=True,text=True,encoding='utf-8',errors='replace')
+  dirty=subprocess.run(['git','status','--porcelain'],cwd=root,capture_output=True,text=True,encoding='utf-8',errors='replace')
+  lines=[ln[:200] for ln in (dirty.stdout or '').splitlines() if ln.strip()]
+  return {'available':True,'head':(head.stdout or '').strip() or None,
+          'dirty':lines[:50],'dirty_count':len(lines)}
+ except Exception:
+  return None
 def write_json(p,data):p.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
 def begin(root,run_dir,args):
  run_dir.mkdir(parents=True,exist_ok=False);planned=json.loads(args.planned_budget or '{}');actual=json.loads(args.actual_budget or args.planned_budget or '{}');delta=budget_delta(planned,actual);degraded=bool(args.degraded or delta)
  cm=manifest(root,args.config);im=manifest(root,args.inputs);code=manifest(root,args.code);ch=hashlib.sha256(json.dumps(cm,sort_keys=True).encode()).hexdigest()
- data={'schema_version':2,'run_id':run_dir.name,'planned_budget':planned,'actual_budget':actual,'budget_delta':delta,'degraded':degraded,'degradation_reason':args.degradation_reason if degraded else None,'acceptance_impact':args.acceptance_impact,'claim_restrictions':args.claim_restriction,'input_manifest':im,'code_manifest':code,'config_manifest':cm,'config_hash':ch,'command':args.command,'environment':{'python':sys.version,'platform':platform.platform(),'cwd':str(root)},'status':'RUNNING','started_at':time.strftime('%Y-%m-%dT%H:%M:%S%z'),'return_code':None,'result_ref':None,'validation_ref':None,'result_hash':None,'validation_hash':None,'executed_by_runner':False}
+ data={'schema_version':2,'run_id':run_dir.name,'planned_budget':planned,'actual_budget':actual,'budget_delta':delta,'degraded':degraded,'degradation_reason':args.degradation_reason if degraded else None,'acceptance_impact':args.acceptance_impact,'claim_restrictions':args.claim_restriction,'input_manifest':im,'code_manifest':code,'config_manifest':cm,'config_hash':ch,'command':args.command,'environment':{'python':sys.version,'platform':platform.platform(),'cwd':str(root)},'vcs':vcs_snapshot(root),'status':'RUNNING','started_at':time.strftime('%Y-%m-%dT%H:%M:%S%z'),'return_code':None,'result_ref':None,'validation_ref':None,'result_hash':None,'validation_hash':None,'executed_by_runner':False}
  write_json(run_dir/'config_snapshot.json',{'planned_budget':planned,'actual_budget':actual,'budget_delta':delta,'config_manifest':cm});(run_dir/'config_hash.txt').write_text(ch+'\n',encoding='utf-8',newline='\n');write_json(run_dir/'input_manifest.json',im);write_json(run_dir/'code_manifest.json',code);write_json(run_dir/'environment.json',data['environment']);(run_dir/'command.txt').write_text(args.command+'\n',encoding='utf-8',newline='\n');(run_dir/'stdout.log').write_text('',encoding='utf-8',newline='\n');(run_dir/'stderr.log').write_text('',encoding='utf-8',newline='\n');write_json(run_dir/'run_metadata.json',data);return data
 def finish(root,run_dir,status,result_ref,validation_ref,return_code,executed):
  p=run_dir/'run_metadata.json';data=json.loads(p.read_text(encoding='utf-8-sig'))
@@ -49,7 +61,9 @@ def finish(root,run_dir,status,result_ref,validation_ref,return_code,executed):
   if not executed:raise RuntimeError('successful status requires execution by unified runner')
   if not rp.is_file() or not vp.is_file():raise FileNotFoundError('result/validation missing')
  if data.get('degraded') and status=='SUCCESS':status='DEGRADED_SUCCESS'
- data.update({'status':status,'return_code':return_code,'result_ref':result_ref,'validation_ref':validation_ref,'result_hash':sha256(rp) if rp.is_file() else None,'validation_hash':sha256(vp) if vp.is_file() else None,'executed_by_runner':executed,'finished_at':time.strftime('%Y-%m-%dT%H:%M:%S%z')});write_json(p,data);return data
+ data.update({'status':status,'return_code':return_code,'result_ref':result_ref,'validation_ref':validation_ref,'result_hash':sha256(rp) if rp.is_file() else None,'validation_hash':sha256(vp) if vp.is_file() else None,'executed_by_runner':executed,'finished_at':time.strftime('%Y-%m-%dT%H:%M:%S%z')})
+ data['vcs']=vcs_snapshot(root)  # post-run state: outputs appear as untracked/dirty
+ write_json(p,data);return data
 def run(root,run_dir,args):
  data=begin(root,run_dir,args)
  result_path=safe(root,args.result_ref); validation_path=safe(root,args.validation_ref)

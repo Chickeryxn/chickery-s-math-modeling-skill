@@ -2,7 +2,7 @@
 
 [简体中文](README.md) | [English](README.en.md)
 
-**Math Modeling Skill** — an Agent skill library and executable workflow framework for mathematical-modeling contests (CUMCM / MCM/ICM): 32 Claude/Codex/DSH skills plus 28 standard-library-only validation scripts turn "AI writes code, humans make decisions, everything reproducible and auditable" into a machine-enforced process contract.
+**Math Modeling Skill** — an Agent skill library and executable workflow framework for mathematical-modeling contests (CUMCM / MCM/ICM): 32 Claude/Codex/DSH skills plus 32 standard-library-only validation scripts turn "AI writes code, humans make decisions, everything reproducible and auditable" into a machine-enforced process contract.
 
 | Badge | Value |
 |---|---|
@@ -10,7 +10,7 @@
 | Version | 0.7.1 (plugin manifests in sync) |
 | Runtime | Python 3.10+ (standard library only, no third-party dependencies) |
 | Platforms | Windows / Linux / macOS |
-| Tests | 181 cases, `python scripts/run_tests.py` all green |
+| Tests | 202 cases, `python scripts/run_tests.py` all green |
 
 ## What this is
 

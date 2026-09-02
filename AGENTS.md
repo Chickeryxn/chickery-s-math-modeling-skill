@@ -235,7 +235,7 @@ Do not run a full-workspace audit merely because multiple files changed. Always 
 - To change a frozen value: **解冻 → 修改 canonical source → 重跑 affected work → 重冻结**.
 - Record the reason in `results/Qx/reports/freeze_change_log.md`.
 - A freeze is stale when a referenced canonical source is newer than `frozen_at`.
-- Note: the `frozen_at` freshness rule has no automatic checker yet; `solution-package-builder` records `frozen_at` and the human confirms currency at G4/G6 (see CHANGELOG 0.7.0).
+- `scripts/check_frozen_freshness.py .` automatically flags stale claims (missing source, source newer than `frozen_at`, or invalid `frozen_at`) and is wired into `validate_repo.py`; run it before G4/G6 in `submission`.
 
 # Experiment Output
 
@@ -267,9 +267,10 @@ Create `logs/` only when a failure, warning, or reproducibility need justifies i
 # Figures and Paper
 
 - Type 1 diagnostic: internal only.
-- Type 2 comparison: may appear in paper.
+- Type 2 comparison: may appear in paper; like Type 3/4 it must pass render verification in `submission`.
 - Type 3 paper: must support a main claim and pass publication-quality render checks.
-- Type 4 appendix: supplementary and referenced from the main text.
+- Type 4 appendix: supplementary and referenced from the main text; render-verified in `submission`.
+- The figure generator writes a sibling `<figure>.render.json` (status `PASS`, `rendered_at`, checks) for every Type 2–4 figure; `scripts/figure_render_audit.py .` verifies that every figure referenced by a paper section exists and carries render evidence.
 - Paper claims must remain proportional to tested evidence.
 - Mention eliminated methods only when the record helps explain a real trade-off; do not manufacture breadth.
 

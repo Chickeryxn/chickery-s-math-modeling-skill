@@ -29,6 +29,7 @@ Use this skill:
 Load only what the current task needs:
 
 - `scripts/ai_trace_checker.py` — quantifiable AI-trace frequency check (run on a section for a mechanical pre-scan).
+- `scripts/polish_stats.py` — quantified writing metrics (long-sentence ratio and examples, paragraph sizes, filler phrases, AI connectors) to target fixes before manual polishing.
 - Repo-level advisory rules (Apache-2.0 / MIT, notices retained):
   - `references/upstream/lupynow-writing/de-ai-writing.md` — eight AI-trace classes and quantifiable caps.
   - `references/upstream/lupynow-writing/self-review-framework.md` — four-round self review.
@@ -63,7 +64,9 @@ Use or request:
    - Mathematical modeling contest papers follow a standard structure: Abstract → Problem Restatement → Problem Analysis → Assumptions → Symbols → Model Construction (per Q) → Model Solution → Results Analysis → Robustness → Strengths & Limitations → Conclusion.
    - Each section has different polishing priorities (see section-specific rules below).
 
-2. Run the 12-point polish checklist (see below).
+2. Run the mechanical pre-scan.
+   - Run `python scripts/polish_stats.py <section>` for quantified targets (sentences over 30 words, filler phrases, connector density) and `python scripts/ai_trace_checker.py <section> --strict` for AI-trace caps.
+   - Address the mechanical findings first; then run the 12-point polish checklist below on what remains.
 
 3. Calibrate claims against evidence.
    - For each numerical or comparative claim, verify it is supported by the final result analysis or robustness report.

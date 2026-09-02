@@ -31,7 +31,12 @@ python scripts/work_record.py check .
 - `validate_independence.py`: main/baseline/verifier separation checks.
 - `validate_model_contract.py`: problem-specific contract shape check.
 - `qa_report.py`: layered status summary; it never upgrades a blocked gate.
+- `check_frozen_freshness.py`: per-claim freshness of `frozen_numbers.json` (source exists, not newer than `frozen_at`); exit 2 on any stale claim. Wired into `validate_repo.py`.
+- `figure_render_audit.py`: every figure referenced by a paper section must exist under `paper/figures/` and carry a sibling `<name>.render.json` (`status: PASS`, `rendered_at`).
+- `preflight.py`: one-command submission bundle (claim_coverage / abstract_checker / ai_trace_checker / latex_assembly --check-only --strict / figure_consistency_check / section_structure_check); steps run only when their inputs exist.
+- `polish_stats.py`: quantified writing metrics (long-sentence ratio, filler phrases, AI connectors) as an advisory pre-scan for paper-polisher; `--strict` exits 2 on long-sentence ratio > 0.25 or filler total > 8.
 - `sync_plugin.py`: portable skill-tree synchronization and hash check.
+- Run snapshots additionally record an optional `vcs` block (git HEAD + dirty list) when the workspace is a git repository.
 - `resource_index.py`: scans `resource-library/` and (re)builds `index.json`; `--check` verifies the index matches disk.
 - `training_scorecard.py`: literacy training scorecard contract. `round <dir>` scaffolds/validates one round's `scorecard.json` (six dimensions, agent self-scores with evidence paths, null user scores, mechanical-check list); `summary <dir>` aggregates rounds into `summary.json` (radar, ranking, mechanical tally); `--check` modes validate without writing.
 - `work_record.py`: work-record tree (see `docs/work-record.md`). `init` scaffolds `records/`; `log` appends a timestamped session entry; `gate` records a monotonic gate transition with existing evidence; `decision` mirrors a ledger record into a decision card (refuses to fabricate); `retro` scaffolds a review; `replay` regenerates a session draft from manifests/ledgers/run summaries/frozen numbers (`--write` stores it); `index` rebuilds `records/README.md`; `check` validates index sync, links, timestamps, and gate monotonicity. `--runtime` auto-detects codex/claude/dsh.

@@ -2,7 +2,7 @@
 
 [简体中文](README.md) | [English](README.en.md)
 
-**Math Modeling Skill** — 面向 CUMCM / MCM/ICM 等数学建模竞赛的 Agent 技能库与可执行工作流框架：32 个 Claude/Codex/DSH 技能 + 28 个纯标准库脚本，把「AI 写代码、人类做决策、一切可复现可审计」变成机器可强制的过程契约。
+**Math Modeling Skill** — 面向 CUMCM / MCM/ICM 等数学建模竞赛的 Agent 技能库与可执行工作流框架：32 个 Claude/Codex/DSH 技能 + 32 个纯标准库脚本，把「AI 写代码、人类做决策、一切可复现可审计」变成机器可强制的过程契约。
 
 | 徽章 | 值 |
 |---|---|
@@ -10,7 +10,7 @@
 | 版本 | 0.7.1（插件 manifest 同步） |
 | 运行环境 | Python 3.10+（仅标准库，无第三方依赖） |
 | 平台 | Windows / Linux / macOS |
-| 测试 | 181 个用例，`python scripts/run_tests.py` 全绿 |
+| 测试 | 202 个用例，`python scripts/run_tests.py` 全绿 |
 
 ## 这是什么
 

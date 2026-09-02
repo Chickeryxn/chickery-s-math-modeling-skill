@@ -7,6 +7,7 @@
     "SUCCESS and DEGRADED_SUCCESS require execution by the unified runner and return_code=0.",
     "Result and validation hashes must remain current.",
     "A material budget delta automatically marks the run degraded.",
-    "A rerun creates a new run_id rather than rewriting completed metadata."
+    "A rerun creates a new run_id rather than rewriting completed metadata.",
+    "Optional vcs records the git HEAD and dirty-file list when the workspace is a git repository (best-effort, never blocking)."
   ]
 }

@@ -32,6 +32,9 @@ def main():
     qa=run([py,str(r/'scripts/qa_report.py'),str(r)],r);reports.append(qa)
     if qa.get('returncode')!=0:errors.append([py,str(r/'scripts/qa_report.py'),str(r)])
     add([py,str(r/'scripts/validate_upstream_assets.py'),str(r)])
+    add([py,str(r/'scripts/figure_render_audit.py'),str(r)])
+    frozen_files=list(r.glob('results/*/reports/frozen_numbers.json'))
+    if frozen_files:add([py,str(r/'scripts/check_frozen_freshness.py'),str(r)])
     result={'status':'PASS' if not errors else 'FAIL','errors':errors,'checks':reports}
     print(json.dumps(result,ensure_ascii=False,indent=2));return 0 if not errors else 2
 if __name__=='__main__':raise SystemExit(main())

@@ -44,3 +44,12 @@ python scripts/latex_assembly.py . --template <你本地的 cumcmthesis 主文�
 - 每个数字在正文中应引用冻结宏（如 `\q1mainrmse`），禁止手写裸数字。
 - 引用以 `\cref` 风格（图~x / 表x）统一；参考文献用 `reference-manager` 产出的条目转 `\bibitem`。
 - 汇编后运行三审（G6）：一致性/完整性/质检。
+
+## 提交前预检（preflight）
+
+`python scripts/preflight.py .` 一键串联提交相关的机械检查：`claim_coverage`（每问有节/冻结/摘要数字）、`abstract_checker`（摘要逐问数字）、`ai_trace_checker --strict`（抽样章节）、`latex_assembly --check-only --strict`（裸数字与冻结引用）、`figure_consistency_check`（paper/figures）、`section_structure_check --strict`（骨架顺序与篇幅）。输入工件缺失的步骤自动跳过；任一已执行的步骤失败即返回 2——提交前 10 分钟跑一次即可兜底。
+
+配套的两个单项审计：
+
+- `python scripts/check_frozen_freshness.py .` — 冻结数字新鲜度（源文件存在且不晚于 `frozen_at`），已接入 `validate_repo.py`。
+- `python scripts/figure_render_audit.py .` — 论文章节引用的每张图都存在且有 `<图名>.render.json` 渲染证据。

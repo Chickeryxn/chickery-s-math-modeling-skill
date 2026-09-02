@@ -28,6 +28,7 @@ Use legacy decision logs or Markdown reviews only during migration.
 4. Referenced tables, figures, code, and data files exist.
 5. Why-this-method, result verdict, stability, confidence, and claim scope resolve to human decision IDs.
 6. Freeze and decisions are not stale relative to materially changed cited evidence.
+7. Paper figures referenced by sections carry render evidence (run `scripts/figure_render_audit.py .`; every `<figure>.render.json` must be `PASS` and current).
 
 # Scoped Workflow
 
