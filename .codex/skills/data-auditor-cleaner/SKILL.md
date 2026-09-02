@@ -1,6 +1,7 @@
 ---
 name: data-auditor-cleaner
 description: Map contest attachments to subquestions, audit and clean raw data, and emit one reusable data profile with quality, coverage, imbalance, concentration, and method-readiness evidence for downstream risk screening.
+license: MIT
 whenToUse: When contest attachments must be mapped, audited, profiled, and cleaned before risk screening.
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: training-auditor
 description: Multi-dimensional audit for a training round. Runs mechanical checks, drafts the 6-dimension literacy scorecard via scripts/training_scorecard.py, and prepares the summary for the user to pick the next direction. Used in docs/training.md phase C.
+license: MIT
 whenToUse: In the literacy-training loop phase C: run mechanical checks and draft the 6-dimension scorecard for human steering.
 ---
 

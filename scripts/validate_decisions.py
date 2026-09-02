@@ -77,9 +77,21 @@ def validate(path:Path, root:Path)->list[str]:
     return errors
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('root',type=Path);ap.add_argument('ledger',type=Path);a=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('root',type=Path);ap.add_argument('ledger',type=Path)
+    ap.add_argument('--json',action='store_true',help='emit a JSON report (status/errors) instead of plain text')
+    a=ap.parse_args()
     try:errors=validate(a.ledger.resolve(),a.root.resolve())
-    except Exception as e:print(str(e),file=sys.stderr);return 2
-    if errors:print('\n'.join(errors),file=sys.stderr);return 2
-    print(f'DECISION_LEDGER_OK {a.ledger}');return 0
+    except Exception as e:
+        if a.json:print(json.dumps({'status':'FAIL','errors':[str(e)]},ensure_ascii=False))
+        else:print(str(e),file=sys.stderr)
+        return 2
+    if errors:
+        if a.json:print(json.dumps({'status':'FAIL','errors':errors},ensure_ascii=False))
+        else:print('\n'.join(errors),file=sys.stderr)
+        return 2
+    if a.json:
+        print(json.dumps({'status':'PASS','ledger':str(a.ledger),'errors':[]},ensure_ascii=False))
+    else:
+        print(f'DECISION_LEDGER_OK {a.ledger}')
+    return 0
 if __name__=='__main__':raise SystemExit(main())

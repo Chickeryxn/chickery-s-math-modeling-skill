@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  test:
+    name: validate-repo (${{ matrix.os }} / py${{ matrix.python }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history so git-HEAD-dependent checks behave
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Repository self-check (tests + validators)
+        shell: bash
+        run: |
+          python scripts/run_tests.py
+          python scripts/validate_repo.py .
+
+      - name: Skill-tree consistency
+        shell: bash
+        run: |
+          python scripts/validate_skill_trees.py .
+          python scripts/sync_plugin.py . --check
+
+      - name: Upstream assets integrity
+        shell: bash
+        run: python scripts/validate_upstream_assets.py .
+
+      - name: Line-ending hygiene (no CRLF in tracked files)
+        shell: bash
+        run: |
+          if git ls-files --eol | grep -E 'w/(crlf|mixed)' ; then
+            echo "CRLF/mixed line endings detected in tracked files — run: git config core.autocrlf false && git add --renormalize ."
+            exit 1
+          fi

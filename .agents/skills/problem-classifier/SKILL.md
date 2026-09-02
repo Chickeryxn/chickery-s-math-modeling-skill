@@ -1,6 +1,7 @@
 ---
 name: problem-classifier
 description: Classify each parsed mathematical-modeling subquestion by required output and structure, surface ambiguous framing trade-offs for human choice, and record primary/secondary task types without selecting algorithms.
+license: MIT
 whenToUse: When the parsed problem needs task-type classification and framing ambiguities surfaced before method screening.
 ---
 

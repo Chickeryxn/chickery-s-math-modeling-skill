@@ -2,7 +2,7 @@
 """Golden-example guard: planning/examples artifacts must keep passing the
 standalone structural checks promised in planning/examples/README.md."""
 from __future__ import annotations
-import json, subprocess, sys, unittest
+import json, subprocess, sys, tempfile, unittest
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -28,13 +28,12 @@ class GoldenExampleTests(unittest.TestCase):
     def test_method_card_example_keeps_machine_anchors_with_chinese_body(self):
         card = EX / "method-card.example.md"
         self.assertTrue(method_card_ready(card))
-        # A translated-header placeholder card must not pass the gate
-        bad = EX.parent / "examples_bad_card.md"
-        try:
+        # A translated-header placeholder card must not pass the gate.
+        # Use a temp dir, not the repo tree, so parallel runs cannot collide.
+        with tempfile.TemporaryDirectory() as td:
+            bad = Path(td) / "examples_bad_card.md"
             bad.write_text("# 方法卡\n主方法：M1\n基线：M0\n占位：待填\n", encoding="utf-8")
             self.assertFalse(method_card_ready(bad))
-        finally:
-            bad.unlink(missing_ok=True)
 
     def test_risk_probe_example_ready(self):
         self.assertTrue(risk_probe_ready(EX / "risk_probe_summary.example.json"))

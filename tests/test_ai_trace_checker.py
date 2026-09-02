@@ -23,6 +23,8 @@ class AiTraceCheckerTests(unittest.TestCase):
     def test_empty_text_passes(self):
         r = analyze("")
         self.assertEqual(r["verdict"], "PASS")
+        # count_words("") == 0 is floored to 1 (max(..., 1)) so per-word rate
+        # thresholds never divide by zero; the guard is intentional.
         self.assertEqual(r["word_count"], 1)
 
     def test_furthermore_over_limit_warns(self):

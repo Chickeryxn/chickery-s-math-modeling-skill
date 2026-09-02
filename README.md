@@ -10,7 +10,8 @@
 | 版本 | 0.8.0（插件 manifest 同步） |
 | 运行环境 | Python 3.10+（仅标准库，无第三方依赖） |
 | 平台 | Windows / Linux / macOS |
-| 测试 | 241 个用例，`python scripts/run_tests.py` 全绿 |
+| CI | [![CI](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml)（Py 3.10–3.12 × Ubuntu/Windows） |
+| 测试 | 243 个用例，`python scripts/run_tests.py` 全绿 |
 
 ## 这是什么
 

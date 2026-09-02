@@ -1,6 +1,7 @@
 ---
 name: training-solver
 description: Closed-book training solver. Solve a training problem from start to finish WITHOUT reading resource-library/, then hand off to training-reflector. Used in the literacy-training loop (docs/training.md).
+license: MIT
 whenToUse: In the literacy-training loop phase A: solve closed-book without reading resource-library or prior-round solutions.
 ---
 

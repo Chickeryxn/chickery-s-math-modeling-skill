@@ -1,6 +1,7 @@
 ---
 name: decision-prompt-builder
 description: Build one compact choice card at a genuine mathematical-modeling judgment point. Use before method screening, after a meaningful experiment, or before final claim/freeze approval so the human chooses the trade-off while AI handles mechanical consequences.
+license: MIT
 whenToUse: At a genuine modeling-judgment point (before screening, after the first meaningful experiment, before freeze) when the human must choose a trade-off.
 ---
 

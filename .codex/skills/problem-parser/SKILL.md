@@ -1,6 +1,7 @@
 ---
 name: problem-parser
 description: Parse a mathematical-modeling problem into goals, objects, data, constraints, outputs, subquestions, dependencies, variables, relationships, and human-confirmed success criteria before any method selection.
+license: MIT
 whenToUse: When starting a new problem parse: extract goals, objects, constraints, outputs, and framing decisions before any method talk.
 ---
 

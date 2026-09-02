@@ -1,6 +1,7 @@
 ---
 name: paper-section-writer
 description: Draft submission-ready mathematical-modeling paper sections from the approved solution package, frozen numbers, human decision ledger, and verified figures without searching scattered exploratory outputs or inventing interpretation.
+license: MIT
 whenToUse: In submission, when paper sections must be drafted from the solution package and frozen numbers only.
 ---
 

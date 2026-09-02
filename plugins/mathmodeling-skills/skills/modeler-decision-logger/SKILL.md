@@ -1,6 +1,7 @@
 ---
 name: modeler-decision-logger
 description: Faithfully append a human modeler's choice and rationale to one canonical per-subquestion JSONL decision ledger. Use after a choice card is answered or when migrating legacy decision artifacts; never originate or improve the decision.
+license: MIT
 whenToUse: After a human answers a choice card or states a decision, to append it verbatim to the JSONL decision ledger.
 ---
 

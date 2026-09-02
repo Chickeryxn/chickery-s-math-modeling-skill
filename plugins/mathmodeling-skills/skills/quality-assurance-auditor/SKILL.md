@@ -1,6 +1,7 @@
 ---
 name: quality-assurance-auditor
 description: Perform the final submission-level audit of mathematical-modeling workflow integrity, evidence quality, anti-fabrication, paper coherence, figures, references, and contest readiness after consistency and completeness audits pass.
+license: MIT
 whenToUse: In submission after consistency and completeness pass, for the final five-dimension submission audit.
 ---
 

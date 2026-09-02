@@ -190,6 +190,25 @@ class ProfileGateTests(unittest.TestCase):
         self.assertIsNotNone(hint)
         self.assertIn('deadline <6h', hint)
 
+    def test_deadline_hints_with_injected_clock(self):
+        # Deterministic boundaries via the injectable `now` argument; the
+        # previous variant depended on wall-clock timing around each branch.
+        fixed = datetime(2026, 9, 1, 0, 0, tzinfo=timezone.utc)
+        cases = [
+            ('2026-08-31T23:00:00Z', 'deadline passed'),
+            ('2026-09-01T05:00:00Z', 'deadline <6h'),
+            ('2026-09-01T23:00:00Z', 'deadline <24h'),
+            ('2026-09-02T23:00:00Z', 'deadline <48h'),
+            ('2026-09-04T00:00:00Z', None),
+        ]
+        for deadline, expect in cases:
+            got = wg.deadline_hint(deadline, now=fixed)
+            if expect is None:
+                self.assertIsNone(got, f'{deadline} should yield no hint')
+            else:
+                self.assertIsNotNone(got, f'{deadline} should yield a hint')
+                self.assertIn(expect, got)
+
     def test_manifest_profile_snapshot_is_tolerated(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)

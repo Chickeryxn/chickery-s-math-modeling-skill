@@ -1,6 +1,7 @@
 ---
 name: method-selector
 description: Build and risk-screen a compact role-based method shortlist for a mathematical-modeling subquestion. Use after problem framing and data profiling, before model code generation, to propose a main candidate, a usable baseline, and at most one conditional fallback without padding the pool.
+license: MIT
 whenToUse: When framing and data are ready and a role-based method shortlist with risk probes is needed before a human method choice.
 ---
 

@@ -30,6 +30,7 @@ def main():
   entries=[x for x in market.get('plugins',[]) if x.get('name')=='mathmodeling-skills']
   if len(entries)!=1:errors.append('marketplace must contain exactly one mathmodeling-skills entry')
   elif entries[0].get('source')!={'source':'local','path':'./plugins/mathmodeling-skills'}:errors.append('marketplace source mismatch')
+  if entries and entries[0].get('version') is not None and entries[0].get('version')!=codex.get('version'):errors.append('marketplace version differs from plugin manifests')
  except Exception as exc:errors.append(f'metadata invalid: {exc}')
  if errors:print('\n'.join(errors),file=sys.stderr);return 2
  print(json.dumps({'status':'PASS','skill_files':len(source),'trees':'synchronized','plugin_version':codex.get('version')},ensure_ascii=False));return 0

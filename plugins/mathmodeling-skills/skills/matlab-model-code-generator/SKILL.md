@@ -1,6 +1,7 @@
 ---
 name: matlab-model-code-generator
 description: Generate and run minimal reproducible MATLAB or Beita Tianyuan compatible code for the human-approved main method and usable baseline, with compact experiment artifacts and a canonical run summary.
+license: MIT
 whenToUse: When the approved plan targets MATLAB or Beita Tianyuan and .m code must be generated and executed.
 ---
 

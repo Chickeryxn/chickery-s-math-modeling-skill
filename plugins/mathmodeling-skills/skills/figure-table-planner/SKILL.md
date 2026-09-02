@@ -1,6 +1,7 @@
 ---
 name: figure-table-planner
 description: Plan the smallest set of diagnostic, comparison, paper, and appendix figures or tables needed to support verified mathematical-modeling decisions and claims.
+license: MIT
 whenToUse: When verified claims need the smallest evidence-bearing figure/table plan before visuals are generated.
 ---
 

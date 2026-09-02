@@ -1,6 +1,7 @@
 ---
 name: robustness-checker
 description: Design and run risk-targeted robustness, sensitivity, error, and baseline checks for an approved mathematical model, emitting compact machine evidence in lean mode and a final report in submission mode.
+license: MIT
 whenToUse: When load-bearing assumptions or claims need perturbation, resampling, or baseline robustness checks.
 ---
 

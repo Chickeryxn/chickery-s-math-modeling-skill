@@ -1,6 +1,7 @@
 ---
 name: model-code-analyzer
 description: Translate a human-approved main method and usable baseline into a minimal language-neutral implementation and experiment contract. Use after G2.5 and data readiness, before Python or MATLAB code generation.
+license: MIT
 whenToUse: After G2.5, to translate the human-approved method into a language-neutral implementation and experiment contract.
 ---
 

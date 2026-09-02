@@ -25,6 +25,9 @@ import argparse, json, re, sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent / "lib"))
+from common import frozen_claims
+
 try:
     sys.stdout.reconfigure(encoding="utf-8")
     sys.stderr.reconfigure(encoding="utf-8")
@@ -90,17 +93,12 @@ def _mtime_utc(path: Path) -> datetime:
 
 def _claim_items(frozen_file: Path) -> list[dict]:
     """Accept the {"claims": [...]} shape and the {claim_id: {...}} map shape
-    used by the rest of the toolchain."""
+    used by the rest of the toolchain (delegates to lib/common.frozen_claims)."""
     try:
         data = json.loads(frozen_file.read_text(encoding="utf-8-sig"))
     except Exception:
         return []
-    if not isinstance(data, dict):
-        return []
-    claims = data.get("claims")
-    if isinstance(claims, list):
-        return [c for c in claims if isinstance(c, dict) and c.get("claim_id")]
-    return [v for k, v in data.items() if isinstance(v, dict) and "claim_id" in v]
+    return frozen_claims(data)
 
 
 def audit(root: Path) -> dict:

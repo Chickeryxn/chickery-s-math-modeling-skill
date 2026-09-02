@@ -1,6 +1,7 @@
 ---
 name: completeness-auditor
 description: Audit whether the semantic evidence required by the active lean or submission profile exists and is current, without requiring one verbose artifact per skill or an arbitrary number of pass bullets.
+license: MIT
 whenToUse: In submission/final mode, to audit that profile-required evidence exists and is current.
 ---
 

@@ -56,9 +56,10 @@ def read_deadline(root: Path) -> str | None:
             pass
     return None
 
-def deadline_hint(deadline_iso: str) -> str | None:
+def deadline_hint(deadline_iso: str, now: datetime | None = None) -> str | None:
     """Advisory remaining-time guidance derived from an ISO-8601 deadline.
-    Purely informational; never a gate input."""
+    Purely informational; never a gate input. `now` is injectable for tests;
+    defaults to the current wall clock."""
     try:
         s=deadline_iso.strip()
         if s.endswith('Z'):
@@ -66,7 +67,7 @@ def deadline_hint(deadline_iso: str) -> str | None:
         dl=datetime.fromisoformat(s)
     except Exception:
         return None
-    now=datetime.now(dl.tzinfo) if dl.tzinfo else datetime.now()
+    now=now or (datetime.now(dl.tzinfo) if dl.tzinfo else datetime.now())
     left=(dl-now).total_seconds()/3600.0
     if left<0:
         return 'deadline passed: submission-only: finish the three audits and assembly now; no new experiments'

@@ -1,6 +1,7 @@
 ---
 name: model-assumptions-builder
 description: Extract and maintain global and method-specific mathematical-model assumptions from the problem frame, active method cards, data profile, and risk probes, while leaving necessity and impact judgments to the human modeler.
+license: MIT
 whenToUse: When assumptions must be extracted and maintained from the frame, method cards, data profile, and probes.
 ---
 

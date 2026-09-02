@@ -61,7 +61,10 @@ def path_strings(node) -> list[str]:
 def decide(payload: dict) -> tuple[int, str | None]:
     """Return (exit_code, reason). exit 0 allows; exit 2 blocks."""
     tool = str(payload.get("tool_name") or payload.get("tool") or "")
-    if tool and tool not in WRITE_TOOLS:
+    if not tool or tool not in WRITE_TOOLS:
+        # Fail open: without a recognizable write tool the payload may be a
+        # read/other call or an unknown schema — only write tools are screened
+        # (matches the module docstring).
         return 0, None
     inputs = payload.get("tool_input") or payload.get("input") or payload
     for s in path_strings(inputs):

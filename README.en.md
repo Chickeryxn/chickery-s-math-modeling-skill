@@ -10,7 +10,8 @@
 | Version | 0.8.0 (plugin manifests in sync) |
 | Runtime | Python 3.10+ (standard library only, no third-party dependencies) |
 | Platforms | Windows / Linux / macOS |
-| Tests | 241 cases, `python scripts/run_tests.py` all green |
+| CI | [![CI](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml) (Py 3.10–3.12 × Ubuntu/Windows) |
+| Tests | 243 cases, `python scripts/run_tests.py` all green |
 
 ## What this is
 

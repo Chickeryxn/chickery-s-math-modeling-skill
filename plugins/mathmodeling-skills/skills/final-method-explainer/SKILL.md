@@ -1,6 +1,7 @@
 ---
 name: final-method-explainer
 description: Build the authoritative final method explanation for a submission-ready subquestion from the method card, human decision ledger, code plan, final results, and robustness evidence.
+license: MIT
 whenToUse: In submission, when the authoritative final method explanation must be built from card, ledger, code, and results.
 ---
 

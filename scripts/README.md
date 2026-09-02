@@ -2,6 +2,16 @@
 
 These scripts are standard-library-only and domain-neutral. They enforce or audit the project contracts; they do not choose a mathematical model.
 
+## Shared helpers (`scripts/lib/common.py`)
+
+Import-safe stdlib helpers for new and migrated scripts: `utf8_streams()`
+(reconfigure stdout/stderr to UTF-8 — call from `main()`, never at import
+time), `sha256_file()`, `safe_path(root, raw)` (containment guard),
+`load_json()`, `frozen_claims(data)` (normalizes both `frozen_numbers` shapes),
+and the `FROZEN_GLOB` constant. Existing scripts still carry their own local
+copies; when you touch one, migrate its copy to `common` in the same change so
+the duplication shrinks over time.
+
 ## Common commands
 
 ```powershell

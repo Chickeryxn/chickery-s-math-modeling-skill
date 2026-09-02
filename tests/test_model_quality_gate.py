@@ -56,6 +56,19 @@ class ModelQualityGateTests(unittest.TestCase):
         self.assertTrue(any("uncertainty" in f for f in g["findings"]))
         td.cleanup()
 
+    def test_explicit_uncertainty_na_declaration_passes(self):
+        # Docstring contract: `uncertainty: null` with a note is an acceptable
+        # explicit N/A; the old code never honored the note.
+        td, root = make_workspace(uncertainty=False)
+        p = root / "results" / "Q1" / "experiments" / "round1" / "run_summary.json"
+        data = json.loads(p.read_text(encoding="utf-8-sig"))
+        data["uncertainty"] = None
+        data["uncertainty_note"] = "本问为确定性优化，无随机不确定性，声明 N/A。"
+        p.write_text(json.dumps(data), encoding="utf-8")
+        g = gate(root, "Q1")
+        self.assertEqual(g["status"], "PASS", g["findings"])
+        td.cleanup()
+
     def test_missing_contract_fails(self):
         td, root = make_workspace(contract=False)
         g = gate(root, "Q1")

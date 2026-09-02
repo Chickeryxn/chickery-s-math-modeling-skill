@@ -28,7 +28,10 @@ def q_artifact_lineages(root,qid,manifest=None):
     errors=[];statuses=[];lineage_names={p.name for p in candidates}
     for ref in artifact_refs:
         name=Path(ref).name
-        if f'{name}.lineage.json' not in lineage_names and not any(p.stem==name for p in candidates):
+        # lineage files follow the `<artifact>.lineage.json` convention; the
+        # old second disjunct (p.stem == name) could never be true for such
+        # files and has been removed.
+        if f'{name}.lineage.json' not in lineage_names:
             errors.append({'path':ref,'reason':'LINEAGE_MISSING'});statuses.append('MISSING')
     for p in candidates:
         try:d=assess_lineage(root,p);statuses.append(d.get('status'));errors.extend(d.get('stale_reasons',[]))

@@ -110,8 +110,17 @@ def gate(root: Path, qid: str) -> dict:
     if not baseline_metrics_ok:
         findings.append("usable_baseline has no numeric metrics_summary (baseline not comparable)")
     if not has_uncertainty(data):
-        findings.append("no uncertainty/CI/std recorded anywhere in run_summary "
-                        "(add uncertainty or declare uncertainty: null with a note)")
+        # Per the docstring contract, an explicit `uncertainty: null` with a
+        # human-written note is an acceptable "not applicable" declaration.
+        top_unc = data.get("uncertainty")
+        declared_na = top_unc is None and bool(
+            data.get("uncertainty_note") or data.get("uncertainty_na_reason")
+            or (isinstance(data, dict) and any(
+                isinstance(v, str) and ("n/a" in v.lower() or "不适用" in v or "not applicable" in v.lower())
+                for k, v in data.items() if "uncertain" in k.lower())))
+        if not declared_na:
+            findings.append("no uncertainty/CI/std recorded anywhere in run_summary "
+                            "(add uncertainty or declare uncertainty: null with a note)")
     contract = load_contract(root)
     out_contract = ((contract.get("objective") or {}).get("output_contract")) if contract else None
     if not out_contract:
