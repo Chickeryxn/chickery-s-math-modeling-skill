@@ -29,6 +29,11 @@ jobs:
         run: |
           git config core.autocrlf false
           git config core.eol lf
+          # Re-materialize tracked files so the working tree matches the
+          # .gitattributes LF rules (actions/checkout already wrote CRLF for
+          # files that only inherit `* text=auto`, e.g. extensionless LICENSE).
+          git add --renormalize .
+          git checkout-index -f -a
 
       - uses: actions/setup-python@v5
         with:

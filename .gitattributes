@@ -20,6 +20,8 @@
 *.svg     text eol=lf
 *.gitignore text eol=lf
 .gitattributes text eol=lf
+LICENSE    text eol=lf
+LICENSES/*.txt text eol=lf
 
 *.png     binary
 *.jpg     binary
