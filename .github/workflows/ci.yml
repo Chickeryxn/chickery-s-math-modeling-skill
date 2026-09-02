@@ -14,20 +14,33 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         python: ["3.10", "3.11", "3.12"]
+    env:
+      # Windows runners default to cp1252 pipes; the repo emits UTF-8 (and CJK)
+      # test messages, so force UTF-8 stdio everywhere.
+      PYTHONIOENCODING: utf-8
+      PYTHONUTF8: "1"
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0   # full history so git-HEAD-dependent checks behave
 
+      - name: Normalize line endings (match .gitattributes LF intent)
+        shell: bash
+        run: |
+          git config core.autocrlf false
+          git config core.eol lf
+
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
 
-      - name: Repository self-check (tests + validators)
+      - name: Unit tests
         shell: bash
-        run: |
-          python scripts/run_tests.py
-          python scripts/validate_repo.py .
+        run: python scripts/run_tests.py
+
+      - name: Repository validation
+        shell: bash
+        run: python scripts/validate_repo.py .
 
       - name: Skill-tree consistency
         shell: bash
