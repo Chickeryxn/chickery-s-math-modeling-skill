@@ -17,10 +17,35 @@ except Exception:
     pass
 
 IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".pdf", ".svg", ".eps", ".tif", ".tiff"}
-INCLUDEGRAPHICS_RE = re.compile(r"\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}")
+INCLUDEGRAPHICS_RE = re.compile(r"\\includegraphics(?:\*)?(?:\[[^\]]*\])?\{([^}]+)\}")
 MARKDOWN_IMAGE_RE = re.compile(r"!\[[^\]]*\]\(([^)]+)\)")
 SECTIONS_GLOB = "paper/sections/*"
 FIGURES_DIR = "paper/figures"
+
+
+def _strip_tex_comments(text: str) -> str:
+    """Remove LaTeX comments (un-escaped % to end of line) and \\verb spans so
+    commented-out or verbatim \\includegraphics calls are not counted."""
+    import re as _re
+    out_lines = []
+    for line in text.splitlines():
+        # drop \\verb|...| spans first (content is literal)
+        line = _re.sub(r"\\verb[^a-zA-Z].*?[^a-zA-Z]", "", line)
+        out = []
+        i = 0
+        while i < len(line):
+            if line[i] == "%":
+                backslashes = 0
+                j = i - 1
+                while j >= 0 and line[j] == "\\":
+                    backslashes += 1
+                    j -= 1
+                if backslashes % 2 == 0:
+                    break
+            out.append(line[i])
+            i += 1
+        out_lines.append("".join(out))
+    return "\n".join(out_lines)
 
 
 def _norm(name: str) -> str:
@@ -40,7 +65,7 @@ def audit(root: Path) -> dict:
     figures_dir = r / FIGURES_DIR
     present = {}
     if figures_dir.is_dir():
-        for p in figures_dir.glob("*"):
+        for p in figures_dir.rglob("*"):
             if p.is_file() and p.suffix.lower() in IMAGE_EXTS:
                 present[p.name] = p
     referenced, errors, advisory = [], [], []
@@ -48,6 +73,8 @@ def audit(root: Path) -> dict:
         if not section.is_file() or section.suffix.lower() not in {".tex", ".md", ".txt"}:
             continue
         text = section.read_text(encoding="utf-8-sig")
+        if section.suffix.lower() == ".tex":
+            text = _strip_tex_comments(text)
         names = (_norm(m) for m in
                  INCLUDEGRAPHICS_RE.findall(text) + MARKDOWN_IMAGE_RE.findall(text))
         for name in names:

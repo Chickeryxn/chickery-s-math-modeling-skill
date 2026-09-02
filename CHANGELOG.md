@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.9.0 — 2026-09-02
+
+Maintenance release from a full multi-angle audit (P0 correctness → P3 engineering):
+
+- **Validator correctness (P0)**:
+  - `leakage_check` no longer crashes on mixed date/numeric time columns (epoch normalization); `--delimiter` is honored; mixed formats flagged.
+  - `claim_coverage` maps Chinese-numeral section headings (问题三 → Q3) so present sections are not reported MISSING.
+  - `check_frozen_freshness` rejects escaping/absolute source refs, accepts `+0800` offsets on Python 3.10, warns on tz-less `frozen_at`, and documents mtime semantics.
+  - `latex_assembly` detects duplicate claim ids, keeps macro names unique, parses .bib with balanced braces (skips @comment), fixes the LaTeX-comment stripping condition, counts characters not bytes, guards unresolved template placeholders, and emits a single AI-declaration section.
+  - `work_record` replay reads `current_gate`; session artifact links get a `../../` prefix and `check` resolves links from the file's directory; decision cards quote verbatim values.
+  - `run_tests` refuses a false-green pass when no tests are discovered.
+  - `workflow_guard` validates the Qx id shape and keeps snapshot references inside the project root.
+- **Contract unification (P1)**: per-question frozen-number paths everywhere; audit cycle de-locked (consistency → completeness → QA); the three writer prerequisites defined once; model-code-analyzer owns `model_contract.json` + the independent verifier; one shared review status vocabulary; training rounds isolated from contest paths; unified render-evidence key set; MATLAB snapshots must come from the unified runner.
+- **Docs/examples/upstream (P2)**: reference.md/dsh-compatibility test-count drift fixed and guarded by `test_doc_claims`; archify index skill count fixed; golden examples made internally consistent (value ↔ locator ↔ ledger) with cross-example assertions; post-contest lessons no longer target hash-protected upstream files; NOTICE labels modified imports and all four skill trees; five-state upstream usage map added; `validate_upstream_assets` requires full hashes.json coverage; clean-room TOC line removed from the paper template.
+- **Engineering (P3)**: GitHub Actions CI (Py 3.10–3.12 × Ubuntu/Windows) running tests + repo validation + tree checks + CRLF hygiene; deterministic deadline-hint tests; real-validator synthetic scenario tests; orphan fixtures removed; `tests/support.py`; `scripts/lib/common.py` shared helpers; `validate_repo --only/--skip-tests`; `validate_decisions --json`; uncertainty N/A declarations honored by the model quality gate; marketplace carries a version enforced against plugin manifests; frozen guard fails open on unknown tools; figure audit ignores commented/verbatim `\includegraphics`; `license: MIT` frontmatter on all 32 skills.
+- Version badges/plugin manifests/marketplace bumped to 0.9.0; tests grew to 243.
+
 ## 0.8.0 — 2026-09-02
 
 Full content-strategy hardening (engine semantics, automated-gap closure, golden examples, decision-interface policy, training cold start):

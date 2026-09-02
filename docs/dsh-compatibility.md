@@ -73,7 +73,7 @@ plugins:
 
 1. 用 DSH 打开仓库根目录 → 会话技能目录应出现 32 个技能（含 `work-logger`）。
 2. `python scripts/validate_repo.py .` → `status: PASS`。
-3. `python scripts/run_tests.py` → 243 用例全绿。
+3. `python scripts/run_tests.py` → 244 用例全绿。
 4. `python scripts/work_record.py init .`、`log "smoke" . --runtime dsh`、`check .` → 记录树可用；`log` 不带 `--runtime` 时应自动探测为 `dsh`。
 5. 打开一个决策点（或任意问答）后检查：若启用了 hooks 补丁，SessionStart 横幅与 PreToolUse 守卫按预期工作。
 6. 沙箱确认：默认 `workspace-write` 下可写仓库；尝试写仓库外路径应被拒绝并提示升级权限。
@@ -85,7 +85,7 @@ python scripts/validate_repo.py .                 # 仓库级总检（含 4 树�
 python scripts/sync_plugin.py . --check           # 4 树哈希一致性
 python scripts/validate_skill_trees.py .          # 4 树 + manifest 版本 + marketplace
 python scripts/work_record.py check .             # 记录树一致性
-python scripts/run_tests.py                       # 243 用例
+python scripts/run_tests.py                       # 244 用例
 ```
 
 ## 八、边界与保留项

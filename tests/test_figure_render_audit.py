@@ -67,6 +67,21 @@ class FigureRenderAuditTests(unittest.TestCase):
         self.assertIn('not PASS or missing rendered_at', out['errors'][0]['reason'])
         self.assertIn('q1_unused.png', out['unreferenced_figures'])
 
+    def test_commented_and_verbatim_includegraphics_ignored(self):
+        # Regression: \includegraphics inside LaTeX comments or \verb spans
+        # used to count as requirements.
+        root = self.make_workspace()
+        write(root / 'paper/sections/q1.tex',
+              "% \\includegraphics{figures/commented.png}\n"
+              "\\verb|\\includegraphics{figures/verb.png}|\n"
+              "\\includegraphics*{figures/starred.png}\n")
+        write(root / 'paper/figures/starred.png', 'png')
+        render_evidence(root / 'paper/figures/starred.png')
+        out = audit(root)
+        self.assertEqual(out['status'], 'PASS', out['errors'])
+        refs = {x['figure'] for x in out['referenced']}
+        self.assertEqual(refs, {'starred.png'})
+
     def test_markdown_reference_supported(self):
         root = self.make_workspace()
         write(root / 'paper/sections/q1.md', '![main](figures/q1_main.png)')
