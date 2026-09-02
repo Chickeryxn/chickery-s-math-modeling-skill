@@ -51,7 +51,7 @@ Make every visual evidence-bearing. Prefer fewer useful visuals over a decorativ
 
 - Type 1 never enters the paper.
 - Type 3 uses final validated sources and a human-confirmed core claim.
-- In `submission`, any figure that will appear in the paper (Type 2–4) needs render evidence: `math-figure-generator` writes a sibling `<name>.render.json` with the unified key set `status` (`PASS`), `rendered_at`, `checks` (the render checks performed), and `source` (the data/code the figure was rendered from). `scripts/figure_render_audit.py` verifies `status == "PASS"` and a present `rendered_at` for every referenced figure — keep the three skill-side descriptions (here, `math-figure-generator`, `consistency-auditor`) identical to that contract.
+- In `submission`, any figure that will appear in the paper (Type 2–4) needs render evidence: `math-figure-generator` writes a sibling `<name>.render.json` with the unified key set `status` (`PASS`), `rendered_at`, `checks` (the render checks performed), and `source` (the data/code the figure was rendered from). `scripts/figure_render_audit.py` verifies `status == "PASS"` and a present `rendered_at` for every referenced figure. The single source for the render-evidence key set is AGENTS.md ("Figures and Paper"); the skill-side descriptions here, in `math-figure-generator`, and in `consistency-auditor` must stay in sync with it.
 - Do not use unresolved exploratory figures as paper evidence.
 - Do not fabricate data, captions, or claims.
 - Do not fill plans with placeholder sentinels; pause for one human choice instead.

@@ -12,13 +12,15 @@ whenToUse: In submission, when paper sections must be drafted from the solution 
 # Preconditions
 
 - `rigor_profile` is `submission`.
-- The three writer prerequisites hold (numbered exactly as in
-  `workflow-orchestrator` G5 and AGENTS.md "Submission Artifact Contract"):
-  1. a final method explanation exists (`methods/Qx/qx_final_method_explanation.md`);
-  2. a final result analysis exists (`results/Qx/reports/qx_final_result_analysis.md`);
-  3. the solution package and current per-question frozen numbers exist
-     (`results/Qx/reports/qx_solution_package_for_writer.md` and
-     `results/Qx/reports/frozen_numbers.json`).
+- The three writer prerequisites hold — the exact numbered list defined once in
+  `AGENTS.md` ("Submission Artifact Contract"): (1) a final method explanation
+  exists (`methods/Qx/qx_final_method_explanation.md`); (2) a final result
+  analysis exists (`results/Qx/reports/qx_final_result_analysis.md`);
+  (3) the writer package exists
+  (`results/Qx/reports/qx_solution_package_for_writer.md`) and every numerical
+  claim in the section sources from the current
+  `results/Qx/reports/frozen_numbers.json`. Do not maintain a third copy of
+  this list here.
 - Required human claim-scope and physical/domain-meaning decisions are recorded.
 
 If any prerequisite is missing, return to its producer rather than drafting around the gap.

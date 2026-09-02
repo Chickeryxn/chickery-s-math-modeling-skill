@@ -1,8 +1,19 @@
 # Schemas
 
-The schemas are lightweight, human-readable contracts consumed by the repository-local validators. They are intentionally domain-neutral. A new problem supplies a separate `model_contract.json`; do not modify these schemas with problem entities or parameters.
+The schema files are **documented contracts** (lightweight, human-readable,
+domain-neutral). The executable checks live in the `scripts/validate_*.py`
+validators and in the golden-example guard (`tests/test_examples.py`); the JSON
+files themselves are not loaded by any validator, so the coupling between the
+two sides is enforced by `tests/test_schemas_consistency.py` — when you change
+a validator's required keys or status vocabulary, update the matching schema
+file (and vice versa) in the same change. A new problem supplies a separate
+`model_contract.json`; do not modify these schemas with problem entities or
+parameters.
 
-The decision and run snapshot schemas are checked by `validate_decisions.py` and `validate_run_snapshot.py`; the model contract is checked by `validate_model_contract.py`.
+The decision and run snapshot schemas are checked by `validate_decisions.py`
+and `validate_run_snapshot.py`; the model contract is checked by
+`validate_model_contract.py` (each validator's `required`/status sets must
+equal the schema's).
 
 - `lineage.schema.json`: source, validation, input/config/code hash, and stale-state contract (produced by `scripts/lineage.py make`, assessed by `scripts/lineage.py assess`).
 - `run_snapshot.schema.json`: immutable experiment snapshot contract (produced by `scripts/create_run_snapshot.py`, validated by `scripts/validate_run_snapshot.py`).

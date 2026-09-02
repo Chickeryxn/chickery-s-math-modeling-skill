@@ -19,6 +19,10 @@ Ensure the same concept uses one symbol and different concepts do not collide.
 
 Read legacy candidate pools only when method cards are absent.
 
+Maintenance is two-pass: produce the first-pass symbol table from the problem
+frame alone, then re-run after method screening/code plans exist to fold in
+method-specific symbols — do not require the method card before the first pass.
+
 # Workflow
 
 1. Extract inputs, outputs, parameters, decisions, states, indices, sets, functions, and intermediate quantities.

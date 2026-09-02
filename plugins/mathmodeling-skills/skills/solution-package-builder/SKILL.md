@@ -33,6 +33,10 @@ Create the writer's single source package and immutable numerical snapshot. Do n
 5. Route the human answer to `modeler-decision-logger` as `package_signoff`.
 6. Only after sign-off, generate `results/Qx/reports/frozen_numbers.json`.
 7. Verify every numerical package claim resolves to the freeze and every judgment claim resolves to a human decision ID.
+8. Run `python scripts/check_frozen_freshness.py .` before handoff; treat any
+   stale claim (missing source, source newer than `frozen_at`, or invalid
+   `frozen_at`) as a blocker — thaw, rerun the affected source, and re-freeze
+   rather than shipping a stale freeze.
 
 # Frozen Number Contract
 

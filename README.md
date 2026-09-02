@@ -9,7 +9,7 @@
 | 版本 | [0.9.0](CHANGELOG.md)（插件 manifest 同步） |
 | 组成 | 32 个技能 · 32 个纯标准库脚本 · Python 3.10+（零第三方依赖） |
 | 平台 | Windows / Linux / macOS |
-| CI | [![CI](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml) Ubuntu/Windows × Py 3.10–3.12，260 个用例全绿 |
+| CI | [![CI](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml) Ubuntu/Windows × Py 3.10–3.12，266 个用例全绿 |
 | 许可 | [MIT](LICENSE) |
 
 ## 它解决什么问题
@@ -118,6 +118,9 @@ cd chickery-s-math-modeling-skill
 
 **Q：第一次跑，从哪开始？**
 看 [学习路径](docs/learning-path.md)；或用默认 `learning + lean` 配置直接拿一道赛题练一轮，体会它在哪些节点停下来问你。
+
+**Q：赛题/数据/草稿会被 git 误提交吗？**
+不会（除非强制 `git add -f`）：`.gitignore` 已忽略 `workspace/` 数据与 `methods/results/robustness/paper/code/Q*/scratch` 等竞赛产物（占位 `.gitkeep` 仍保留）。若要完全隔离，推荐在独立目录或 `git worktree` 中跑竞赛，赛后只把需要的复盘/记录拷回。
 
 **Q：与 XiaoMaColtAI 等上游库是什么关系？**
 本项目合并了 6 个上游项目并锁定 12 项决策（历史见 [references/README.md](references/README.md)）；现行可执行契约以 `AGENTS.md`、`schemas/`、`scripts/` 为准。

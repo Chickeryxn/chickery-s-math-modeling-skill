@@ -41,7 +41,7 @@ If these are missing, return to the producer skill rather than guessing.
    - Identify the failure modes that would make a method unusable.
 
 3. **Create a role-based shortlist.**
-   - Generate candidates from **at least two modeling paradigms** unless the required output locks the paradigm (use `references/abstraction-patterns.md` for the abstraction four-step and multi-paradigm templates).
+   - Generate candidates from **at least two modeling paradigms** unless the required output locks the paradigm (use the repo-level `references/abstraction-patterns.md` for the abstraction four-step and multi-paradigm templates).
    - One `main_candidate`: best fit to the chosen trade-off.
    - One `usable_baseline`: completes the real task and yields directly comparable outputs.
    - At most one `conditional_fallback`: differs in a meaningful mathematical way and has an explicit activation trigger.

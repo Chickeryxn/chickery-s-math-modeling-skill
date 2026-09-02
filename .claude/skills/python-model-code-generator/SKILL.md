@@ -12,7 +12,7 @@ whenToUse: When the approved plan targets Python and runnable reproducible code 
 - Required cleaned data and profile exist.
 - The plan targets Python.
 
-Legacy method-pool files may be read during migration, but they do not override the human choice. (The old migration note "code/model-code-analyzer.md" referred to a legacy artifact name, not a file to create; the current code plan lives at `code/Qx/qx_code_plan.md`.)
+Legacy method-pool files may be read during migration, but they do not override the human choice; the current code plan lives at `code/Qx/qx_code_plan.md`.
 
 # Workflow
 

@@ -71,15 +71,12 @@ Follow the `model-code-analyzer` contract, including approved decision ID, roles
 
 ## Immutable run requirement
 
-Create the immutable run snapshot with `scripts/create_run_snapshot.py` exactly
-as the Python generator does — a snapshot produced by the MATLAB code itself
-cannot claim `SUCCESS` (the validator requires `executed_by_runner: true` and a
+Create the immutable run snapshot by invoking `python scripts/create_run_snapshot.py`
+from the agent runtime (the harness/shell calls the runner; MATLAB/北太天元 code
+must never write or finalize snapshot metadata itself) exactly as the Python
+generator does — a snapshot produced by the MATLAB code itself cannot claim
+`SUCCESS` (the validator requires `executed_by_runner: true` and a
 return code of 0). When no compatible runtime is available, record the round as
 `NOT_RUN` with the snapshot begun but not finalized; never self-certify an
 unexecuted round. Record planned and actual budgets, input/config/code hashes,
 exact command, runtime, status, result reference, and validation reference.
-
-
-## v0.3 runner requirement
-
-Record MATLAB execution through the unified run snapshot contract or an equivalent snapshot with runner evidence, return code, output hashes, budget delta, and validation reference. Static files do not prove execution.

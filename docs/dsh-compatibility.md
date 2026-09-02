@@ -89,7 +89,7 @@ python scripts/validate_repo.py .                 # 仓库级总检（含 4 树�
 python scripts/sync_plugin.py . --check           # 4 树哈希一致性
 python scripts/validate_skill_trees.py .          # 4 树 + manifest 版本 + marketplace
 python scripts/work_record.py check .             # 记录树一致性
-python scripts/run_tests.py                       # 260 用例
+python scripts/run_tests.py                       # 266 用例
 ```
 
 ## 八、边界与保留项

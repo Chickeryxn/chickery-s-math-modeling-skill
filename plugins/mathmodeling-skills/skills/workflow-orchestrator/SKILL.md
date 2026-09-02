@@ -116,14 +116,13 @@ In `submission`, additionally require:
 
 ## G5 — PAPER_SECTION_READY
 
-Require the three writer prerequisites (defined identically in
-`paper-section-writer`), plus frozen-number sourcing, human-confirmed
-interpretation/claim scope, and verified figures. The three are:
-
-1. a final method explanation exists (`methods/Qx/qx_final_method_explanation.md`);
-2. a final result analysis exists (`results/Qx/reports/qx_final_result_analysis.md`);
-3. every numerical claim in the section traces to the per-subquestion
-   `results/Qx/reports/frozen_numbers.json`.
+Require the three writer prerequisites — the exact numbered list defined once
+in `AGENTS.md` ("Submission Artifact Contract") and mirrored by
+`paper-section-writer` preconditions: final method explanation, final result
+analysis, and the writer package with every numerical claim sourcing from the
+current `results/Qx/reports/frozen_numbers.json`. Plus human-confirmed
+interpretation/claim scope and render-verified figures. Do not maintain a
+second copy of the numbered list here.
 
 ## G6 — FINAL_AUDIT_PASSED
 

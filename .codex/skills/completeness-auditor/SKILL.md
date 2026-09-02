@@ -72,11 +72,18 @@ otherwise completeness and QA mutually require each other and neither can pass.
 - Final verdict is `PASSED` only when all submission requirements are satisfied.
 
 
-## Status-aware completeness
+## Status vocabulary (single set)
 
-Classify each artifact as `CURRENT`, `STALE`, `MISSING`, or `INVALIDATED` using lineage evidence. Distinguish `MECHANICAL_PASS`, `SEMANTIC_PASS`, `HUMAN_JUDGMENT_PENDING`, `GATE_BLOCKED`, and `NOT_RUN`. Artifact count is not evidence of completion.
+Completeness verdicts use one vocabulary: `PRESENT` (evidence exists and is
+current), `MISSING` (absent), `INSUFFICIENT` (present but missing required
+semantic fields/checks or lineage — a present file with missing lineage is
+`INSUFFICIENT`, never `PRESENT`), `STALE` (materially cited source changed),
+`NOT_APPLICABLE` (justified by task/profile).
 
-
-## v0.3 evidence status
-
-Include current/stale/missing lineage, run snapshot status, decision provenance, and independence status in completeness. A present file with missing lineage is `INSUFFICIENT`, not `PRESENT`.
+When this audit calls the lineage/run-snapshot validators, report their own
+statuses verbatim (`CURRENT`/`STALE`/`MISSING` for lineage, run-snapshot
+status, decision provenance, independence status) without translating them
+into the evidence vocabulary. QA-level statuses
+(`MECHANICAL_PASS`/`SEMANTIC_PASS`/`HUMAN_JUDGMENT_PENDING`/`GATE_BLOCKED`/
+`NOT_RUN`) are produced by the QA layer, not by this skill. Artifact count is
+not evidence of completion.

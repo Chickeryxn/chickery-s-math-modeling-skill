@@ -38,7 +38,7 @@ Detailed cues are in `references/task-type-guide.md`.
 3. Identify mixed or ambiguous framings that would change what the team can claim.
 4. For a load-bearing ambiguity, invoke one choice card explaining consequences. Do not silently settle it.
 5. Save `planning/classification/problem_classification.json`.
-6. Record the human framing decision in `methods/Qx/qx_decisions.jsonl`, or in `planning/framing_decisions.jsonl` when the Qx method directory does not yet exist.
+6. Delegate recording the human framing decision to `modeler-decision-logger` (it appends the verbatim answer to `methods/Qx/qx_decisions.jsonl`, or to `planning/framing_decisions.jsonl` when the Qx method directory does not yet exist); never write ledger lines directly.
 
 # Output Contract
 

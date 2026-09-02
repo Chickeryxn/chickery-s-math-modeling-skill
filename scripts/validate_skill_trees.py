@@ -15,6 +15,29 @@ except Exception:
 def rel_files(root):return sorted(p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file() and p.name!='.DS_Store' and not p.name.endswith('.pyc'))
 def hashes(root):return {rel:hashlib.sha256((root/rel).read_bytes()).hexdigest() for rel in rel_files(root)}
 def load(p):return json.loads(p.read_text(encoding='utf-8-sig'))
+SCRIPT_REF_RE=__import__('re').compile(r'(?<![\w./-])scripts/([\w.-]+\.py)')
+UPSTREAM_REF_RE=__import__('re').compile(r'(?<![\w./-])references/upstream/([\w/-]+\.(?:md|py))')
+def skill_ref_errors(root,base):
+ """Every repo-relative script/upstream path referenced by a skill must exist.
+
+ Pattern lookbehind keeps this from matching embedded example paths such as
+ `workspace/code/scripts/clean.py` (preceded by '/') — only repo-root-relative
+ references like `scripts/resource_index.py` are checked.
+ """
+ out=[]
+ seen=set()
+ for md in sorted(base.rglob('*.md')):
+  text=md.read_text(encoding='utf-8-sig')
+  where=str(md.relative_to(root)).replace('\\','/')
+  for m in SCRIPT_REF_RE.finditer(text):
+   tok='scripts/'+m.group(1)
+   if tok not in seen and not (root/'scripts'/m.group(1)).is_file():
+    seen.add(tok);out.append(f'ghost script reference {tok} (in {where})')
+  for m in UPSTREAM_REF_RE.finditer(text):
+   tok='references/upstream/'+m.group(1)
+   if tok not in seen and not (root/'references'/'upstream'/m.group(1)).is_file():
+    seen.add(tok);out.append(f'ghost upstream reference {tok} (in {where})')
+ return out
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('root',type=Path);a=ap.parse_args();r=a.root.resolve();errors=[]
  trees=[r/'.codex/skills',r/'.claude/skills',r/'plugins/mathmodeling-skills/skills',r/'.agents/skills'];base=trees[0]
@@ -24,6 +47,7 @@ def main():
   for tree in trees[1:]:
    if not tree.is_dir():errors.append(f'missing skill tree {tree}')
    elif hashes(tree)!=source:errors.append(f'skill tree drift: {tree}')
+  errors.extend(skill_ref_errors(r,base))
  try:
   codex=load(r/'plugins/mathmodeling-skills/.codex-plugin/plugin.json');claude=load(r/'plugins/mathmodeling-skills/.claude-plugin/plugin.json');market=load(r/'.agents/plugins/marketplace.json')
   if codex.get('version')!=claude.get('version'):errors.append('plugin manifest versions differ')

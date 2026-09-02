@@ -4,3 +4,46 @@ __pycache__/
 .DS_Store
 Thumbs.db
 docs/diagrams/archify/generated/
+
+# ---- Contest-content privacy guard -------------------------------
+# Following the README quick start, contest problems, attachments and derived
+# artifacts live inside the repo tree. These are NOT meant to be committed:
+# an accidental `git add .` could publish the problem set, data and your
+# draft work. Tracked placeholder files (.gitkeep) stay visible; generated
+# content under these paths is ignored. For full isolation, run a contest in
+# a separate git worktree or outside this repository (see README FAQ).
+/workspace/problem.txt
+/workspace/data_raw/*
+!/workspace/data_raw/.gitkeep
+/workspace/data_clean/*
+!/workspace/data_clean/.gitkeep
+/workspace/data/*
+!/workspace/data/.gitkeep
+/workspace/papers/*
+!/workspace/papers/.gitkeep
+/workspace/archived/*
+!/workspace/archived/.gitkeep
+/methods/*
+!/methods/.gitkeep
+/code/Q*/
+/code/matlab/Q*/
+/results/*
+!/results/.gitkeep
+/robustness/*
+!/robustness/.gitkeep
+/paper/sections/*
+!/paper/sections/.gitkeep
+/paper/audits/*
+!/paper/audits/.gitkeep
+/paper/figures/*
+!/paper/figures/.gitkeep
+/scratch/*
+!/scratch/.gitkeep
+/planning/parse/*
+!/planning/parse/.gitkeep
+/planning/classification/*
+!/planning/classification/.gitkeep
+/planning/manifests/*
+!/planning/manifests/.gitkeep
+/planning/framing_decisions.jsonl
+/planning/model_contract.json

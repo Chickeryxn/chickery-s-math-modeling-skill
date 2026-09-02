@@ -52,29 +52,37 @@ def main():
         example = r / 'planning' / 'model_contract.example.json'
         if example.is_file():
             add('contract', [py, str(r / 'scripts' / 'validate_model_contract.py'), str(example)])
-    if want('manifests'):
-        for p in sorted((r / 'planning' / 'manifests').glob('*.json')):
-            add('manifests', [py, str(r / 'scripts' / 'validate_manifest.py'), str(r), str(p)])
-    if want('artifacts'):
-        for p in sorted((r / 'planning' / 'manifests').glob('*.json')):
-            add('artifacts', [py, str(r / 'scripts' / 'validate_artifacts.py'), str(r), str(p)])
-    if want('decisions'):
-        for p in sorted(r.glob('methods/Q*/**/*_decisions.jsonl')):
-            add('decisions', [py, str(r / 'scripts' / 'validate_decisions.py'), str(r), str(p)])
-    if want('snapshots'):
-        for p in sorted(r.glob('results/**/run_metadata.json')):
-            add('snapshots', [py, str(r / 'scripts' / 'validate_run_snapshot.py'), str(r), str(p.parent)])
-    if want('lineage'):
-        for p in sorted(r.glob('**/*.lineage.json')):
-            add('lineage', [py, str(r / 'scripts' / 'lineage.py'), 'assess', str(r), str(p)])
-    if want('independence'):
-        for p in sorted(r.glob('results/**/run_summary.json')):
-            try:
-                d = json.loads(p.read_text(encoding='utf-8-sig'))
-            except Exception:
-                continue
-            if d.get('methods') or d.get('verifier'):
-                add('independence', [py, str(r / 'scripts' / 'validate_independence.py'), str(r), str(p)])
+    def scanned(group: str, items: list) -> None:
+        # Keep empty artifact groups visible: "nothing found to check" is an
+        # advisory fact, not a silent pass (an empty workspace previously
+        # reported PASS for every scoped group while checking nothing).
+        if want(group):
+            if items:
+                for it in items:
+                    add(group, it)
+            else:
+                reports.append({'group': group, 'note': 'no artifacts to check',
+                                'scanned': 0})
+
+    scanned('manifests', [[py, str(r / 'scripts' / 'validate_manifest.py'), str(r), str(p)]
+                          for p in sorted((r / 'planning' / 'manifests').glob('*.json'))])
+    scanned('artifacts', [[py, str(r / 'scripts' / 'validate_artifacts.py'), str(r), str(p)]
+                          for p in sorted((r / 'planning' / 'manifests').glob('*.json'))])
+    scanned('decisions', [[py, str(r / 'scripts' / 'validate_decisions.py'), str(r), str(p)]
+                          for p in sorted(r.glob('methods/Q*/**/*_decisions.jsonl'))])
+    scanned('snapshots', [[py, str(r / 'scripts' / 'validate_run_snapshot.py'), str(r), str(p.parent)]
+                          for p in sorted(r.glob('results/**/run_metadata.json'))])
+    scanned('lineage', [[py, str(r / 'scripts' / 'lineage.py'), 'assess', str(r), str(p)]
+                        for p in sorted(r.glob('**/*.lineage.json'))])
+    indep_cmds = []
+    for p in sorted(r.glob('results/**/run_summary.json')):
+        try:
+            d = json.loads(p.read_text(encoding='utf-8-sig'))
+        except Exception:
+            continue
+        if d.get('methods') or d.get('verifier'):
+            indep_cmds.append([py, str(r / 'scripts' / 'validate_independence.py'), str(r), str(p)])
+    scanned('independence', indep_cmds)
     if want('qa'):
         qa = run([py, str(r / 'scripts' / 'qa_report.py'), str(r)], r)
         reports.append(qa)

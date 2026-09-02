@@ -13,6 +13,6 @@ Inspect the rendered image or PDF page, not only the plotting code.
 - uncertainty, baseline, and main method are identified correctly;
 - caption and visual support the same claim;
 - source row/count/metric agrees with the canonical data artifact;
-- Type 3/4 output exists under `paper/figures/`.
+- Type 2–4 output (any figure that may enter the paper) exists under `paper/figures/` with a sibling `<figure>.render.json`.
 
 Record failures concisely and rerender after correction.

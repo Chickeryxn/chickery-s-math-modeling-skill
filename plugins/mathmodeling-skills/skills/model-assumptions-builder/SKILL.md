@@ -15,6 +15,11 @@ whenToUse: When assumptions must be extracted and maintained from the frame, met
 
 Read legacy candidate pools only during migration.
 
+Maintenance is two-pass: produce the first-pass assumptions table from the
+problem frame alone, then re-run after method screening to fold in the active
+method cards, data profile, and probes — do not deadlock on those inputs
+existing before the first pass.
+
 # Workflow
 
 1. Extract explicit problem assumptions and method-induced assumptions.
@@ -27,7 +32,7 @@ Read legacy candidate pools only during migration.
    - mitigation or fallback link.
 4. Identify conflicts across Qx.
 5. Present unresolved necessity/impact trade-offs in one compact choice card where possible.
-6. Log human `assumption_necessity` decisions in `qx_decisions.jsonl`.
+6. For human `assumption_necessity` decisions, delegate recording to `modeler-decision-logger` (it appends the user's verbatim answer to `qx_decisions.jsonl`); never write ledger lines directly.
 7. Save `planning/model_assumptions.md`, transcribing settled human labels and impacts with decision IDs.
 
 # Assumption Fields

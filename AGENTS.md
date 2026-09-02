@@ -262,6 +262,15 @@ The three critical writer rules remain:
 2. No final result analysis, no writer handoff.
 3. The writer reads the solution package rather than guessing from scattered results.
 
+The three writer prerequisites (single definition; `paper-section-writer`
+preconditions and `workflow-orchestrator` G5 refer to this exact list):
+
+1. a final method explanation exists (`methods/Qx/qx_final_method_explanation.md`);
+2. a final result analysis exists (`results/Qx/reports/qx_final_result_analysis.md`);
+3. the writer package exists (`results/Qx/reports/qx_solution_package_for_writer.md`)
+   and every numerical claim in the section sources from the current
+   `results/Qx/reports/frozen_numbers.json`.
+
 # Change Impact and Auditing
 
 Classify a change before auditing:

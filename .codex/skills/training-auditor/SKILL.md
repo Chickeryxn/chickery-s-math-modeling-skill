@@ -22,9 +22,9 @@ Turn a round's artifacts into a **6-dimension literacy scorecard** and a summary
    scan the real contest):
    - `python scripts/model_quality_gate.py <round_root>` (round root = `results/training/roundN/solution` layout, adapted per the solver's neutral layout)
    - `python scripts/claim_coverage.py <round_root>`
-   - `python scripts/abstract_checker.py results/training/roundN/solution/<abstract file> --subquestions Q1,Q2,...` (if the round has sections)
-   - `python scripts/ai_trace_checker.py results/training/roundN/solution/<file>` (sample)
-   - `python scripts/leakage_check.py --profile results/training/roundN/solution/data_profile.json --target <y>` (if applicable)
+   - `python scripts/abstract_checker.py results/training/roundN/solution/<abstract file> --subquestions Q1,Q2,...` (if the round has sections; `<abstract file>` = the round's own abstract file, e.g. `abstract.tex` or the section containing 摘要/Abstract)
+   - `python scripts/ai_trace_checker.py results/training/roundN/solution/<file>` (sample; `<file>` = a round-local text file to scan)
+   - `python scripts/leakage_check.py --profile results/training/roundN/solution/data_profile.json --target <y>` (if applicable; `<y>` = the round's own target column)
    - `python scripts/figure_consistency_check.py results/training/roundN/solution/figures`
    - `python scripts/section_structure_check.py <round_root>`
 2. **Literacy scorecard**: run `python scripts/training_scorecard.py round results/training/roundN --json` to get the template, then fill agent self-scores (1–5 + evidence path per dimension), leaving `user_score` null for the human.
