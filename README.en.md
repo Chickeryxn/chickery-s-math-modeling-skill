@@ -12,7 +12,7 @@
 | Platforms | Windows / Linux / macOS |
 | Tests | 171 cases, `python scripts/run_tests.py` all green |
 
-## What this is (30 seconds)
+## What this is
 
 Mathematical-modeling contests now allow AI assistance, but letting an Agent "free-wheel" creates two risks: **the AI makes modeling judgments for you** (choosing methods, writing rationales, drawing conclusions), and **results are untrustworthy** (code that never ran, numbers without provenance, versions nobody can verify).
 
@@ -24,7 +24,7 @@ This project splits a contest into **six gate stages (G1–G6)**; passing each g
 | **Humans own modeling judgment** | Method choice, result verdicts, confidence, physical meaning, and contribution framing are human decisions, always recorded |
 | **Evidence drives everything** | Gates, freezes, and paper numbers must trace back to real on-disk artifacts and hashes, never to verbal claims |
 
-## Quick start (4 steps)
+## Quick start
 
 ```bash
 git clone https://github.com/Chickeryxn/chickery-s-math-modeling-skill.git
@@ -39,7 +39,7 @@ git checkout mathmodeling-new-skeleton
 
 Session configuration lives in `planning/session_config.json`: `interaction_mode` (`learning`/`speed`) controls question density, `rigor_profile` (`lean`/`submission`) controls artifact and audit density; new workspaces default to `learning + lean`, switch to `submission` before handoff.
 
-## Core concepts (60 seconds)
+## Core concepts
 
 ![Generic gate pipeline](docs/diagrams/archify/assets/mm-generic-workflow.png)
 

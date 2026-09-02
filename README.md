@@ -12,7 +12,7 @@
 | 平台 | Windows / Linux / macOS |
 | 测试 | 171 个用例，`python scripts/run_tests.py` 全绿 |
 
-## 这是什么（30 秒）
+## 这是什么
 
 数学建模竞赛允许 AI 辅助，但直接让 Agent「自由发挥」会带来两类风险：**AI 越权替你做建模判断**（选方法、编理由、下结论），以及**结果不可信**（代码没跑、数字无出处、版本过期无法核对）。
 
@@ -24,7 +24,7 @@
 | **人类拥有建模判断权** | 选方法、判结果、定置信度、物理意义与贡献论述，只能由人类拍板，并留痕 |
 | **证据驱动一切** | 门禁、冻结、论文数字都必须溯源到磁盘上的真实工件与哈希，禁止口头声明 |
 
-## 快速开始（4 步）
+## 快速开始
 
 ```bash
 git clone https://github.com/Chickeryxn/chickery-s-math-modeling-skill.git
@@ -39,7 +39,7 @@ git checkout mathmodeling-new-skeleton
 
 会话配置在 `planning/session_config.json`：`interaction_mode`（`learning`/`speed`）控制提问密度，`rigor_profile`（`lean`/`submission`）控制工件与审计密度；新工作区默认 `learning + lean`，提交前切到 `submission`。
 
-## 核心概念（60 秒）
+## 核心概念
 
 ![通用门控流水线](docs/diagrams/archify/assets/mm-generic-workflow.png)
 
