@@ -73,6 +73,52 @@ class FrozenFreshnessTests(unittest.TestCase):
                                 str(root)], capture_output=True, text=True, encoding='utf-8')
             self.assertEqual(p.returncode, 0, p.stderr)
 
+    def test_escaping_source_is_rejected(self):
+        # Regression: an absolute source path (or one escaping root via '..')
+        # was resolved outside the workspace without a containment check.
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            outside = Path(td).parent / 'outside-secret.json'
+            write(outside, 'x')
+            frozen_file(root, [claim('q1_rmse', str(outside), '2099-01-01T00:00:00Z')])
+            out = audit(root)
+            self.assertEqual(out['status'], 'FAIL')
+            self.assertIn('escapes project root', out['stale'][0]['reason'])
+            outside.unlink(missing_ok=True)
+
+    def test_dotdot_escaping_source_is_rejected(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            write(root / 'results/Q1/reports/frozen_numbers.json',
+                  json.dumps({'claims': [claim('q1_rmse', '../../../../etc/hosts',
+                                               '2099-01-01T00:00:00Z')]}))
+            out = audit(root)
+            self.assertEqual(out['status'], 'FAIL')
+            self.assertIn('escapes project root', out['stale'][0]['reason'])
+
+    def test_no_colon_offset_frozen_at_accepted(self):
+        # Python 3.10's fromisoformat rejects '+0800' (no colon); the checker
+        # must normalize it. frozen_at in the far future keeps the claim fresh.
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            write(root / 'results/Q1/experiments/final/metrics/main.json', '1')
+            frozen_file(root, [claim('q1_rmse', 'results/Q1/experiments/final/metrics/main.json',
+                                     '2099-01-01T00:00:00+0800')])
+            out = audit(root)
+            self.assertEqual(out['status'], 'PASS', out)
+
+    def test_naive_frozen_at_warns_but_passes(self):
+        # A tz-less frozen_at is interpreted as UTC (advisory warning only).
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            write(root / 'results/Q1/experiments/final/metrics/main.json', '1')
+            frozen_file(root, [claim('q1_rmse', 'results/Q1/experiments/final/metrics/main.json',
+                                     '2099-01-01T00:00:00')])
+            out = audit(root)
+            self.assertEqual(out['status'], 'PASS')
+            self.assertEqual(len(out['warnings']), 1)
+            self.assertIn('no timezone', out['warnings'][0]['reason'])
+
 
 if __name__ == '__main__':
     unittest.main()

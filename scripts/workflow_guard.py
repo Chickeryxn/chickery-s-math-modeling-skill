@@ -202,6 +202,9 @@ def _round_no(path: Path) -> int:
     m=re.search(r'(\d+)\s*$',path.parent.name)
     return int(m.group(1)) if m else 0
 
+QID_RE = re.compile(r'^Q\d+$')
+
+
 def derive_state(root: Path, qid: str, profile: str = 'submission'):
     """Derive the current gate from canonical evidence.
 
@@ -212,6 +215,8 @@ def derive_state(root: Path, qid: str, profile: str = 'submission'):
     freeze, sign-off) are required only in the submission track. G5/G6 are
     submission-only and are not evaluated in lean.
     """
+    if not QID_RE.match(qid or ''):
+        raise ValueError(f'invalid question id: {qid!r} (expected Q<number>, e.g. Q1)')
     checks={};
     parse_path=first(root,'planning/parse/problem_parse.json')
     classification_path=first(root,'planning/classification/problem_classification.json')
@@ -243,7 +248,11 @@ def derive_state(root: Path, qid: str, profile: str = 'submission'):
         data=load_json(path)
         ref=data.get('run_snapshot') or data.get('snapshot_ref')
         if not isinstance(ref,str): return False
-        snapshot=(root/ref).resolve()
+        try:
+            snapshot=(root/ref).resolve()
+            snapshot.relative_to(root.resolve())
+        except ValueError:
+            return False  # snapshot reference escapes the project root
         if not snapshot.is_file(): return False
         try: snap=load_json(snapshot)
         except Exception: return False

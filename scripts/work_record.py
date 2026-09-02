@@ -142,8 +142,12 @@ def cmd_log(args) -> int:
     ts = datetime.now().strftime("%H:%M:%S")
     entry = f"## {ts} - {args.text}\n"
     if args.artifacts:
+        # Artifacts are given as repository-root-relative paths; session files
+        # live two levels deep under records/sessions/, so the rendered links
+        # must climb back to the repo root (../../) or clicking them breaks
+        # (Markdown resolves links relative to the file, not the repo root).
         for a in args.artifacts:
-            entry += f"- 产物: [{a}]({a})\n"
+            entry += f"- 产物: [{a}](../../{a})\n"
     if args.subject:
         entry += f"- 子问题: {args.subject}\n"
     if args.tags:
@@ -238,6 +242,12 @@ def cmd_decision(args) -> int:
     slug = re.sub(r"[^A-Za-z0-9_.-]+", "-", args.decision_id)
     path = rec(root, "decisions", f"{date}-{q}-{slug}.md")
     src = rec_.get("source") or {}
+    def quoted(value) -> str:
+        """Render a verbatim human value as a blockquote so Markdown
+        metacharacters in the original wording (pipes, code fences, '---')
+        cannot corrupt the card's structure."""
+        lines = str(value or "").splitlines() or [""]
+        return "\n".join(f"> {ln}" for ln in lines)
     body = (
         f"---\ndate: {date}\nsubject: {q}\ndecision_id: {args.decision_id}\n"
         f"ledger: {ledger_rel}\n---\n\n"
@@ -245,12 +255,12 @@ def cmd_decision(args) -> int:
         f"- 子问题: {q} | 类型: {rec_.get('decision_type')} | 状态: {rec_.get('status')}\n"
         f"- 决定人: {rec_.get('decided_by')} | 时间: {rec_.get('recorded_at')}\n"
         f"- 账本位置: {ledger_rel}:{no}\n\n"
-        f"## 选择\n\n{rec_.get('choice')}\n\n"
-        f"## 理由（用户原话，AI 不重写）\n\n{rec_.get('rationale')}\n\n"
+        f"## 选择\n\n{quoted(rec_.get('choice'))}\n\n"
+        f"## 理由（用户原话，AI 不重写）\n\n{quoted(rec_.get('rationale'))}\n\n"
         f"## 证据引用\n\n"
         + "\n".join(f"- {r}" for r in (rec_.get("evidence_refs") or []))
         + f"\n\n## 来源消息\n\n- 消息 ID: {src.get('user_message_id')}\n"
-        f"- 用户原话: {src.get('user_verbatim_answer')}\n")
+        f"- 用户原话:\n\n{quoted(src.get('user_verbatim_answer'))}\n")
     path.write_text(body, encoding="utf-8")
     print(json.dumps({"status": "CARD_WRITTEN", "card": path.name}, ensure_ascii=False))
     return 0
@@ -316,7 +326,10 @@ def cmd_replay(args) -> int:
             continue
         if not isinstance(d, dict):
             continue
-        gate = d.get("gate") or d.get("derived_gate") or d.get("stage")
+        # Canonical manifest key is current_gate (validate_manifest /
+        # workflow_guard); tolerate older alternate spellings during migration.
+        gate = (d.get("current_gate") or d.get("gate")
+                or d.get("derived_gate") or d.get("stage"))
         entries.append((str(d.get("updated_at") or d.get("recorded_at") or ""),
                         f"{p.stem} manifest: gate={gate}"))
     for p in sorted((root / "methods").glob("*/q*_decisions.jsonl")):
@@ -414,12 +427,25 @@ def check_gates(path: Path, errors: list) -> None:
 
 
 def check_links(root: Path, path: Path, errors: list) -> None:
+    """Verify relative Markdown links resolve from the file's own directory.
+
+    Links are written relative to the containing file (sessions entries use
+    '../../repo/root/...', records/README.md index entries use
+    'sessions/x.md' relative to records/). Resolving from the file directory
+    matches how Markdown viewers open them; external URLs and anchors are
+    skipped.
+    """
     for m in LINK_RE.finditer(path.read_text(encoding="utf-8-sig")):
         ref = m.group(1)
-        if ref.startswith(("http://", "https://", "#")) or ref.startswith(("sessions/", "subjects/",
-                                                                           "gates/", "decisions/", "retros/")):
+        if ref.startswith(("http://", "https://", "#", "mailto:")):
             continue
-        if not (root / ref).exists():
+        try:
+            target = (path.parent / ref).resolve()
+            target.relative_to(root.resolve())
+        except ValueError:
+            errors.append(f"{path}: link escapes project root: {ref}")
+            continue
+        if not target.exists():
             errors.append(f"{path}: broken link {ref}")
 
 

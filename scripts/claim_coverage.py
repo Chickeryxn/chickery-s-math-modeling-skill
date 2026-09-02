@@ -30,6 +30,33 @@ from abstract_checker import extract_abstract
 
 SECTION_RE = re.compile(r"\\section\*?\{([^}]*)\}", flags=re.S)
 
+# Chinese numerals used in section headings such as 问题一 / 问题十二.
+_CN_DIGITS = {"一": 1, "二": 2, "两": 2, "三": 3, "四": 4, "五": 5,
+              "六": 6, "七": 7, "八": 8, "九": 9, "十": 10}
+
+
+def cn_num_to_arabic(token: str) -> str:
+    """Map a small Chinese numeral token (1..99) to Arabic digits.
+
+    Handles single digits (一..九), tens (十, 二十, 十二, 二十一), and bare
+    ASCII digits (already Arabic). Larger numbers are not expected in contest
+    subquestion labels; on any unhandled shape the token is returned as-is so
+    callers keep a stable, non-crashing fallback.
+    """
+    t = token.strip()
+    if not t:
+        return t
+    if t.isdigit():
+        return t
+    if "十" not in t:
+        if len(t) == 1 and t in _CN_DIGITS:
+            return str(_CN_DIGITS[t])
+        return t  # unhandled shape (e.g. 百/千) -> keep verbatim
+    head, _, tail = t.partition("十")
+    tens = _CN_DIGITS.get(head, 1) if head else 1
+    units = _CN_DIGITS.get(tail, 0) if tail else 0
+    return str(tens * 10 + units)
+
 
 def load_subquestions(root: Path) -> list[str]:
     p = root / "planning" / "parse" / "problem_parse.json"
@@ -57,7 +84,7 @@ def section_qids(root: Path) -> dict[str, str]:
             t = title.strip()
             mm = re.search(r"(?:问题|Q)\s*([一二三四五六七八九十0-9]+)", t)
             if mm:
-                found.append("Q" + mm.group(1))
+                found.append("Q" + cn_num_to_arabic(mm.group(1)))
         out[p.name] = sorted(set(found))
     return out
 

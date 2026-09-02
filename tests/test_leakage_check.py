@@ -44,6 +44,31 @@ class LeakageCheckTests(unittest.TestCase):
         self.assertEqual(r["status"], "PASS")
         td.cleanup()
 
+    def test_mixed_date_and_numeric_time_does_not_crash(self):
+        # Regression: parse_time returned datetime for dates and float for
+        # numeric tokens; comparing the two raised TypeError and crashed the
+        # whole script. Both kinds now normalize to epoch-seconds floats.
+        td = tempfile.TemporaryDirectory()
+        p = write_csv(Path(td.name), "date,y\n2026-01-01,1\n100,2\n2026-01-02,3\n")
+        r = check_file(p, "y", time_col="date")
+        self.assertIn("status", r)
+        self.assertTrue(any("mixes date and numeric formats" in f for f in r["findings"]))
+        td.cleanup()
+
+    def test_numeric_time_descending_detected(self):
+        td = tempfile.TemporaryDirectory()
+        p = write_csv(Path(td.name), "t,y\n300,1\n200,2\n100,3\n")
+        r = check_file(p, "y", time_col="t")
+        self.assertTrue(any("not ascending" in f for f in r["findings"]))
+        td.cleanup()
+
+    def test_delimiter_option_is_used(self):
+        td = tempfile.TemporaryDirectory()
+        p = write_csv(Path(td.name), "x;y\n1;2\n2;3\n")
+        r = check_file(p, "y", delimiter=";")
+        self.assertEqual(r["status"], "PASS")
+        td.cleanup()
+
     def test_duplicate_rows_detected(self):
         td = tempfile.TemporaryDirectory()
         p = write_csv(Path(td.name), "x,y\n1,2\n1,2\n3,4\n")

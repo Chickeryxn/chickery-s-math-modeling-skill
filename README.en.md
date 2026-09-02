@@ -10,7 +10,7 @@
 | Version | 0.8.0 (plugin manifests in sync) |
 | Runtime | Python 3.10+ (standard library only, no third-party dependencies) |
 | Platforms | Windows / Linux / macOS |
-| Tests | 215 cases, `python scripts/run_tests.py` all green |
+| Tests | 236 cases, `python scripts/run_tests.py` all green |
 
 ## What this is
 

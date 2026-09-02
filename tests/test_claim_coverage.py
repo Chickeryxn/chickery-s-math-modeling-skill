@@ -6,7 +6,7 @@ from pathlib import Path
 import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-from claim_coverage import load_subquestions, section_qids, frozen_per_qid, coverage
+from claim_coverage import load_subquestions, section_qids, frozen_per_qid, coverage, cn_num_to_arabic
 
 
 def make_workspace(with_sections=True, with_frozen=True):
@@ -42,6 +42,32 @@ class ClaimCoverageTests(unittest.TestCase):
         sq = section_qids(root)
         self.assertIn("Q1", sq["q1.tex"])
         td.cleanup()
+
+    def test_chinese_numeral_heading_maps_to_arabic_qid(self):
+        # Regression: 问题三 was mapped to "Q三" instead of "Q3", so a present
+        # section was reported MISSING against a parse id of "Q3".
+        td = tempfile.TemporaryDirectory()
+        root = Path(td.name)
+        (root / "paper" / "sections").mkdir(parents=True)
+        (root / "paper" / "sections" / "q3.tex").write_text(
+            "\\section{问题三：建模}\n结果 3.5。\n", encoding="utf-8")
+        (root / "paper" / "sections" / "q12.tex").write_text(
+            "\\section{问题十二：验证}\n结果 0.5。\n", encoding="utf-8")
+        sq = section_qids(root)
+        self.assertIn("Q3", sq["q3.tex"])
+        self.assertIn("Q12", sq["q12.tex"])
+        self.assertNotIn("Q三", sq["q3.tex"])
+        td.cleanup()
+
+    def test_cn_num_to_arabic_edge_cases(self):
+        self.assertEqual(cn_num_to_arabic("一"), "1")
+        self.assertEqual(cn_num_to_arabic("九"), "9")
+        self.assertEqual(cn_num_to_arabic("十"), "10")
+        self.assertEqual(cn_num_to_arabic("十二"), "12")
+        self.assertEqual(cn_num_to_arabic("二十一"), "21")
+        self.assertEqual(cn_num_to_arabic("3"), "3")
+        # unhandled shape (百/千) falls back verbatim instead of crashing
+        self.assertEqual(cn_num_to_arabic("一百"), "一百")
 
     def test_frozen_per_qid(self):
         td, root = make_workspace()

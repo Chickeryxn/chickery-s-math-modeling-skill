@@ -7,7 +7,8 @@ data profile) for common leakage patterns:
 2. target column is not duplicated under a different name (heuristic name match);
 3. when a time column is given, rows are in ascending time order (a shuffled
    time column means a random split would leak the future);
-4. duplicate rows / near-duplicate identifiers are reported.
+4. duplicate rows are reported.
+5. mixed date/numeric time formats are flagged (ordering is then advisory).
 
 Usage:
   python scripts/leakage_check.py --file workspace/data_clean/train.csv --target y [--time date] [--json]
@@ -39,23 +40,47 @@ def load_rows(path: Path, delimiter: str | None = None):
     return headers, rows
 
 
-def parse_time(token: str):
+def _is_date_format(token: str) -> bool:
+    from datetime import datetime
     token = token.strip()
+    if not token:
+        return False
     for fmt in ("%Y-%m-%d", "%Y/%m/%d", "%Y%m%d", "%Y-%m-%d %H:%M:%S"):
         try:
-            from datetime import datetime
-            return datetime.strptime(token, fmt)
+            datetime.strptime(token, fmt)
+            return True
         except Exception:
             continue
+    return False
+
+
+def parse_time(token: str):
+    """Parse a time token into a uniform epoch-seconds float, or None.
+
+    Both ISO-ish date formats and plain numeric tokens return floats so the
+    disorder comparison never mixes datetime and float types (which would
+    raise TypeError). Date formats are interpreted as UTC epochs to stay
+    timezone-independent for ordering purposes.
+    """
+    from datetime import datetime, timezone
+    token = token.strip()
+    if _is_date_format(token):
+        for fmt in ("%Y-%m-%d", "%Y/%m/%d", "%Y%m%d", "%Y-%m-%d %H:%M:%S"):
+            try:
+                dt = datetime.strptime(token, fmt)
+                return dt.replace(tzinfo=timezone.utc).timestamp()
+            except Exception:
+                continue
     try:
         return float(token)
     except Exception:
         return None
 
 
-def check_file(path: Path, target: str, time_col: str | None = None) -> dict:
+def check_file(path: Path, target: str, time_col: str | None = None,
+               delimiter: str | None = None) -> dict:
     findings = []
-    headers, rows = load_rows(path)
+    headers, rows = load_rows(path, delimiter=delimiter)
     if target not in headers:
         findings.append(f"target column {target!r} not found (headers: {', '.join(headers[:8])})")
         return {"status": "FAIL", "findings": findings, "rows": len(rows)}
@@ -79,13 +104,20 @@ def check_file(path: Path, target: str, time_col: str | None = None) -> dict:
         else:
             prev = None
             disorder = 0
+            parsed_kinds = set()
             for r in rows:
-                t = parse_time(r.get(time_col, ""))
+                raw = r.get(time_col, "")
+                t = parse_time(raw)
                 if t is None:
                     continue
+                parsed_kinds.add("date" if _is_date_format(raw) else "numeric")
                 if prev is not None and t < prev:
                     disorder += 1
                 prev = t
+            if len(parsed_kinds) > 1:
+                findings.append(
+                    f"time column {time_col!r} mixes date and numeric formats — "
+                    "ordering comparisons are advisory only; normalize the column for a real split check")
             if disorder:
                 findings.append(
                     f"time column {time_col!r} is not ascending ({disorder} inversions) — "
@@ -130,7 +162,7 @@ def main():
     ap.add_argument("--json", action="store_true")
     a = ap.parse_args()
     if a.file:
-        report = check_file(a.file.resolve(), a.target, a.time)
+        report = check_file(a.file.resolve(), a.target, a.time, a.delimiter)
     elif a.profile:
         report = check_profile(a.profile.resolve(), a.target)
     else:

@@ -19,7 +19,14 @@ plt.rcParams['svg.fonttype'] = 'none'
 PALETTE = {
     'primary': '#1A6FC4', 'baseline': '#767676',
     'positive': '#2E9E44', 'negative': '#E53935',
+    'baseline_dark': '#4D4D4D', 'series_alt': '#E28E2C',
 }
+# Semantics (match color-systems.md):
+#   primary / baseline / baseline_dark  = identity + hierarchy (grey is baseline);
+#   positive / negative                 = direction ONLY (deltas, improvements);
+#   series_alt                          = a second identity color for a competing
+#                                          series (e.g. a forecast line) — never
+#                                          reuse positive/negative for identity.
 
 def plot_ranking(ax, names, scores, title='', highlight_n=3):
     """Sorted horizontal bar showing ranking. Top-N highlighted in primary color."""
@@ -78,11 +85,11 @@ def plot_forecast(ax, hist_time, hist_values, forecast_time, forecast_mean,
     """Historical data + forecast with optional confidence band."""
     ax.plot(hist_time, hist_values, color=PALETTE['primary'], linewidth=2,
             marker='o', markersize=4, label=hist_label)
-    ax.plot(forecast_time, forecast_mean, color=PALETTE['positive'], linewidth=2,
+    ax.plot(forecast_time, forecast_mean, color=PALETTE['series_alt'], linewidth=2,
             marker='s', markersize=4, label=forecast_label)
     if forecast_lower is not None and forecast_upper is not None:
         ax.fill_between(forecast_time, forecast_lower, forecast_upper,
-                        color=PALETTE['positive'], alpha=0.15)
+                        color=PALETTE['series_alt'], alpha=0.15)
     # Vertical separator between history and forecast
     sep_x = (hist_time[-1] + forecast_time[0]) / 2 if len(hist_time) > 0 else forecast_time[0]
     ax.axvline(x=sep_x, color=PALETTE['baseline'], linestyle=':', linewidth=1, alpha=0.7)
@@ -319,8 +326,12 @@ def make_hero_layout(figsize=(12, 8)):
 
 ```python
 def make_comparison_row(figsize=(16, 5)):
-    """Three equal-width panels for method comparison."""
-    fig, axes = plt.subplots(1, 3, figsize=figsize)
+    """Three equal-width panels for method comparison.
+
+    Panels compare the same metric, so they share the y scale (matches
+    layout-guide.md Pattern 3: "All panels share the same axis scale").
+    """
+    fig, axes = plt.subplots(1, 3, figsize=figsize, sharey=True)
     for i, (ax, label) in enumerate(zip(axes, ['a', 'b', 'c'])):
         add_panel_label(ax, label)
     plt.subplots_adjust(wspace=0.3)

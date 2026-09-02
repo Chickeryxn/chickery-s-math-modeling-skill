@@ -151,6 +151,31 @@ class DecisionTests(unittest.TestCase):
         self.assertEqual(rc, 2)
         td.cleanup()
 
+    def test_decision_card_quotes_verbatim_markdown_metacharacters(self):
+        # Regression: raw user text containing pipes/code fences/'---' used to
+        # be interpolated directly, corrupting the card's Markdown structure.
+        td, root = make_root()
+        wr.cmd_init(type("A", (), {"root": root})())
+        ledger = root / "methods" / "Q1" / "q1_decisions.jsonl"
+        ledger.parent.mkdir(parents=True)
+        rec = {"decision_id": "q1_method_choice", "decision_type": "method_choice",
+               "status": "DECIDED", "decided_by": "human",
+               "choice": "M1 | M2", "rationale": "line one\n---\n```fence```",
+               "evidence_refs": [], "recorded_at": "2026-09-01T10:00:00+00:00",
+               "source": {"source_type": "user_answer", "user_message_id": "msg-1",
+                          "user_verbatim_answer": "原话 | 含 | 竖线"}}
+        ledger.write_text(json.dumps(rec, ensure_ascii=False) + "\n", encoding="utf-8")
+        rc = wr.cmd_decision(type("A", (), {"root": root, "subject": "Q1",
+                                            "decision_id": "q1_method_choice", "ledger": None})())
+        self.assertEqual(rc, 0)
+        card = list((root / "records" / "decisions").glob("*.md"))[0]
+        content = card.read_text(encoding="utf-8")
+        self.assertIn("> M1 | M2", content)
+        self.assertIn("> line one", content)
+        self.assertIn("> ```fence```", content)   # still verbatim inside the quote
+        self.assertIn("> 原话 | 含 | 竖线", content)
+        td.cleanup()
+
 
 class IndexCheckTests(unittest.TestCase):
     def test_index_and_check_roundtrip(self):
@@ -180,6 +205,43 @@ class IndexCheckTests(unittest.TestCase):
         self.assertEqual(wr.cmd_check(type("A", (), {"root": root})()), 2)
         td.cleanup()
 
+    def test_session_link_resolves_from_session_dir(self):
+        # Session entries link artifacts with a ../../ repo-root prefix; check
+        # must resolve them relative to the file (records/sessions/), not the
+        # repo root. An existing artifact must pass and a missing one fail.
+        td, root = make_root()
+        wr.cmd_init(type("A", (), {"root": root})())
+        good = root / "planning" / "parse" / "problem_parse.json"
+        good.parent.mkdir(parents=True)
+        good.write_text("{}", encoding="utf-8")
+        (root / "records" / "sessions" / "2026-09-01-001.md").write_text(
+            "---\ndate: 2026-09-01\nsession: 2026-09-01-001\nruntime: codex\n---\n\n"
+            "## 10:00:00 - x\n"
+            "- 产物: [parse](../../planning/parse/problem_parse.json)\n"
+            "- 产物: [missing](../../planning/parse/absent.json)\n",
+            encoding="utf-8")
+        wr.cmd_index(type("A", (), {"root": root})())
+        self.assertEqual(wr.cmd_check(type("A", (), {"root": root})()), 2)
+        # drop the broken link and it passes
+        (root / "records" / "sessions" / "2026-09-01-001.md").write_text(
+            "---\ndate: 2026-09-01\nsession: 2026-09-01-001\nruntime: codex\n---\n\n"
+            "## 10:00:00 - x\n- 产物: [parse](../../planning/parse/problem_parse.json)\n",
+            encoding="utf-8")
+        self.assertEqual(wr.cmd_check(type("A", (), {"root": root})()), 0)
+        td.cleanup()
+
+    def test_log_artifacts_get_repo_root_prefix(self):
+        td, root = make_root()
+        wr.cmd_init(type("A", (), {"root": root})())
+        rc = wr.cmd_log(type("A", (), {"root": root, "text": "x", "subject": None,
+                                       "artifacts": ["planning/parse/problem_parse.json"],
+                                       "tags": None, "runtime": None})())
+        self.assertEqual(rc, 0)
+        session = list((root / "records" / "sessions").glob("*.md"))[0]
+        content = session.read_text(encoding="utf-8")
+        self.assertIn("](../../planning/parse/problem_parse.json)", content)
+        td.cleanup()
+
     def test_cli_end_to_end(self):
         td, root = make_root()
         p = run_cli(["init", str(root)])
@@ -193,7 +255,7 @@ class ReplayTests(unittest.TestCase):
     def make_artifacts(self, root):
         m = root / "planning" / "manifests" / "Q1.json"
         m.parent.mkdir(parents=True)
-        m.write_text(json.dumps({"question": "Q1", "gate": "G2"}), encoding="utf-8")
+        m.write_text(json.dumps({"question": "Q1", "current_gate": "G2"}), encoding="utf-8")
         led = root / "methods" / "Q1" / "q1_decisions.jsonl"
         led.parent.mkdir(parents=True)
         led.write_text(json.dumps({"decision_id": "q1_method_choice", "decision_type": "method_choice",

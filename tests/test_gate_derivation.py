@@ -3,7 +3,7 @@ import json,tempfile,unittest
 from pathlib import Path
 import sys
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'scripts'))
-from workflow_guard import derive_state,require_gate
+from workflow_guard import derive_state,require_gate,QID_RE
 
 def write(p,text='x'):
  p.parent.mkdir(parents=True,exist_ok=True);p.write_text(text,encoding='utf-8')
@@ -26,4 +26,29 @@ class GateDerivationTests(unittest.TestCase):
    write(root/'results/Q1/reports/q1_solution_package_for_writer.md');write(root/'results/Q1/reports/frozen_numbers.json','{}');
    with (root/'methods/Q1/q1_decisions.jsonl').open('a',encoding='utf-8') as f:f.write(json.dumps(decision(qid,'package_signoff','package'))+'\n')
    self.assertEqual(derive_state(root,qid)['gate'],'G5');write(root/'paper/sections/q1.tex');write(root/'paper/audits/cross_media_consistency_audit.md');write(root/'paper/audits/completeness_audit.md');write(root/'paper/qa_report.md');self.assertEqual(derive_state(root,qid)['gate'],'G6')
+  def test_invalid_question_id_rejected(self):
+   # Regression: qid was interpolated straight into paths/globs; a crafted id
+   # like '../x' could read files outside the intended question directory.
+   with tempfile.TemporaryDirectory() as td:
+    root=Path(td)
+    self.assertTrue(QID_RE.match('Q1'))
+    self.assertTrue(QID_RE.match('Q12'))
+    self.assertFalse(QID_RE.match('q1'))
+    self.assertFalse(QID_RE.match('../x'))
+    self.assertFalse(QID_RE.match(''))
+    for bad in ('../x','methods/..','Q1/../Q2',''):
+     with self.assertRaises(ValueError):derive_state(root,bad)
+  def test_snapshot_escaping_reference_rejected(self):
+   # A run_summary pointing its snapshot at a path outside the root must not
+   # satisfy the G3 run-summary check.
+   with tempfile.TemporaryDirectory() as td:
+    root=Path(td);qid='Q1'
+    write(root/'planning/parse/problem_parse.json',json.dumps({'data_inventory':[]}));write(root/'planning/classification/problem_classification.json','{}');write(root/'methods/Q1/q1_method_card.md','# main_candidate usable_baseline\n## Baseline validity\n## Risk-probe summary');write(root/'methods/Q1/probes/risk_probe_summary.json',json.dumps({'methods':{'M1':{'verdict':'PASS','output_degeneracy':{'status':'PASS','metrics':{}}}}}));write(root/'methods/Q1/q1_decisions.jsonl',json.dumps(decision(qid,'method_choice','m'))+'\n')
+    write(root/'results/Q1/experiments/round1/run_summary.json',json.dumps({'run_snapshot':'../../outside_snapshot.json'}))
+    outside=Path(td).parent/'outside_snapshot.json';write(outside,json.dumps({'run_id':'r','status':'SUCCESS','return_code':0,'result_ref':'x','validation_ref':'y','executed_by_runner':True}))
+    state=derive_state(root,qid)
+    self.assertNotEqual(state['gate'],'G3')
+    outside.unlink(missing_ok=True)
+
+
 if __name__=='__main__':unittest.main()

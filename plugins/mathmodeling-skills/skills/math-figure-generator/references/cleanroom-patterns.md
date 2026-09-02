@@ -13,6 +13,9 @@ plt.rcParams['font.sans-serif'] = ['Arial', 'DejaVu Sans', 'Liberation Sans']
 plt.rcParams['svg.fonttype'] = 'none'
 plt.rcParams['pdf.fonttype'] = 42
 rng = np.random.default_rng(2026)
+# numpy >= 2.0 renamed np.trapz -> np.trapezoid (the old name was removed);
+# pick whichever the installed numpy provides so these snippets run on both.
+TRAPZ = getattr(np, 'trapezoid', None) or getattr(np, 'trapz', None)
 
 PALETTE = {'primary': '#1A6FC4', 'primary_light': '#5B9BD5', 'baseline': '#767676',
            'positive': '#2E9E44', 'negative': '#E53935', 'accent1': '#E28E2C', 'accent2': '#7B5FD6'}
@@ -54,7 +57,7 @@ def roc_with_ci(ax, n_models=3, n_folds=5, n_thresh=200):
         mean = np.mean(tprs, axis=0); sd = np.std(tprs, axis=0)
         color = [PALETTE['primary'], PALETTE['accent1'], PALETTE['accent2']][m]
         ax.plot(base_fpr, mean, lw=1.6, color=color,
-                label=f'Model {m+1} (AUC={np.trapezoid(mean, base_fpr):.2f})')
+                label=f'Model {m+1} (AUC={TRAPZ(mean, base_fpr):.2f})')
         ax.fill_between(base_fpr, mean - sd, mean + sd, alpha=0.15, color=color)
     ax.plot([0, 1], [0, 1], ls='--', color=PALETTE['baseline'])
     ax.set_xlabel('False positive rate'); ax.set_ylabel('True positive rate')
@@ -176,21 +179,27 @@ def density_ridge(ax, groups, labels):
 
 ```python
 def clustered_heatmap(ax, Z, row_labels, col_labels):
-    # Z: rows x cols; cluster rows by simple linkage on row vectors
+    # Z: rows x cols; cluster rows by single linkage on correlation distance,
+    # then reorder rows so merged clusters stay adjacent.
     def hclust(M):
-        # single-linkage on correlation distance, greedy merge order
-        n = len(M); perm = list(range(n)); remaining = list(range(n))
-        while len(remaining) > 1:
+        # single-linkage greedy merge; returns a leaf ordering that keeps
+        # every merged cluster contiguous (previously `perm` was never
+        # updated, so the "reordered" claim silently produced no reorder).
+        n = len(M)
+        active = list(range(n))
+        groups = {i: [i] for i in range(n)}
+        while len(active) > 1:
             best = None
-            for a in remaining:
-                for b in remaining:
-                    if a >= b: continue
+            for ai, a in enumerate(active):
+                for b in active[ai + 1:]:
                     d = 1 - abs(np.corrcoef(M[a], M[b])[0, 1])
-                    if best is None or d < best[0]: best = (d, a, b)
+                    if best is None or d < best[0]:
+                        best = (d, a, b)
             _, a, b = best
-            remaining.remove(b)
-            M[a] = (M[a] + M[b]) / 2
-        return perm
+            M[a] = (M[a] + M[b]) / 2          # merged centroid
+            groups[a] = groups[a] + groups[b] # keep adjacency
+            active.remove(b)
+        return groups[active[0]]
     perm = hclust(Z.copy())
     im = ax.imshow(Z[perm], aspect='auto', cmap='RdBu_r', vmin=-1, vmax=1)
     ax.set_yticks(range(len(perm))); ax.set_yticklabels([row_labels[i] for i in perm], fontsize=7)

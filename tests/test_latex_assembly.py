@@ -10,7 +10,7 @@ from latex_assembly import (scan_sections, load_frozen_numbers, ai_declaration,
                             render_main, build_report, sanitize_macro_name,
                             macros_for_frozen, macro_value, latex_escape,
                             parse_bib_to_bibitems, check_frozen_references, estimate_pages,
-                            scan_bare_numbers)
+                            scan_bare_numbers, frozen_macro_map, strip_latex_comment)
 
 
 def make_workspace():
@@ -163,6 +163,79 @@ class LatexAssemblyTests(unittest.TestCase):
         report = build_report(root, ["paper/sections/q1.tex"], load_frozen_numbers(root), [])
         self.assertIn("bare_number_scan", report)
         self.assertIn("frozen_reference_warnings", report)
+        td.cleanup()
+
+    def test_duplicate_claim_id_across_files_raises(self):
+        # Regression: the second results file silently overwrote the first
+        # claim with the same id.
+        td, root = make_workspace()
+        (root / "results" / "Q2" / "reports").mkdir(parents=True)
+        (root / "results" / "Q2" / "reports" / "frozen_numbers.json").write_text(json.dumps(
+            {"claims": [{"claim_id": "q1_main_rmse", "value": 9.9}]}), encoding="utf-8")
+        with self.assertRaises(ValueError):
+            load_frozen_numbers(root)
+        td.cleanup()
+
+    def test_macro_names_collision_get_unique_suffix(self):
+        # q1_avg and q1avg sanitize to the same base; the later claim must get
+        # a distinct macro instead of emitting two identical \newcommand.
+        frozen = {"q1_avg": {"value": 1.0}, "q1avg": {"value": 2.0}}
+        macros, _ = macros_for_frozen(frozen)
+        self.assertIn("\\newcommand{\\q1avg}{1.0}", macros)
+        self.assertNotIn("\\newcommand{\\q1avg}{2.0}", macros)
+        # exactly two distinct macro definitions
+        self.assertEqual(macros.count("\\newcommand"), 2)
+        mapping = frozen_macro_map(frozen)
+        self.assertNotEqual(mapping["q1_avg"], mapping["q1avg"])
+        td = tempfile.TemporaryDirectory()
+        td.cleanup()
+
+    def test_strip_latex_comment(self):
+        self.assertEqual(strip_latex_comment("text 3.14 % note 9.9"), "text 3.14 ")
+        self.assertEqual(strip_latex_comment("no comment here"), "no comment here")
+        # escaped percent (\\%) is literal and does not start a comment
+        self.assertEqual(strip_latex_comment(r"growth 5\% is fine % tail"), r"growth 5\% is fine ")
+        self.assertEqual(strip_latex_comment("url http://x/%20 with comment % cut"), "url http://x/")
+
+    def test_scan_bare_numbers_ignores_commented_numbers(self):
+        td, root = make_workspace()
+        (root / "paper" / "sections" / "q1.tex").write_text(
+            "正文 1.5。% 注释里有 9.9 不应计数\n续 2.5。", encoding="utf-8")
+        r = scan_bare_numbers(root, ["paper/sections/q1.tex"], {})
+        tokens = [s.split(": ")[-1] for s in r["sample"]]
+        self.assertIn("1.5", tokens)
+        self.assertIn("2.5", tokens)
+        self.assertNotIn("9.9", tokens)
+
+    def test_parse_bib_skips_comment_and_nested_braces(self):
+        td, root = make_workspace()
+        bib = root / "paper" / "refs.bib"
+        bib.write_text("""@comment{this is not an entry}
+@article{Wang2023,
+  author = {Wang, X.},
+  title = {A {nested} method},
+  journal = {J. Modeling},
+  year = {2023}
+}""", encoding="utf-8")
+        items = parse_bib_to_bibitems(bib)
+        self.assertEqual(len(items), 1)
+        self.assertIn("A {nested} method", items[0])
+        td.cleanup()
+
+    def test_render_main_rejects_unresolved_placeholders(self):
+        td, root = make_workspace()
+        tpl = root / "templates" / "paper" / "broken.tex"
+        tpl.write_text("A __INPUTS__\nB __FROZEN_MACROS__\n", encoding="utf-8")  # missing two
+        with self.assertRaises(ValueError):
+            render_main(tpl, root, ["paper/sections/q1.tex"], {}, [])
+        td.cleanup()
+
+    def test_build_report_counts_characters_not_bytes(self):
+        td, root = make_workspace()
+        # 4 CJK chars = 12 UTF-8 bytes; characters must count as 4
+        (root / "paper" / "sections" / "cn.tex").write_text("中文数字abc", encoding="utf-8")
+        report = build_report(root, ["paper/sections/cn.tex"], {}, [])
+        self.assertEqual(report["approx_paper_chars"], 7)  # 4 CJK + 3 ascii
         td.cleanup()
 
 
