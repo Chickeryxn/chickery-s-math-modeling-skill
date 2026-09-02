@@ -81,7 +81,7 @@ def assess_all(root: Path, write=False):
     output=[]
     for path in sorted(root.rglob('*.lineage.json')):
         data=assess(root,path); output.append({'path':str(path.relative_to(root)),'status':data['status'],'stale_reasons':data['stale_reasons']})
-        if write: path.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+        if write: path.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     return output
 
 def main():
@@ -92,7 +92,7 @@ def main():
     x=ap.parse_args()
     try:
         if x.cmd=='make':
-            data=make(x.root.resolve(),x.artifact,x.created_from,x.validated_by,x.consumed_by,x.decision_id,x.input_ref,x.config_ref,x.code_ref);x.out.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8');code=0
+            data=make(x.root.resolve(),x.artifact,x.created_from,x.validated_by,x.consumed_by,x.decision_id,x.input_ref,x.config_ref,x.code_ref);x.out.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n');code=0
         elif x.cmd=='assess': data=assess(x.root.resolve(),x.lineage.resolve());code=0 if data['status']=='CURRENT' else 1
         else: data={'status':'PASS','artifacts':assess_all(x.root.resolve(),x.write)};code=0 if all(x['status']=='CURRENT' for x in data['artifacts']) else 1
         print(json.dumps(data,ensure_ascii=False,indent=2));return code

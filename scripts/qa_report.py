@@ -107,7 +107,7 @@ def main():
     if a.out:
         try:
             a.out.parent.mkdir(parents=True,exist_ok=True)
-            a.out.write_text(text+'\n',encoding='utf-8')
+            a.out.write_text(text+'\n',encoding='utf-8',newline='\n')
         except OSError as exc:
             print(f'cannot write --out: {exc}',file=sys.stderr);return 2
     # Propagate a blocked gate to the exit code so validate_repo can gate on it.

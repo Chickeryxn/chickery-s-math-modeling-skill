@@ -154,7 +154,7 @@ def write_hashes(root: Path) -> dict:
             if p.is_file():
                 rec[name] = sha256(p)
         (sub / "hashes.json").write_text(json.dumps(rec, ensure_ascii=False, indent=2) + "\n",
-                                         encoding="utf-8")
+                                         encoding="utf-8", newline="\n")
         out[sub.name] = rec
     return out
 

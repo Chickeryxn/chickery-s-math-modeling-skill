@@ -58,6 +58,31 @@ class FigureConsistencyTests(unittest.TestCase):
         self.assertEqual(png_size(p), (640, 480))
         td.cleanup()
 
+    def test_case_insensitive_duplicate_names_flagged(self):
+        import os
+        if os.path.normcase("q1_a.png") == os.path.normcase("Q1_A.PNG"):
+            self.skipTest("case-insensitive filesystem cannot hold both names")
+        td = tempfile.TemporaryDirectory()
+        d = Path(td.name)
+        make_png(d / "q1_a.png", 800, 600)
+        make_png(d / "Q1_A.PNG", 800, 600)
+        r = fscan(d, None)
+        self.assertEqual(r["status"], "FAIL")
+        self.assertTrue(any("duplicate figure names" in f for f in r["findings"]), r["findings"])
+        td.cleanup()
+
+    def test_manifest_extensionless_declared_resolves(self):
+        # Regression: manifest entries may omit the extension (LaTeX style);
+        # a unique match must not be reported as missing.
+        td = tempfile.TemporaryDirectory()
+        d = Path(td.name)
+        make_png(d / "q1_a.png", 800, 600)
+        m = d / "figs.json"
+        m.write_text(json.dumps({"figures": ["q1_a"]}), encoding="utf-8")
+        r = fscan(d, m)
+        self.assertEqual(r["status"], "PASS", r["findings"])
+        td.cleanup()
+
 
 class SectionStructureTests(unittest.TestCase):
     def test_full_skeleton_passes(self):

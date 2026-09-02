@@ -92,7 +92,11 @@ def main():
     ap.add_argument("--strict", action="store_true")
     ap.add_argument("--json", action="store_true")
     a = ap.parse_args()
-    text = Path(a.file).read_text(encoding="utf-8")
+    try:
+        text = Path(a.file).read_text(encoding="utf-8")
+    except OSError as exc:
+        print(f"cannot read input file: {exc}", file=sys.stderr)
+        return 2
     subs = [s.strip().upper() for s in a.subquestions.split(",") if s.strip()] if a.subquestions else None
     report = check(text, a.min_numbers, a.min_words, a.max_words, subs)
     if a.json:

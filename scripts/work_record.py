@@ -95,7 +95,7 @@ def write_frontmatter(path: Path, fields: dict) -> None:
     for k, v in fields.items():
         body += f"{k}: {v}\n"
     body += "---\n"
-    path.write_text(body, encoding="utf-8")
+    path.write_text(body, encoding="utf-8", newline="\n")
 
 
 def gate_rank(g: str) -> int:
@@ -153,7 +153,7 @@ def cmd_log(args) -> int:
     if args.tags:
         entry += f"- 标签: {', '.join(args.tags)}\n"
     entry += "\n"
-    with path.open("a", encoding="utf-8") as f:
+    with path.open("a", encoding="utf-8", newline="\n") as f:
         f.write(head + entry)
     print(json.dumps({"status": "LOGGED", "session": path.name, "entry": ts}, ensure_ascii=False))
     return 0
@@ -191,10 +191,10 @@ def cmd_gate(args) -> int:
         return 2
     if not path.exists():
         write_frontmatter(path, {"subject": q, "status": "active"})
-        with path.open("a", encoding="utf-8") as f:
+        with path.open("a", encoding="utf-8", newline="\n") as f:
             f.write(f"\n# {q} 门禁迁移\n\n| 时间 | 门禁 | 证据 | 备注 |\n|---|---|---|---|\n")
     row = f"| {local_time()} | {g} | {', '.join(evidence)} | {args.note or ''} |\n"
-    with path.open("a", encoding="utf-8") as f:
+    with path.open("a", encoding="utf-8", newline="\n") as f:
         f.write(row)
     print(json.dumps({"status": "GATE_RECORDED", "subject": q, "gate": g}, ensure_ascii=False))
     return 0
@@ -261,7 +261,7 @@ def cmd_decision(args) -> int:
         + "\n".join(f"- {r}" for r in (rec_.get("evidence_refs") or []))
         + f"\n\n## 来源消息\n\n- 消息 ID: {src.get('user_message_id')}\n"
         f"- 用户原话:\n\n{quoted(src.get('user_verbatim_answer'))}\n")
-    path.write_text(body, encoding="utf-8")
+    path.write_text(body, encoding="utf-8", newline="\n")
     print(json.dumps({"status": "CARD_WRITTEN", "card": path.name}, ensure_ascii=False))
     return 0
 

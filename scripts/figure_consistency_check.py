@@ -5,9 +5,11 @@ Mechanical consistency for a paper's figure set (pure standard library):
 1. naming: files share a common prefix/suffix pattern (e.g. q1_*.png);
 2. raster size families: PNG dimensions are consistent within the same
    figure group (same width or same aspect family);
-3. duplicate names / missing extensions are flagged;
+3. duplicate names (case-insensitive collisions) are flagged;
 4. an optional manifest (`--manifest figlist.json` with {"figures": ["q1_a.png", ...]})
-   can be used to declare the intended set — missing declared files are flagged.
+   declares the intended set — declared entries missing on disk are flagged,
+   and entries may omit the extension when it resolves uniquely
+   (q1_a -> q1_a.png, matching LaTeX \\includegraphics usage).
 
 Use after `math-figure-generator` to keep a paper's figure set uniform.
 Exit: 0 ok, 1 findings (non-strict), 2 strict.
@@ -43,9 +45,25 @@ def scan(root: Path, manifest: Path | None) -> dict:
         except Exception as exc:
             findings.append(f"invalid manifest: {exc}")
     present = {p.name for p in files}
+    # case-insensitive duplicates (q1_a.png vs Q1_A.png) collide on Windows
+    # and confuse every downstream path
+    by_lower = {}
+    for p in files:
+        by_lower.setdefault(p.name.lower(), []).append(p.name)
+    for key, names in sorted(by_lower.items()):
+        if len(names) > 1:
+            findings.append(f"duplicate figure names (case-insensitive): {', '.join(sorted(names))}")
     for name in declared:
-        if name not in present:
-            findings.append(f"declared figure missing: {name}")
+        if name in present:
+            continue
+        # allow extensionless declared entries that resolve uniquely
+        matches = [p.name for p in files if p.stem == name]
+        if len(matches) == 1:
+            continue
+        if len(matches) > 1:
+            findings.append(f"ambiguous declared figure '{name}': {', '.join(sorted(matches))}")
+            continue
+        findings.append(f"declared figure missing: {name}")
     png_groups = {}
     for p in files:
         if p.suffix.lower() == ".png":

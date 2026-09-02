@@ -106,7 +106,14 @@ def main():
     ap.add_argument("--config", type=Path, default=None,
                     help="JSON config overriding limits/groups/em_dash_limit")
     a = ap.parse_args()
-    text = Path(a.file).read_text(encoding="utf-8") if a.file else sys.stdin.buffer.read().decode("utf-8", errors="replace")
+    if a.file:
+        try:
+            text = Path(a.file).read_text(encoding="utf-8")
+        except OSError as exc:
+            print(f"cannot read input file: {exc}", file=sys.stderr)
+            return 2
+    else:
+        text = sys.stdin.buffer.read().decode("utf-8", errors="replace")
     cfg = load_config(a.config) if a.config else {}
     report = analyze(text, **cfg)
     if a.json:

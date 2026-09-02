@@ -37,6 +37,13 @@ Load only what the current task needs:
   - `references/upstream/lupynow-writing/common-phrases.md` — bilingual phrase bank.
   - `references/upstream/nature-writing/style-guardrails.md`, `writing-strategy.md`, `nat-comms-2025-diction.md`, `section-moves.md`, `phrasebank-playbook.md` — nature-polishing rules.
 
+When these references conflict (they are verbatim imports and occasionally do),
+apply the precedence documented in `references/upstream/README.md`
+("已知规则冲突的裁决顺序"): quantified de-AI caps win over phrase lists;
+figure legends use the ≤300-word upper bound (the <250-word figure is corpus
+statistics); this skill's 12-point checklist is the integration point — do not
+reconcile upstream word lists against each other item by item.
+
 # Preconditions
 
 The following should already exist or be provided:

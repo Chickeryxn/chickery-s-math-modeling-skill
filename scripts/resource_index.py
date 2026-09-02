@@ -77,7 +77,7 @@ def main():
             return 2
         print(json.dumps({"status": "PASS", "categories": len(data["categories"])}, ensure_ascii=False))
         return 0
-    index.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    index.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(json.dumps({"status": "WRITTEN", "categories": {k: len(v["entries"]) for k, v in data["categories"].items()}},
                      ensure_ascii=False, indent=2))
     return 0

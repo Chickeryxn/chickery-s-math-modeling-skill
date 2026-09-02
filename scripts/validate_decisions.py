@@ -15,6 +15,16 @@ STATUSES={"SUGGESTED","PENDING","DECIDED","SUPERSEDED","STALE"}
 DECIDED_TYPES={"framing","method_choice","fallback_activation","result_verdict","stability_verdict","assumption_necessity","claim_scope","package_signoff","submission_authorization"}
 DATE_PREFIX=re.compile(r'^\d{4}-\d{2}-\d{2}')
 
+def valid_iso_date(ts:str)->bool:
+    """A recorded_at date part must be a real calendar date: '2026-99-99' has
+    the right shape but is not a date."""
+    try:
+        from datetime import date as _date
+        _date.fromisoformat(ts[:10])
+        return True
+    except Exception:
+        return False
+
 def resolve_project_file(root:Path, ref:str)->Path|None:
     if not isinstance(ref,str) or not ref.strip(): return None
     if ref.startswith("evidence:"): return None
@@ -50,6 +60,7 @@ def validate(path:Path, root:Path)->list[str]:
         ts=r.get('recorded_at')
         if not isinstance(ts,str) or not ts.strip():errors.append(f"{loc}: recorded_at must be a non-empty string")
         elif not DATE_PREFIX.match(ts):errors.append(f"{loc}: recorded_at must start with an ISO-8601 date (YYYY-MM-DD): {ts}")
+        elif not valid_iso_date(ts):errors.append(f"{loc}: recorded_at has an invalid calendar date: {ts[:10]}")
         status=r.get('status')
         if status not in STATUSES:errors.append(f"{loc}: invalid status {status}")
         source=r.get('source') or {}

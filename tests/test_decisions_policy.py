@@ -47,6 +47,18 @@ class DecisionMarkerPolicyTests(unittest.TestCase):
             write(ledger, json.dumps(record('unavailable:codex', verbatim='  ')) + '\n')
             self.assertTrue(validate(ledger, root))
 
+    def test_impossible_calendar_date_rejected(self):
+        # Regression: recorded_at only had to match a shape regex, so
+        # '2026-99-99' passed while not being a real date.
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            ledger = root / 'methods/Q1/q1_decisions.jsonl'
+            rec = record('m1')
+            rec['recorded_at'] = '2026-99-99T00:00:00Z'
+            write(ledger, json.dumps(rec) + '\n')
+            errors = validate(ledger, root)
+            self.assertTrue(any('invalid calendar date' in e for e in errors), errors)
+
 
 if __name__ == '__main__':
     unittest.main()

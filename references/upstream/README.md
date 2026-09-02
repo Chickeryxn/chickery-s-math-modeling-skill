@@ -34,10 +34,20 @@
 |---|---|---|
 | **已吸收** | 已改写入技能自有 references 或本库自有层，agent 优先用本地版 | `lupynow-writing/de-ai-writing.md`（→ `ai_trace_checker`/`paper-polisher`）、`model-selection-matrix.md`（→ `method-selector`）、`lupynow-cookbook/*`（→ `method-selector`/代码生成器）、`nature-writing/consistency-sweep.md`/`terminology-ledger.md`/`main-text-discipline.md`（→ `consistency-auditor`/`paper-polisher`） |
 | **可直读** | 与竞赛论文直接相关，按需加载原文 | `nature-figure/figure-contract.md`、`qa-contract.md`、`design-theory.md`、`api.md`、`multipanel-evidence-architecture.md`、`nature-figure` 三个审计脚本、`nature-writing/style-guardrails.md` 等（注意是 Nature 期刊向规则，套用 CUMCM 中文论文时只取"语言服务论证"原则） |
-| **含未 vendor 引用** | 原文提到本仓库未引入的脚本/资源，照做会 FileNotFound | `nature-figure/qa-contract.md`（`audit_figure_collisions.py`/`figure_safety.py`）、`api.md`（`panel_alignment.R`）、`design-theory.md`、`multipanel-evidence-architecture.md`（`../../nature-shared/...`）——agent 应忽略这些命令，改用已 vendor 的 `audit_panel_alignment.py`/`audit_pdf_text.py`/`validate_figure.py` 或 `scripts/figure_render_audit.py` |
+| **含未 vendor 引用** | 原文提到本仓库未引入的脚本/资源，照做会 FileNotFound | `nature-figure/qa-contract.md`（`audit_figure_collisions.py`/`figure_safety.py`/`nature-article-requirements.md`/`requirements.txt`）、`api.md`（`figure_safety.py`/`panel_alignment.R`）、`design-theory.md`（`demos.md`）、`multipanel-evidence-architecture.md`（`../../nature-shared/...`）、`lupynow-cookbook/*`（`code-templates/...` 共 15 处）、`lupynow-writing/common-phrases.md`（`model-validation.md`）、`model-selection-matrix.md`（`problem-decomposition.md`）、`nature-writing/nat-comms-2025-diction.md`（`published-article-patterns.md`）、`consistency-sweep.md`（`scripts/check_consistency.py` 执行路径——该 py 已 vendor，但路径在本仓库不可用）、`nature-writing/style-guardrails.md` 等（"见 SKILL.md" 提示，指向上游技能而非本仓库）——agent 应忽略这些命令/路径，改用已 vendor 的脚本（`audit_panel_alignment.py`/`audit_pdf_text.py`/`validate_figure.py`/`scripts/figure_render_audit.py`） |
 | **仅参考** | 只取理念，不直接套用 | Nature 投稿流程文件（`reviewer-checklist.md`、`technical-concern-taxonomy.md` 等 40KB 面向 Nature 投稿）、上游所有"网络核验"步骤 |
 
 > 新增/更新本清单时保持简洁：宁可让 agent 读错一份文件，也不要让它在缺失脚本上浪费时间。
+
+## 已知规则冲突的裁决顺序（先看这里）
+
+上游原文之间偶有矛盾（逐字引入所致）。消费方（尤其 `paper-polisher`、`method-selector`、`math-figure-generator`）按以下优先级裁决，本仓库自有规则始终优先于任何上游文件：
+
+1. **去 AI 味/连接词上限**：以 `lupynow-writing/de-ai-writing.md` 的量化上限为准（`moreover ≤ 1`、`moreover+furthermore ≤ 2`、"it is worth noting that ≤1" 等）。`lupynow-writing/common-phrases.md` 第十节的递进词列表只作词汇选择参考，**不得**推翻上述上限；`paper-polisher` 的 12 点清单与 `scripts/ai_trace_checker.py` 是执行入口。
+2. **图注长度**：`nature-writing/style-guardrails.md` 的 "≤300 词" 是上限建议；语料统计提示（如 "Nature 图注 <250 词"）是统计口径，不是规则。使用 ≤300 词上界并标注语料时点。
+3. **绘图工具**：`lupynow-cookbook/cookbook-ml.md` 的 "NN-SVG / draw.io" 一条为未裁剪残留，以本仓库 **matplotlib-only** 图引擎政策为准（`math-figure-generator`）。
+4. **过度声明词表**：以 `paper-polisher` 十二点清单为准（它整合并引用上游风格文件）；上游 overclaim 词表出现分歧时不再逐个调和，统一走 `paper-polisher`。
+5. **统计/排版数字**（5pt 字形、89/183 mm 等）：语料/自写综合，非 Nature 官方条款；引用时标注"语料统计"。`validate_figure.py` 等已 vendor 脚本中的规则以其自身 docstring 声明为准。
 
 ## 明确未引入（许可证或边界原因）
 

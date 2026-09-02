@@ -445,9 +445,10 @@ def main():
             return 0
         main_tex = root / "paper" / "main.tex"
         main_tex.write_text(render_main(template, root, sections, frozen, ai_blocks, bibitems),
-                            encoding="utf-8")
+                            encoding="utf-8", newline="\n")
         (root / "paper" / "build_report.json").write_text(
-            json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8",
+            newline="\n")
         print(json.dumps({"status": "PASS", "main_tex": str(main_tex.relative_to(root)),
                           **report}, ensure_ascii=False, indent=2))
         return 0

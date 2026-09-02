@@ -107,7 +107,7 @@ def main():
     if a.out:
         out = a.out if a.out.is_absolute() else root / a.out
         out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_text(text, encoding="utf-8")
+        out.write_text(text, encoding="utf-8", newline="\n")
         print(f"wrote {out.relative_to(root)}")
     else:
         print(text)

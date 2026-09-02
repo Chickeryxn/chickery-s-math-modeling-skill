@@ -170,7 +170,7 @@ def load_or_scaffold(round_dir: Path, mode: str) -> tuple[dict, bool]:
         return json.loads(path.read_text(encoding="utf-8-sig")), False
     round_dir.mkdir(parents=True, exist_ok=True)
     data = template(round_number(round_dir), mode)
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     return data, True
 
 
@@ -265,7 +265,7 @@ def cmd_summary(args) -> int:
             return 2
         print(json.dumps({"status": "PASS", "rounds": len(data["rounds"])}, ensure_ascii=False))
         return 0
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     if args.json:
         print(json.dumps(data, ensure_ascii=False, indent=2))
     print(json.dumps({"status": "WRITTEN", "rounds": len(data["rounds"]),
