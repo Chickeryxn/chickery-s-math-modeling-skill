@@ -2,58 +2,83 @@
 
 [简体中文](README.md) | [English](README.en.md)
 
-**Math Modeling Skill** — 面向 CUMCM / MCM/ICM 等数学建模竞赛的 Agent 技能库与可执行工作流框架：32 个 Claude/Codex/DSH 技能 + 32 个纯标准库脚本，把「AI 写代码、人类做决策、一切可复现可审计」变成机器可强制的过程契约。
+**让 AI 参与建模，但不替你拍板。** AI 负责解析赛题、写代码、跑实验、整理证据、起草论文；你负责选方法、判结果、定置信度、解释物理意义。这个仓库把这套分工固化成 **6 道「证据门禁」（G1–G6）**、32 个技能与 32 个纯标准库脚本，把「AI 写代码、人类做决策、一切可复现可审计」变成机器能强制检查的流程。
 
 | 徽章 | 值 |
 |---|---|
-| 许可 | [MIT](LICENSE) |
-| 版本 | 0.9.0（插件 manifest 同步） |
-| 运行环境 | Python 3.10+（仅标准库，无第三方依赖） |
+| 版本 | [0.9.0](CHANGELOG.md)（插件 manifest 同步） |
+| 组成 | 32 个技能 · 32 个纯标准库脚本 · Python 3.10+（零第三方依赖） |
 | 平台 | Windows / Linux / macOS |
-| CI | [![CI](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml)（Py 3.10–3.12 × Ubuntu/Windows） |
-| 测试 | 247 个用例，`python scripts/run_tests.py` 全绿 |
+| CI | [![CI](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml) Ubuntu/Windows × Py 3.10–3.12，247 个用例全绿 |
+| 许可 | [MIT](LICENSE) |
 
-## 这是什么
+## 它解决什么问题
 
-数学建模竞赛允许 AI 辅助，但直接让 Agent「自由发挥」会带来两类风险：**AI 越权替你做建模判断**（选方法、编理由、下结论），以及**结果不可信**（代码没跑、数字无出处、版本过期无法核对）。
+数学建模竞赛已允许 AI 辅助，但直接让 Agent「自由发挥」通常栽在这两点：
 
-本项目把一次竞赛拆成 **6 个门禁关卡（G1–G6）**，每过一关必须留下可核对的证据工件，由 `scripts/` 下的校验器自动检查——门禁只能由证据推动，不能自我声明。同时用 32 个职责单一的技能覆盖从读题到交论文的每一步。
+| 风险 | 表现 | 后果 |
+|---|---|---|
+| **AI 越权做判断** | 替你选方法、编理由、下结论 | 方向错了没人拦，论文经不起评委追问 |
+| **结果不可信** | 代码没跑过、数字没出处、版本无法核对 | 「我算过了」无法自证，一戳就穿 |
 
-| 原则 | 含义 |
-|---|---|
-| **AI 负责机械正确性** | 解析题目、写代码、跑实验、整理证据、起草论文，均由 AI 完成 |
-| **人类拥有建模判断权** | 选方法、判结果、定置信度、物理意义与贡献论述，只能由人类拍板，并留痕 |
-| **证据驱动一切** | 门禁、冻结、论文数字都必须溯源到磁盘上的真实工件与哈希，禁止口头声明 |
+**这个仓库的答案：** 把一次竞赛拆成 6 道可检查的门禁。每过一关，磁盘上必须留下对应的证据文件，由 `scripts/` 里的校验器自动检查——**门禁只能被证据推开，Agent 自己说「过了」不算数。**
 
-## 快速开始
+## 人和 AI 怎么分工
+
+| 谁 | 做什么 | 怎么保证 |
+|---|---|---|
+| **AI** | 解析题目、写代码、跑实验、整理证据、起草论文 | 机械活，AI 全包 |
+| **你** | 选方法、判结果、定置信度、写物理解释与贡献 | 每项决定记入 `methods/Qx/qx_decisions.jsonl`，须附你的原话，AI 不得代写理由 |
+| **证据** | 门禁、冻结、论文数字的最终裁判 | 全部溯源到磁盘真实工件与哈希，口头声明无效 |
+
+这正是各竞赛 AI 使用规则要求的分工：AI 是工具，建模判断与成果负责仍是参赛者本人。
+
+## 快速开始（约 5 分钟）
 
 ```bash
 git clone https://github.com/Chickeryxn/chickery-s-math-modeling-skill.git
 cd chickery-s-math-modeling-skill
-git checkout mathmodeling-new-skeleton
 ```
 
-1. 用 **Codex、Claude 或 DeepSeek Harness（DSH）桌面版**打开仓库根目录。
-2. 把题目与附件放入 `workspace/problem.txt`、`workspace/data_raw/<题目附件>`（原始附件只读，清洗副本写入 `workspace/data_clean/`）。
-3. 让 agent 跑一次自检：`python scripts/validate_repo.py .`。
-4. 开始工作流：`problem-parser → problem-classifier → data-auditor-cleaner → workflow-orchestrator`（agent 会按门禁逐步推进并在建模判断点询问你）。
+克隆后即位于开发分支 `mathmodeling-new-skeleton`（仓库默认分支），无需切换。
 
-会话配置在 `planning/session_config.json`：`interaction_mode`（`learning`/`speed`）控制提问密度，`rigor_profile`（`lean`/`submission`）控制工件与审计密度；新工作区默认 `learning + lean`，提交前切到 `submission`。
+1. 用 **Codex / Claude / DeepSeek Harness（DSH）桌面版**打开仓库根目录。
+2. 赛题放入 `workspace/problem.txt`，附件放入 `workspace/data_raw/`（原始附件只读；清洗副本由工作流写入 `workspace/data_clean/`）。
+3. 环境自检：`python scripts/validate_repo.py .`
+4. 让 Agent 按顺序开始：`problem-parser → problem-classifier → data-auditor-cleaner → workflow-orchestrator`。它会一关一关推进，并在该你拍板的地方停下来问你。
 
-## 核心概念
+两个配置开关（`planning/session_config.json`）：
+
+| 开关 | 取值 | 作用 | 什么时候用 |
+|---|---|---|---|
+| `interaction_mode` | `learning` / `speed` | 提问密度与建议展示时机 | 新手用 `learning`；熟练后切 `speed` |
+| `rigor_profile` | `lean` / `submission` | 工件与审计密度（不改变「人做判断」的边界） | 探索迭代用 `lean`；交稿前切 `submission` |
+
+## 6 道门禁怎么运作
 
 ![通用门控流水线](docs/diagrams/archify/assets/mm-generic-workflow.png)
 
-**门禁**：每次竞赛按子问题（Q1、Q2…）独立推进，每个子问题走同一套门禁——G1 问题框架化 → G2 方法筛选 → G2.5 人工选型 → G3 代码与实验评审 → G4 结果判定与冻结 → G5 论文章节 → G6 最终审计。门禁由 `scripts/workflow_guard.py derive Qx` 从磁盘证据推导，**manifest 只是缓存，不能自我提升**。
+每个子问题（Q1、Q2…）独立走同一套门禁。「谁放行」指该关的决定权在谁手上：
 
-**关键规则**
+| 门禁 | 做什么 | 谁放行 |
+|---|---|---|
+| **G1 问题框架化** | 解析赛题、梳理数据、定目标与成功标准 | 你先确认关键框架 |
+| **G2 方法筛选** | 产出候选方法卡 + 风险探测（不急着写代码） | AI 先干，探测证据说话 |
+| **G2.5 人工选型** | 只有你拍板用什么方法，才允许生成代码 | **你** |
+| **G3 代码与实验评审** | 代码能运行、输入输出符合约定、结果可复现 | AI 自检 + 机器校验 |
+| **G4 结果判定与冻结** | 你判定结果/稳定性/声明范围，数字冻结进 `frozen_numbers.json` | **你** |
+| **G5 论文章节** | 只用冻结数字写作，图通过渲染校验 | AI 起草，你确认物理解释 |
+| **G6 最终审计** | 一致性/完整性/QA 三审 | 机器出报告，你终审 |
 
-- 只有 G2 与 G2.5 同时通过，才允许生成模型代码。
-- 人工方法、结果、稳定性与声明范围决策，必须记入追加式 JSONL 决策账本，AI 不得代写理由。
-- 论文中出现的每个数字必须来自 `results/Qx/reports/frozen_numbers.json`；改数要走「解冻 → 改源头 → 重跑 → 重冻结」并记录变更日志，禁止手改。
-- 图分四型：Type 1 诊断图只做内部调试，永不进论文；Type 3/4 才进论文并须通过渲染校验。
+**几条铁律：**
 
-**技能分组**（32 个，[全表见参考手册](docs/reference.md#技能清单-32-个)）
+- **改数必须走流程**：论文里每个数字来自 `results/Qx/reports/frozen_numbers.json`；改数 = 解冻 → 改源头 → 重跑 → 重冻结，并在 `freeze_change_log.md` 记原因，禁止手改。
+- **图分四型**：Type 1 只做内部调试，永不进论文；Type 3/4 才进论文且须通过渲染校验。
+- **G5/G6 只在 `submission` 模式启用**；`lean` 模式下推进到 G4 判定即可。
+
+## 32 个技能一览
+
+按职能分 6 组（完整技能表见 [参考手册](docs/reference.md#技能清单-32-个)）：
 
 | 分组 | 覆盖 |
 |---|---|
@@ -62,41 +87,41 @@ git checkout mathmodeling-new-skeleton
 | 代码与实验 | 代码生成/评审（Python、MATLAB/北太天元）、稳健性 |
 | 结果与论文 | 结果报告、图表、方法说明、冻结、论文写作/润色/引用 |
 | 编排与审计 | 门禁调度、完整性/一致性/QA 审计、工作记录 |
-| 训练模式 | 闭卷求解、素养复盘、多维审核（专项能力训练） |
+| 训练模式 | 闭卷求解、素养复盘、多维审核 |
 
 ## 文档地图
 
-按你的目标选文档（完整索引见 [docs/](docs/README.md)）：
+按你的目标选（完整索引见 [docs/](docs/README.md)）：
 
 | 目标 | 文档 |
 |---|---|
-| 理解"每个门禁为什么存在"、练习自检 | [学习路径](docs/learning-path.md) |
-| 训练 agent 的高品质建模能力（闭卷→复盘→审核） | [训练模式](docs/training.md) |
-| 详细记录工作过程（`records/` 记录树） | [工作记录树](docs/work-record.md) |
-| 用 DSH 桌面版（技能发现/沙箱/冒烟清单） | [DSH 适配](docs/dsh-compatibility.md) |
+| 第一次接触，理解「门禁为什么存在」 | [学习路径](docs/learning-path.md) |
+| 用 DSH 桌面版跑这套工作流 | [DSH 适配](docs/dsh-compatibility.md) |
+| 训练 Agent 的高品质建模能力 | [训练模式](docs/training.md) |
 | 构建论文（xelatex + CUMCMThesis） | [论文构建](docs/paper-build.md) |
-| 技能全表/契约/命令/目录/术语/上游 | [参考手册](docs/reference.md) |
+| 技能全表/命令速查/目录结构/术语表 | [参考手册](docs/reference.md) |
+| 0.9.0 审查修复对照（问题→落实） | [审计修复清单](docs/audit-fix-0.9.0.md) |
 
 ## 常见问题
 
-**Q：它能直接替我做题或写论文吗？**
-不能。AI 只做机械正确性；方法选择、结果判定、物理解释与贡献论述必须由你决定并留痕——这也是主办方 AI 使用规则的要求。
+**Q：它能直接替我做题、写论文吗？**
+不能，也不该。AI 只承担机械正确性；方法、结果、物理解释与贡献必须由你拍板并留痕——这正是竞赛 AI 规则要求的分工。
 
-**Q：需要安装什么依赖？**
-零第三方依赖。所有脚本仅用 Python 标准库（3.10+），`python scripts/run_tests.py` 即可自检。
+**Q：需要安装什么？**
+零第三方依赖。所有脚本只用 Python 标准库（3.10+），`python scripts/run_tests.py` 即可自检。
 
-**Q：Codex、Claude 和 DSH 都能用吗？**
-能。三棵技能树（`.codex/`、`.claude/`、`.agents/`）各自完整独立、内容一致；修改技能时先改 `.codex/skills/` 再运行 `python scripts/sync_plugin.py .` 同步，用 `validate_skill_trees.py` 校验。
+**Q：Codex、Claude、DSH 都能用吗？**
+能。`.codex/skills/`、`.claude/skills/`、`.agents/skills/` 三棵技能树各自完整、内容一致；改技能先改 `.codex/skills/`，再运行 `python scripts/sync_plugin.py .` 同步并校验。
 
 **Q：`frozen_numbers.json` 能直接手改吗？**
-不能。改数必须：解冻 → 修改源头 → 重跑受影响实验 → 重冻结，并在 `freeze_change_log.md` 记录原因。
+不能。改数必须解冻 → 改源头 → 重跑 → 重冻结，并在 `freeze_change_log.md` 记录原因。
 
-**Q：如何扩展或修改技能？**
-改 `.codex/skills/<skill>/SKILL.md` 后运行 `python scripts/sync_plugin.py .` 同步全部副本，再用 `validate_skill_trees.py` 校验。
+**Q：第一次跑，从哪开始？**
+看 [学习路径](docs/learning-path.md)；或用默认 `learning + lean` 配置直接拿一道赛题练一轮，体会它在哪些节点停下来问你。
 
-**Q：和 XiaoMaColtAI 等上游技能库是什么关系？**
+**Q：与 XiaoMaColtAI 等上游库是什么关系？**
 本项目合并了 6 个上游项目并锁定 12 项决策（历史见 [references/README.md](references/README.md)）；现行可执行契约以 `AGENTS.md`、`schemas/`、`scripts/` 为准。
 
 ## 许可与致谢
 
-[MIT License](LICENSE)。合并借鉴了 [XiaoMaColtAI/math-modeling-skill](https://github.com/XiaoMaColtAI/math-modeling-skill)、[latexstudio/CUMCMThesis](https://github.com/latexstudio/CUMCMThesis)、[Lupynow/math-modeling-skills](https://github.com/Lupynow/math-modeling-skills)、[Yuan1z0825/nature-skills](https://github.com/Yuan1z0825/nature-skills)、[jihe520/sci-box](https://github.com/jihe520/sci-box) 等上游项目；流程图由 [tt-a1i/archify](https://github.com/tt-a1i/archify) 生成。详细合并决策见 [references/README.md](references/README.md) 与 [NOTICE.md](NOTICE.md)。
+[MIT License](LICENSE)。融合借鉴了 [XiaoMaColtAI/math-modeling-skill](https://github.com/XiaoMaColtAI/math-modeling-skill)、[latexstudio/CUMCMThesis](https://github.com/latexstudio/CUMCMThesis)、[Lupynow/math-modeling-skills](https://github.com/Lupynow/math-modeling-skills)、[Yuan1z0825/nature-skills](https://github.com/Yuan1z0825/nature-skills)、[jihe520/sci-box](https://github.com/jihe520/sci-box) 等上游项目；流程图由 [tt-a1i/archify](https://github.com/tt-a1i/archify) 生成。详细合并决策见 [references/README.md](references/README.md) 与 [NOTICE.md](NOTICE.md)。
