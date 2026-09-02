@@ -8,10 +8,10 @@ Source: https://github.com/Yuan1z0825/nature-skills · commit `ebd722e1880844268
 
 Imported verbatim (notices retained) under `references/upstream/`:
 
-- `nature-figure/`: `figure-contract.md`, `qa-contract.md`, `design-theory.md`, `api.md`, `multipanel-evidence-architecture.md`
+- `nature-figure/`: `figure-contract.md`, `qa-contract.md`, `design-theory.md`, `api.md`, `multipanel-evidence-architecture.md`, `audit_panel_alignment.py`, `audit_pdf_text.py`, `validate_figure.py`
 - `nature-writing/` from `skills/nature-polishing/references/`: `style-guardrails.md`, `writing-strategy.md`, `nat-comms-2025-diction.md`, `section-moves.md`, `phrasebank-playbook.md`
 - `nature-writing/` from `skills/nature-statistics/references/`: `common-failure-modes.md`, `statistical-reporting.md`, `reviewer-checklist.md`
-- `nature-writing/` from `skills/nature-shared/`: `main-text-discipline.md`, `terminology-ledger.md`, `consistency-sweep.md`, `check_consistency.py`
+- `nature-writing/` from `skills/nature-shared/`: `main-text-discipline.md`, `terminology-ledger.md`, `consistency-sweep.md`, `check_consistency.py`, `technical-concern-taxonomy.md`
 
 Licensed under the Apache License, Version 2.0. See `LICENSES/Apache-2.0.txt`.
 
@@ -20,6 +20,8 @@ Licensed under the Apache License, Version 2.0. See `LICENSES/Apache-2.0.txt`.
 Source: https://github.com/Lupynow/math-modeling-skills · commit `3a9428c006cc1b977c6a72a531b739a62868a4bc`
 
 Imported verbatim (copyright retained) under `references/upstream/lupynow-writing/`: `de-ai-writing.md`, `self-review-framework.md`, `common-phrases.md`, `figure-and-code-guide.md`, `model-selection-matrix.md`.
+
+Imported verbatim (copyright retained) under `references/upstream/lupynow-cookbook/` (8 algorithm cookbooks): `cookbook-optimization.md`, `cookbook-ml.md`, `cookbook-evaluation.md`, `cookbook-mechanistic.md`, `cookbook-statistical.md`, `cookbook-network.md`, `cookbook-clustering.md`, `cookbook-game-theory.md`.
 
 Copyright (c) 2026 Lupynow. See `LICENSES/MIT.txt`. Note: per-skill LICENSE copies inside the upstream repo list "Copyright (c) 2026" without a holder; confirm with upstream before commercial redistribution.
 

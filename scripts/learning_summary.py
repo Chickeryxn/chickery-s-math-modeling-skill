@@ -101,7 +101,7 @@ def render(root: Path) -> str:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("root", type=Path)
-    ap.add_argument("--out", type=Path, default=Path("results/learning_summary.md"))
+    ap.add_argument("--out", type=Path, default=None)
     a = ap.parse_args()
     root = a.root.resolve()
     text = render(root)

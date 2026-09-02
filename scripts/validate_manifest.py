@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
 """Validate manifest shape and compare its cached gate with evidence-derived state."""
 from __future__ import annotations
+import sys
 import argparse, json, sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 from workflow_guard import derive_state, gate_value
+
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+except Exception:
+    pass
 GATES={'G1','G2','G2.5','G3','G4','G5','G6','G1_PROBLEM_FRAMED','G2_METHOD_SCREENED','G2_5_HUMAN_CHOSEN','G3_CODE_REVIEWED','G4_RESULTS_JUDGED','G5_PAPER_READY','G6_FINAL_AUDIT'}
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('root',type=Path);ap.add_argument('manifest',type=Path);a=ap.parse_args();m=json.loads(a.manifest.read_text(encoding='utf-8-sig'));errs=[]

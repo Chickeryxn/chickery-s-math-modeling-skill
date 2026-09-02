@@ -43,6 +43,19 @@ class ResourceIndexTests(unittest.TestCase):
         self.assertEqual(json.loads(idx.read_text(encoding="utf-8")), data)
         td.cleanup()
 
+    def test_nested_subdirectories_included(self):
+        td = tempfile.TemporaryDirectory()
+        root = Path(td.name)
+        nested = root / "resource-library" / "assets" / "problems"
+        nested.mkdir(parents=True)
+        (root / "resource-library" / "assets" / "README.md").write_text("r", encoding="utf-8")
+        (nested / "smoke.txt").write_text("x", encoding="utf-8")
+        d = scan(root)
+        assets = d["categories"]["assets"]
+        self.assertIn("problems/smoke.txt", assets["entries"])
+        self.assertEqual(assets["docs"], ["README.md"])
+        td.cleanup()
+
 
 if __name__ == "__main__":
     unittest.main()

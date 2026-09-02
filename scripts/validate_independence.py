@@ -1,8 +1,16 @@
 #!/usr/bin/env python3
 """Validate static and declared runtime independence of main/baseline/verifier."""
 from __future__ import annotations
+import sys
 import argparse, hashlib, json, sys
 from pathlib import Path
+
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+except Exception:
+    pass
 
 RUNTIME_KEYS={'result_ref','validation_ref','input_manifest','run_snapshot','config_ref','result_source','validation_source'}
 

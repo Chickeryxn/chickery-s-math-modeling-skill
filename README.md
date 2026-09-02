@@ -2,15 +2,15 @@
 
 [简体中文](README.md) | [English](README.en.md)
 
-**Math Modeling Skill** — 面向 CUMCM / MCM/ICM 等数学建模竞赛的 Agent 技能库与可执行工作流框架：32 个 Claude/Codex/DSH 技能 + 27 个纯标准库校验脚本，把「AI 写代码、人类做决策、一切可复现可审计」变成机器可强制的过程契约。
+**Math Modeling Skill** — 面向 CUMCM / MCM/ICM 等数学建模竞赛的 Agent 技能库与可执行工作流框架：32 个 Claude/Codex/DSH 技能 + 28 个纯标准库校验脚本，把「AI 写代码、人类做决策、一切可复现可审计」变成机器可强制的过程契约。
 
 | 徽章 | 值 |
 |---|---|
 | 许可 | [MIT](LICENSE) |
-| 版本 | 0.6.1（插件 manifest 同步） |
+| 版本 | 0.7.0（插件 manifest 同步） |
 | 运行环境 | Python 3.10+（仅标准库，无第三方依赖） |
 | 平台 | Windows / Linux / macOS |
-| 测试 | 154 个用例，`python scripts/run_tests.py` 全绿 |
+| 测试 | 171 个用例，`python scripts/run_tests.py` 全绿 |
 
 ## 目录
 
@@ -196,8 +196,8 @@ problem-parser → problem-classifier → data-auditor-cleaner → workflow-orch
 |---|---|
 | `python scripts/run_tests.py` | 运行全部测试（标准库 unittest，无第三方依赖） |
 | `python scripts/validate_repo.py .` | 仓库级完整性总检（技能树、测试、契约、快照、血缘、QA） |
-| `python scripts/validate_skill_trees.py .` | 三棵技能树哈希一致性 + 插件 manifest 版本一致 |
-| `python scripts/sync_plugin.py . [--check]` | 同步 `.codex/skills/` → `.claude/skills/` 与插件分发副本 |
+| `python scripts/validate_skill_trees.py .` | 四棵技能树哈希一致性 + 插件 manifest 版本一致 |
+| `python scripts/sync_plugin.py . [--check]` | 同步 `.codex/skills/` → `.claude/skills/`、`.agents/skills/` 与插件分发副本 |
 | `python scripts/workflow_guard.py . derive Q1` | 从证据推导 Q1 当前门禁 |
 | `python scripts/workflow_guard.py . require Q1 model_code` | 产出敏感工件前检查门禁（不满足则 GATE_BLOCKED） |
 | `python scripts/validate_model_contract.py planning/model_contract.example.json` | 校验模型契约结构并输出合同哈希 |
@@ -233,14 +233,14 @@ problem-parser → problem-classifier → data-auditor-cleaner → workflow-orch
 ├── records/                       # 工作记录树（sessions/subjects/gates/decisions/retros，advisory）
 ├── references/                    # 上游知识库（历史决策，advisory，非强制）
 ├── schemas/                       # 领域无关契约（4 个 schema + 说明）
-├── scripts/                       # 27 个纯标准库脚本（含 1 个 bash 兼容包装）
+├── scripts/                       # 28 个纯标准库脚本（含 1 个 bash 兼容包装）
 ├── docs/diagrams/archify/         # 通用流程图（PNG/SVG/交互 HTML/JSON 源）
-└── tests/                         # 154 个测试用例
+└── tests/                         # 171 个测试用例
 ```
 
 ## 测试覆盖
 
-`python scripts/run_tests.py`（154 个用例，全标准库）覆盖：
+`python scripts/run_tests.py`（171 个用例，全标准库）覆盖：
 
 - 门禁证据推导与单调迁移（含完整 G1→G6 推进链到 `final_assembly`）
 - 人类决策溯源（伪造人类、未注册证据、路径逃逸均被拒绝）
@@ -299,8 +299,8 @@ problem-parser → problem-classifier → data-auditor-cleaner → workflow-orch
 **Q：需要安装什么依赖？**
 零第三方依赖。所有脚本仅用 Python 标准库，`python scripts/run_tests.py` 即可自检。
 
-**Q：Codex 和 Claude 都能用吗？**
-能。两棵技能树各自完整独立，内容一致；修改技能时先改 `.codex/skills/` 再运行 `sync_plugin.py` 同步。
+**Q：Codex、Claude 和 DSH 都能用吗？**
+能。三棵技能树各自完整独立，内容一致；修改技能时先改 `.codex/skills/` 再运行 `sync_plugin.py` 同步。
 
 **Q：默认分支为什么叫 `mathmodeling-new-skeleton`？**
 当前开发主线。克隆后按 README 执行 `git checkout mathmodeling-new-skeleton` 即可。
@@ -315,7 +315,7 @@ problem-parser → problem-classifier → data-auditor-cleaner → workflow-orch
 Type 1 诊断图只做内部调试，永不进论文；Type 3/4 才可进论文并须通过渲染校验。
 
 **Q：如何扩展或修改技能？**
-改 `.codex/skills/<skill>/SKILL.md` 后运行 `python scripts/sync_plugin.py .` 同步另两棵副本，再用 `validate_skill_trees.py` 校验。
+改 `.codex/skills/<skill>/SKILL.md` 后运行 `python scripts/sync_plugin.py .` 同步另两棵副本与 `.agents/skills/`，再用 `validate_skill_trees.py` 校验。
 
 **Q：和 XiaoMaColtAI 等上游技能库是什么关系？**
 本项目合并了 6 个上游项目（XiaoMaColtAI、CUMCMThesis、Lupynow、nature-skills、sci-box 等）并锁定了 12 项决策；历史记录见 [`references/README.md`](references/README.md)，但现行可执行契约以 `AGENTS.md`、`schemas/`、`scripts/` 为准。

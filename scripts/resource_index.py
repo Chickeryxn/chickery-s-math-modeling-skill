@@ -37,13 +37,14 @@ def scan(root: Path) -> dict:
     if lib.is_dir():
         for sub in sorted(p for p in lib.iterdir() if p.is_dir()):
             entries, docs = [], []
-            for f in sorted(sub.iterdir()):
+            for f in sorted(sub.rglob("*")):
                 if not f.is_file() or f.name in SKIP_NAMES:
                     continue
-                if f.name in DOC_FILES:
+                rel = f.relative_to(sub).as_posix()
+                if f.name in DOC_FILES and "/" not in rel:
                     docs.append(f.name)
                 else:
-                    entries.append(f.name)
+                    entries.append(rel)
             if entries or docs:
                 categories[sub.name] = {"entries": entries, "docs": docs}
     return {"schema_version": 1, "categories": categories}

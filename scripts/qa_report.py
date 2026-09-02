@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Produce evidence-aware layered QA without collapsing local checks into gate success."""
 from __future__ import annotations
+import sys
 import argparse,json,sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parent))
@@ -8,6 +9,13 @@ from workflow_guard import derive_state
 from create_run_snapshot import validate as validate_run
 from lineage import assess as assess_lineage
 from validate_independence import validate as validate_independence
+
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+except Exception:
+    pass
 
 STATUSES=['MECHANICAL_PASS','SEMANTIC_PASS','CONDITIONAL','HUMAN_JUDGMENT_PENDING','GATE_BLOCKED','NOT_RUN','CURRENT','STALE','MISSING']
 
@@ -73,6 +81,12 @@ def audit(root):
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('root',type=Path);ap.add_argument('--out',type=Path);a=ap.parse_args();d=audit(a.root.resolve());text=json.dumps(d,ensure_ascii=False,indent=2);print(text)
-    if a.out:a.out.write_text(text+'\n',encoding='utf-8')
-    return 0
+    if a.out:
+        try:
+            a.out.parent.mkdir(parents=True,exist_ok=True)
+            a.out.write_text(text+'\n',encoding='utf-8')
+        except OSError as exc:
+            print(f'cannot write --out: {exc}',file=sys.stderr);return 2
+    # Propagate a blocked gate to the exit code so validate_repo can gate on it.
+    return 0 if d.get('overall_status') not in {'GATE_BLOCKED'} else 2
 if __name__=='__main__':raise SystemExit(main())

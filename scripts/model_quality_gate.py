@@ -26,8 +26,15 @@ UNCERTAINTY_KEYS = ("uncertainty", "ci", "std", "stddev", "interval", "error")
 
 
 def latest_run_summary(root: Path, qid: str) -> Path | None:
-    runs = sorted((root / "results" / qid / "experiments").rglob("run_summary.json"))
-    return runs[-1] if runs else None
+    runs = list((root / "results" / qid / "experiments").rglob("run_summary.json"))
+    if not runs:
+        return None
+
+    def round_key(p: Path) -> int:
+        m = re.search(r"round(\d+)", str(p))
+        return int(m.group(1)) if m else 0
+
+    return max(runs, key=round_key)
 
 
 def load_contract(root: Path) -> dict:
@@ -80,7 +87,7 @@ def gate(root: Path, qid: str) -> dict:
         data = json.loads(summary_path.read_text(encoding="utf-8-sig"))
     except Exception as exc:
         return {"question": qid, "status": "FAIL", "findings": [f"invalid run_summary: {exc}"]}
-    if not data.get("random_seed"):
+    if data.get("random_seed") is None:
         findings.append("random_seed missing from run_summary")
     methods = data.get("methods") or []
     roles = {m.get("role") for m in methods if isinstance(m, dict)}

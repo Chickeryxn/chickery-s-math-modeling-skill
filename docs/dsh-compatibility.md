@@ -86,7 +86,7 @@ python scripts/work_record.py check .             # 记录树一致性
 python scripts/run_tests.py                       # 154 用例
 ```
 
-## 七、边界与保留项
+## 八、边界与保留项
 
 - DSH 不读取 `.codex-plugin`/`.claude-plugin`/`marketplace.json`/`hooks.json`——这些文件**保留**以服务 Codex/Claude，任何改动都必须过 `validate_skill_trees.py`。
 - DSH 无内置 Python 运行器；一律经 pwsh 调 `python`，沙箱只限制写权限不限制执行。

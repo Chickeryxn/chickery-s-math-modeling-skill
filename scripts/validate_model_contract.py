@@ -1,8 +1,16 @@
 #!/usr/bin/env python3
 """Validate a domain-neutral model contract and its role references."""
 from __future__ import annotations
+import sys
 import argparse,hashlib,json,sys
 from pathlib import Path
+
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+except Exception:
+    pass
 REQUIRED=['schema_version','entities','inputs','state_functions','decision_variables','hard_constraints','soft_constraints','objective','evaluator','uncertainty','validation_contract']
 
 def check_items(items,name,required,errors):

@@ -25,8 +25,8 @@ records/
 
 ```powershell
 python scripts/work_record.py init [root]                       # 建树（幂等）
-python scripts/work_record.py log "<文本>" [root] [--subject Qx] [--artifacts a,b] [--tags t1,t2] [--runtime codex|claude|dsh]
-python scripts/work_record.py gate Qx <G#> [root] --evidence p1,p2 [--note "..."]   # G1..G6 / G2.5
+python scripts/work_record.py log "<文本>" [root] [--subject Qx] [--artifacts a b] [--tags t1 t2] [--runtime codex|claude|dsh]
+python scripts/work_record.py gate Qx <G#> [root] --evidence p1 p2 [--note "..."]   # G1..G6 / G2.5
 python scripts/work_record.py decision Qx <decision_id> [root] [--ledger 路径]       # 从账本镜像决策卡
 python scripts/work_record.py retro "<标题>" [root]                                  # 复盘骨架
 python scripts/work_record.py replay [root] [--date YYYY-MM-DD] [--write]            # 从工件回放会话草稿

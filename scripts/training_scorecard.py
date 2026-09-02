@@ -102,15 +102,22 @@ def load_round_config(root: Path) -> dict:
 def resolve_evidence(round_dir: Path, path: str):
     """Resolve an evidence path relative to the round dir or any ancestor.
 
-    Returns the first existing candidate, or None when nothing exists.
+    Returns the first existing candidate inside the project, or None. Absolute
+    paths and paths escaping the project root are rejected (no existence
+    oracle on arbitrary files, no absolute paths leaked into committed
+    scorecards).
     """
     if not path:
         return None
     candidate = Path(path)
     if candidate.is_absolute():
-        return candidate if candidate.exists() else None
+        return None
     for base in (round_dir, round_dir.parent, round_dir.parent.parent):
-        hit = base / candidate
+        hit = (base / candidate).resolve()
+        try:
+            hit.relative_to(round_dir.parent.parent.parent.resolve())
+        except ValueError:
+            continue
         if hit.exists():
             return hit
     return None
@@ -169,7 +176,8 @@ def load_or_scaffold(round_dir: Path, mode: str) -> tuple[dict, bool]:
 
 def cmd_round(args) -> int:
     round_dir = args.round_dir.resolve()
-    config = load_round_config(round_dir.parent.parent)
+    # round_dir = <root>/results/training/roundN  ->  config root is 3 levels up
+    config = load_round_config(round_dir.parent.parent.parent)
     mode = config.get("mode", "closed")
     if args.check and not (round_dir / SCORECARD).is_file():
         print(f"{SCORECARD} missing in {round_dir}", file=sys.stderr)
@@ -249,7 +257,9 @@ def cmd_summary(args) -> int:
         except Exception as exc:
             print(f"{SUMMARY} invalid: {exc}", file=sys.stderr)
             return 2
-        if existing != data:
+        def comparable(d):
+            return {k: v for k, v in d.items() if k != "generated_at"}
+        if comparable(existing) != comparable(data):
             print(f"{SUMMARY} out of sync - run training_scorecard.py summary (no --check)",
                   file=sys.stderr)
             return 2

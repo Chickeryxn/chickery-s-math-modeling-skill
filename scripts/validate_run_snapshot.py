@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
 """Validate completed experiment snapshots and their hash-backed outputs."""
 from __future__ import annotations
+import sys
 import argparse, json, sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 from create_run_snapshot import validate
+
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+except Exception:
+    pass
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('root',type=Path);ap.add_argument('run_dir',type=Path);a=ap.parse_args()

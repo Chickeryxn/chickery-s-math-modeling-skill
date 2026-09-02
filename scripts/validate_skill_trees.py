@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
 """Cross-platform validation of skill trees, plugin manifests, and marketplace metadata."""
 from __future__ import annotations
+import sys
 import argparse,hashlib,json,sys
 from pathlib import Path
 
-def rel_files(root):return sorted(p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file() and p.name not in {'.DS_Store','*.pyc'})
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+except Exception:
+    pass
+
+def rel_files(root):return sorted(p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file() and p.name!='.DS_Store' and not p.name.endswith('.pyc'))
 def hashes(root):return {rel:hashlib.sha256((root/rel).read_bytes()).hexdigest() for rel in rel_files(root)}
 def load(p):return json.loads(p.read_text(encoding='utf-8-sig'))
 def main():

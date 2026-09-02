@@ -39,7 +39,7 @@ DSH runs the same workspace and scripts; the workflow contract is unchanged. Ope
 - The workspace root opened in DSH is `PROJECT_ROOT`; the sandbox default is `workspace-write`, which allows writing inside the workspace root plus platform temp dirs. Scripts that must write outside (e.g. `--out` to an external path) require a wider sandbox permission with justification.
 - `python` and `git` must be on `PATH` (the harness inherits the environment; it ships no Python).
 - The per-session identifier is `$env:DSH_SESSION_ID`; record it as `user_message_id` in decision ledgers using the convention `dsh:<session_id>:<seq>` (a non-empty string per the decision schema). `$env:DSH_SESSION_JSONL` points at the session log if referenced.
-- Agent hooks are not active by default in DSH; the optional SessionStart guardrail banner requires a profile patch (see `docs/dsh-compatibility.md`). The Claude-only `hooks/hooks.json` remains inert in DSH and Codex.
+- Agent hooks are not active by default in DSH; the optional SessionStart guardrail banner requires a profile patch (see `docs/dsh-compatibility.md`). The Claude-only `plugins/mathmodeling-skills/hooks/hooks.json` (guardrail banner + frozen/raw-data guard) remains inert in DSH and Codex unless the optional patch is applied.
 - Console encoding: scripts force UTF-8 output; `validate_repo.py` captures child output as UTF-8 with replacement errors, so CJK text is safe on GBK consoles.
 
 # Workflow Discipline
@@ -101,11 +101,14 @@ Use choice cards only at modeling-judgment points, normally twice per subquestio
 
 An optional third card may be used before final freeze for claim scope and confidence. Do not ask users to decide mechanically checkable matters.
 
+Additional human decision types enforced by the gate engine but not part of a choice-card flow: `package_signoff` (required before `frozen_numbers` may be produced, G4) and `submission_authorization` (consumed by `latex_assembly.py` for the AI-use declaration). Record them in the same JSONL ledger with the same `source` requirements.
+
 # Workflow Gates
 
 ## G1 — PROBLEM_FRAMED
 
 - Parse, classification, data inventory, success criteria, and human framing exist.
+- Note: the gate engine derives G1 from the three mechanical files (`planning/parse/`, `planning/classification/`, `data_inventory`); success-criteria and framing-ledger review remains a human step at this stage.
 
 ## G2 — METHOD_SCREENED
 
@@ -137,6 +140,7 @@ An optional third card may be used before final freeze for claim scope and confi
 - The human decision ledger contains result, stability, and claim-scope verdicts tied to computed evidence.
 - Final result analysis and robustness report exist.
 - In `submission` profile, the solution package and immutable `frozen_numbers.json` exist and are current.
+- Note: the gate engine derives G4 purely from disk evidence and does not read `rigor_profile`; the profile controls which artifacts are required at handoff, and artifact contents are judged by the human reviewers at G4/G6.
 
 ## G5 — PAPER_SECTION_READY
 
@@ -152,6 +156,8 @@ Run only in `submission` profile. All three must pass:
 - cross-media consistency;
 - semantic completeness;
 - final quality assurance.
+
+Note: as with G4, the engine checks audit-artifact existence, not their PASS verdicts; the audit contents are verified by the human at handoff. The `rigor_profile` is a workflow-density control, not a gate input.
 
 # Risk Probe Contract
 
@@ -226,6 +232,7 @@ Do not run a full-workspace audit merely because multiple files changed. Always 
 - To change a frozen value: **解冻 → 修改 canonical source → 重跑 affected work → 重冻结**.
 - Record the reason in `results/Qx/reports/freeze_change_log.md`.
 - A freeze is stale when a referenced canonical source is newer than `frozen_at`.
+- Note: the `frozen_at` freshness rule has no automatic checker yet; `solution-package-builder` records `frozen_at` and the human confirms currency at G4/G6 (see CHANGELOG 0.7.0).
 
 # Experiment Output
 

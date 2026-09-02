@@ -23,11 +23,10 @@ def count_tests() -> int:
 
 
 def count_scripts() -> int:
-    """Executable scripts: .py files under scripts/ plus the bash wrapper."""
+    """Executable scripts: top-level .py files under scripts/ plus the bash wrapper."""
     py = sum(1 for p in (ROOT / "scripts").glob("*.py"))
     sh = 1 if (ROOT / "scripts" / "sync-plugin.sh").is_file() else 0
     return py + sh
-
 
 def readme_zh() -> str:
     return (ROOT / "README.md").read_text(encoding="utf-8")
@@ -52,8 +51,12 @@ class DocClaimTests(unittest.TestCase):
 
     def test_script_counts(self):
         n = count_scripts()
-        for text in (readme_zh(), readme_en()):
-            self.assertIn(str(n), text, f"README missing script count {n}")
+        # Assert the exact labeled phrase so the bare number cannot match an
+        # unrelated claim (the "28-skill skeleton" once masked a wrong count).
+        zh = readme_zh()
+        en = readme_en()
+        self.assertIn(f"{n} 个纯标准库脚本", zh, f"README zh missing exact script phrase {n}")
+        self.assertIn(f"{n} standard-library-only", en, f"README en missing exact script phrase {n}")
 
     def test_plugin_versions_match(self):
         codex = json.loads((ROOT / "plugins" / "mathmodeling-skills" / ".codex-plugin" / "plugin.json")

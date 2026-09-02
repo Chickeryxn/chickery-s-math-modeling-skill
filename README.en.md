@@ -2,15 +2,15 @@
 
 [简体中文](README.md) | [English](README.en.md)
 
-**Math Modeling Skill** — an Agent skill library and executable workflow framework for mathematical-modeling contests (CUMCM / MCM/ICM): 32 Claude/Codex/DSH skills plus 27 standard-library-only validation scripts turn "AI writes code, humans make decisions, everything reproducible and auditable" into a machine-enforced process contract.
+**Math Modeling Skill** — an Agent skill library and executable workflow framework for mathematical-modeling contests (CUMCM / MCM/ICM): 32 Claude/Codex/DSH skills plus 28 standard-library-only validation scripts turn "AI writes code, humans make decisions, everything reproducible and auditable" into a machine-enforced process contract.
 
 | Badge | Value |
 |---|---|
 | License | [MIT](LICENSE) |
-| Version | 0.6.1 (plugin manifests in sync) |
+| Version | 0.7.0 (plugin manifests in sync) |
 | Runtime | Python 3.10+ (standard library only, no third-party dependencies) |
 | Platforms | Windows / Linux / macOS |
-| Tests | 154 cases, `python scripts/run_tests.py` all green |
+| Tests | 171 cases, `python scripts/run_tests.py` all green |
 
 ## Table of Contents
 
@@ -196,8 +196,8 @@ Domain-neutral contracts live in `schemas/` and are enforced by the validators i
 |---|---|
 | `python scripts/run_tests.py` | Run the whole test suite (standard-library unittest) |
 | `python scripts/validate_repo.py .` | Repository-wide integrity check (skill trees, tests, contracts, snapshots, lineage, QA) |
-| `python scripts/validate_skill_trees.py .` | Hash consistency across the three skill trees + plugin manifest versions |
-| `python scripts/sync_plugin.py . [--check]` | Sync `.codex/skills/` → `.claude/skills/` and the plugin distribution copy |
+| `python scripts/validate_skill_trees.py .` | Hash consistency across the four skill trees + plugin manifest versions |
+| `python scripts/sync_plugin.py . [--check]` | Sync `.codex/skills/` → `.claude/skills/`, `.agents/skills/` and the plugin distribution copy |
 | `python scripts/workflow_guard.py . derive Q1` | Derive Q1's current gate from evidence |
 | `python scripts/workflow_guard.py . require Q1 model_code` | Gate check before producing sensitive artifacts (GATE_BLOCKED otherwise) |
 | `python scripts/validate_model_contract.py planning/model_contract.example.json` | Validate contract shape and print the contract hash |
@@ -233,14 +233,14 @@ See [`scripts/README.md`](scripts/README.md) for detailed arguments and [`schema
 ├── records/                       # Work-record tree (sessions/subjects/gates/decisions/retros; advisory)
 ├── references/                    # Upstream knowledge base (historical decisions, advisory, not required)
 ├── schemas/                       # Domain-neutral contracts (4 schemas + README)
-├── scripts/                       # 27 standard-library-only scripts (incl. 1 bash-compatible wrapper)
+├── scripts/                       # 28 standard-library-only scripts (incl. 1 bash-compatible wrapper)
 ├── docs/diagrams/archify/         # Generic flow diagrams (PNG/SVG/JSON sources; interactive HTML generated on demand)
-└── tests/                         # 154 test cases
+└── tests/                         # 171 test cases
 ```
 
 ## Test coverage
 
-`python scripts/run_tests.py` (154 cases, standard library only) covers:
+`python scripts/run_tests.py` (171 cases, standard library only) covers:
 
 - Evidence-derived gate computation and monotonic transitions (including a full G1→G6 progression to `final_assembly`)
 - Human-decision provenance (fake human, unregistered evidence, escaping paths all rejected)
@@ -300,7 +300,7 @@ No. AI handles mechanical correctness only; method choice, result verdicts, phys
 None. All scripts use only the Python standard library; `python scripts/run_tests.py` is a self-check.
 
 **Q: Does it work with both Codex and Claude?**
-Yes. The two skill trees are each complete and consistent. When editing skills, change `.codex/skills/` first, then run `sync_plugin.py` to refresh the other copies.
+Yes. The three skill trees are each complete and consistent. When editing skills, change `.codex/skills/` first, then run `sync_plugin.py` to refresh the other copies.
 
 **Q: Why is the default branch named `mathmodeling-new-skeleton`?**
 It is the current development line. After cloning, run `git checkout mathmodeling-new-skeleton` as shown in this README.

@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
 """Require and validate lineage for manifest-declared canonical artifacts."""
 from __future__ import annotations
+import sys
 import argparse,json,sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 from lineage import assess
+
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+except Exception:
+    pass
 
 def artifact_lineage_path(root,ref):
  p=(root/ref).resolve()

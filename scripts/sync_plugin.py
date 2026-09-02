@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
 """Portable skill-tree synchronizer; .codex/skills is the source tree."""
 from __future__ import annotations
+import sys
 import argparse, hashlib, json, shutil, sys
 from pathlib import Path
 
-def files(root):return sorted(p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file() and p.name!='.DS_Store')
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+except Exception:
+    pass
+
+def files(root):return sorted(p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file() and p.name!='.DS_Store' and not p.name.endswith('.pyc'))
 def sync_tree(src,dst):
     dst.mkdir(parents=True,exist_ok=True)
     source=set(files(src)); existing=set(files(dst))
@@ -23,8 +31,14 @@ def main():
     for dst in targets:
         got={rel:sha(dst/rel) for rel in files(dst)} if dst.is_dir() else {}
         if got!=src_hash:errors.append(f'drift: {dst}')
-    if sha(r/'AGENTS.md')!=sha(r/'plugins/mathmodeling-skills/AGENTS.md'):errors.append('AGENTS distribution drift')
-    if sha(r/'LICENSE')!=sha(r/'plugins/mathmodeling-skills/LICENSE'):errors.append('LICENSE distribution drift')
+    try:
+        if sha(r/'AGENTS.md')!=sha(r/'plugins/mathmodeling-skills/AGENTS.md'):errors.append('AGENTS distribution drift')
+    except FileNotFoundError:
+        errors.append('AGENTS distribution file missing')
+    try:
+        if sha(r/'LICENSE')!=sha(r/'plugins/mathmodeling-skills/LICENSE'):errors.append('LICENSE distribution drift')
+    except FileNotFoundError:
+        errors.append('LICENSE distribution file missing')
     if errors:print('\n'.join(errors),file=sys.stderr);return 2
     print(json.dumps({'status':'PASS','source':str(src),'targets':[str(x) for x in targets],'files':len(src_hash)},ensure_ascii=False));return 0
 if __name__=='__main__':raise SystemExit(main())

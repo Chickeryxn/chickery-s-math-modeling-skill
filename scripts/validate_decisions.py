@@ -1,8 +1,16 @@
 #!/usr/bin/env python3
 """Validate append-only decision ledgers with verifiable user provenance."""
 from __future__ import annotations
+import sys
 import argparse, json, re, sys
 from pathlib import Path
+
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+except Exception:
+    pass
 STATUSES={"SUGGESTED","PENDING","DECIDED","SUPERSEDED","STALE"}
 DECIDED_TYPES={"framing","method_choice","fallback_activation","result_verdict","stability_verdict","assumption_necessity","claim_scope","package_signoff","submission_authorization"}
 DATE_PREFIX=re.compile(r'^\d{4}-\d{2}-\d{2}')

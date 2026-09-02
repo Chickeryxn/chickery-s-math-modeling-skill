@@ -166,6 +166,11 @@ def cmd_gate(args) -> int:
     evidence = []
     for e in args.evidence:
         p = (root / e).resolve()
+        try:
+            p.relative_to(root.resolve())
+        except ValueError:
+            print(f"evidence escapes project root: {e}", file=sys.stderr)
+            return 2
         if not p.is_file():
             print(f"evidence not found: {e}", file=sys.stderr)
             return 2
@@ -196,6 +201,12 @@ def cmd_decision(args) -> int:
     ensure_tree(root)
     q = args.subject.upper()
     ledger = (root / args.ledger) if args.ledger else None
+    if ledger is not None:
+        try:
+            ledger.resolve().relative_to(root.resolve())
+        except ValueError:
+            print(f"ledger escapes project root: {args.ledger}", file=sys.stderr)
+            return 2
     if ledger is None or not ledger.is_file():
         cand = root / "methods" / q / f"{q.lower()}_decisions.jsonl"
         if cand.is_file():
@@ -217,6 +228,11 @@ def cmd_decision(args) -> int:
     if found is None:
         print(f"decision_id not found in {ledger}: {args.decision_id}", file=sys.stderr)
         return 2
+    try:
+        ledger_rel = ledger.relative_to(root).as_posix()
+    except ValueError:
+        print(f"ledger escapes project root: {ledger}", file=sys.stderr)
+        return 2
     no, rec_ = found
     date = str(rec_.get("recorded_at", local_time()))[:10]
     slug = re.sub(r"[^A-Za-z0-9_.-]+", "-", args.decision_id)
@@ -224,11 +240,11 @@ def cmd_decision(args) -> int:
     src = rec_.get("source") or {}
     body = (
         f"---\ndate: {date}\nsubject: {q}\ndecision_id: {args.decision_id}\n"
-        f"ledger: {ledger.relative_to(root).as_posix()}\n---\n\n"
+        f"ledger: {ledger_rel}\n---\n\n"
         f"# 决策卡：{args.decision_id}\n\n"
         f"- 子问题: {q} | 类型: {rec_.get('decision_type')} | 状态: {rec_.get('status')}\n"
         f"- 决定人: {rec_.get('decided_by')} | 时间: {rec_.get('recorded_at')}\n"
-        f"- 账本位置: {ledger.relative_to(root).as_posix()}:{no}\n\n"
+        f"- 账本位置: {ledger_rel}:{no}\n\n"
         f"## 选择\n\n{rec_.get('choice')}\n\n"
         f"## 理由（用户原话，AI 不重写）\n\n{rec_.get('rationale')}\n\n"
         f"## 证据引用\n\n"

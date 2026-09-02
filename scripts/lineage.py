@@ -1,8 +1,16 @@
 #!/usr/bin/env python3
 """Hash-based artifact lineage with explicit current/stale/missing states."""
 from __future__ import annotations
+import sys
 import argparse, hashlib, json, sys, time
 from pathlib import Path
+
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+except Exception:
+    pass
 
 def sha256(path: Path) -> str:
     h=hashlib.sha256()
@@ -41,6 +49,12 @@ def make_lineage(root, artifact, created, validated, consumed, decisions, inputs
 
 def assess(root: Path, path: Path):
     data=json.loads(path.read_text(encoding='utf-8-sig'));issues=[]
+    # A lineage object with no provenance at all must not pass as CURRENT:
+    # it would let a zero-trace artifact satisfy validate_artifacts.
+    has_refs=bool(data.get('created_from') or data.get('validated_by'))
+    has_hashes=any((data.get(g) or {}) for g in ('input_hash','config_hash','code_hash'))
+    if not has_refs and not has_hashes:
+        issues.append({'reason':'NO_PROVENANCE'})
     for group in ('created_from','validated_by'):
         for ref in data.get(group,[]):
             try: p=root_path(root, ref['path'])

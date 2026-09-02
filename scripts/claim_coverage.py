@@ -22,6 +22,10 @@ try:
 except Exception:
     pass
 
+import sys as _sys
+from pathlib import Path as _P
+if str(_P(__file__).resolve().parent) not in _sys.path:
+    _sys.path.insert(0, str(_P(__file__).resolve().parent))
 from abstract_checker import extract_abstract
 
 SECTION_RE = re.compile(r"\\section\*?\{([^}]*)\}", flags=re.S)

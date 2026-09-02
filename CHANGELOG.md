@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.7.0 — 2026-09-02
+
+Full-audit hardening (7-angle parallel audit + empirical reproduction of every P1):
+
+- **Gate engine fixes**: `require_gate` no longer crashes on manifests with `artifacts` (NameError); risk probes with a `FAIL` verdict no longer stall G1 (PASS/CONDITIONAL candidate required instead); `result_report` minimum gate lowered 4→3 (removes the `require result_report` deadlock); `require_gate` runtime path e2e-tested.
+- **Validator correctness**: `model_quality_gate` picks the latest run by round number (round10 > round9); `training_scorecard summary --check` ignores `generated_at` (no more permanent out-of-sync) and `round` reads `training_config.json` from the correct root; `lineage.assess({})` rejects zero-provenance lineage; `create_run_snapshot` decodes child output as UTF-8 (GBK Windows), fixes degraded/budget consistency, rejects non-terminal snapshots and out-of-root run dirs, writes LF; `qa_report` propagates `GATE_BLOCKED` via exit code and `validate_repo` now treats it as an error.
+- **Encoding**: all 27 scripts force UTF-8 output (GBK console crash / mojibake in validate_repo JSON fixed).
+- **Hooks guard**: `guard_frozen.py` now screens DSH lowercase `write`/`edit` tools, matches paths case-insensitively with component boundaries (no false positives on `my_data_raw/` or content mentions), and the DSH patch documents `pluginRoot` (without it `${CLAUDE_PLUGIN_ROOT}` never substitutes and every tool call would be blocked).
+- **Docs/claims**: README script count corrected to 28 with an exact-phrase guard in `test_doc_claims`; sync/tree rows now mention `.agents/skills/` and four trees; CLAUDE.md/README tree wording updated; `docs/work-record.md` command examples use space-separated args; AGENTS.md documents `package_signoff`/`submission_authorization`, G1/G4/G6 engine notes, and the manual `frozen_at` freshness rule; NOTICE.md now lists all 12 previously missing upstream files; `lineage.schema.json` drops the unimplemented `INVALIDATED` status.
+- **Security**: evidence path containment enforced in `work_record gate`/`decision` and `training_scorecard.resolve_evidence`; `latex_assembly` escapes ledger `choice` text and uniquifies all-symbol macro names.
+- **Coverage**: new `tests/test_governance_e2e.py` (11 tests) covers validate_repo/qa exit codes, sync/tree drift detection, manifest overclaim, run-snapshot CLI, the three gate-engine regressions, and evidence escapes.
+- Tests grew to 171.
+
 ## 0.6.1 — 2026-09-02
 
 - **Doc-claims regression net**: `tests/test_doc_claims.py` asserts README skill/test/script counts and plugin versions match disk, so the past "14/16 scripts" style drift fails CI instead of rotting.

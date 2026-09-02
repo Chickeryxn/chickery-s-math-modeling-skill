@@ -61,7 +61,7 @@ def validate(root: Path, notice_check: bool = True) -> dict:
         if not um.is_file():
             errors.append(f"{rel}: missing UPSTREAM.md")
             continue
-        parsed = parse_upstream_md(um.read_text(encoding="utf-8"))
+        parsed = parse_upstream_md(um.read_text(encoding="utf-8-sig"))
         fields, imported = parsed["fields"], parsed["imported"]
         missing_fields = [f for f in ("Source repository", "License") if f not in fields or not fields[f].strip()]
         if missing_fields:
@@ -126,7 +126,7 @@ def write_hashes(root: Path) -> dict:
         um = sub / "UPSTREAM.md"
         if not um.is_file():
             continue
-        imported = parse_upstream_md(um.read_text(encoding="utf-8"))["imported"]
+        imported = parse_upstream_md(um.read_text(encoding="utf-8-sig"))["imported"]
         rec = {}
         for name in imported:
             p = sub / name

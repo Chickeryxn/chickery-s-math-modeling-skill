@@ -55,7 +55,12 @@ def load_frozen_numbers(root: Path) -> dict:
 
 
 def sanitize_macro_name(name: str) -> str:
-    return re.sub(r"[^A-Za-z0-9]", "", name) or "frozenvalue"
+    import hashlib
+    clean = re.sub(r"[^A-Za-z0-9]", "", name)
+    if clean:
+        return clean
+    # All-symbol ids would all collapse to the same name; make it unique.
+    return "frozenvalue" + hashlib.sha1(name.encode("utf-8")).hexdigest()[:8]
 
 
 def ai_declaration(root: Path) -> tuple[list[str], list[str]]:
@@ -80,7 +85,7 @@ def ai_declaration(root: Path) -> tuple[list[str], list[str]]:
                     "\\section*{AI 工具使用声明}\n"
                     "经参赛者确认：本文中的建模判断、结果判定、物理意义与贡献论述由作者完成；"
                     "AI 仅承担机械正确性工作（解析、编码、实验与整理）。"
-                    + (f" 补充说明：{choice}" if choice and choice != "ok" else "")
+                    + (f" 补充说明：{latex_escape(choice)}" if choice and choice != "ok" else "")
                 )
                 src = p.relative_to(root).as_posix()
                 if src not in sources:

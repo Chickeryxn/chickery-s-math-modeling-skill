@@ -65,7 +65,8 @@ class LatexAssemblyTests(unittest.TestCase):
 
     def test_sanitize_macro_name(self):
         self.assertEqual(sanitize_macro_name("q1_main_rmse"), "q1mainrmse")
-        self.assertEqual(sanitize_macro_name("!!!"), "frozenvalue")
+        self.assertTrue(sanitize_macro_name("!!!").startswith("frozenvalue"))
+        self.assertNotEqual(sanitize_macro_name("!!!"), sanitize_macro_name("???"))
 
     def test_build_report_counts(self):
         td, root = make_workspace()
