@@ -71,6 +71,8 @@ If these are missing, return to the producer skill rather than guessing.
 
 `qx_method_card.md` stays compact and contains:
 
+> Machine anchors: the role tokens `main_candidate` and `usable_baseline` and the section headers `Risk-probe summary` and `Baseline validity` are read by the gate engine (`scripts/workflow_guard.py`). Keep those exact tokens/headers anywhere in the file — they already appear in the tables below. All other prose (rationale chain, notes, compact history) may be written in Chinese. Do not leave placeholders such as `TODO`, `占位`, or `待填` anywhere in the card.
+
 ```markdown
 # Qx Method Card
 

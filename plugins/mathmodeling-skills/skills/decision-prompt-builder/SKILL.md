@@ -30,6 +30,14 @@ Ask the smallest useful question that only the human modeler can answer. Present
 5. Do not recommend an option in `learning` mode before the answer.
 6. Pass the answer verbatim to `modeler-decision-logger`; do not create a per-skill pending decision file.
 
+# Batch Cards (speed mode)
+
+When several subquestions need the same question type (e.g. output form for Q1/Q2/Q3), one matrix card may ask the identical question once per subquestion in `speed` mode. Keep the decisions independent: each subquestion answer is captured as its own record with its own `decision_id` and verbatim source; never infer one row's answer from another row.
+
+# Rationale Sentence Frames
+
+A card may attach an optional fill-in frame such as "我选 X 是因为 ____，并能接受 ____ 代价。" Frames help the human produce a defensible one-sentence rationale; they are prompts, never substitutes — you must not fill in the rationale yourself.
+
 # Standard Cards
 
 ## Before method screening

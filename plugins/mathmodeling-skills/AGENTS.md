@@ -89,6 +89,7 @@ Each line is a JSON object with at least:
 
 - The AI may present evidence and options but must not originate the human's choice, rationale, confidence, physical interpretation, or submission authorization.
 - The AI may append the user's answer verbatim or faithfully structure it; it must not strengthen or invent the rationale.
+- When the runtime provides no stable message identifier, record `user_message_id: "unavailable:<platform>"` (e.g. `unavailable:codex`) alongside the verbatim answer; never invent a fake id.
 - Do not create per-skill `*_modeler_decision.md` files for new work.
 - Existing decision Markdown files remain readable during migration but are not required for new work.
 - A decision passes only when it is human-authored, evidence-linked, non-empty, and contains no placeholder.
@@ -103,6 +104,17 @@ Use choice cards only at modeling-judgment points, normally twice per subquestio
 An optional third card may be used before final freeze for claim scope and confidence. Do not ask users to decide mechanically checkable matters.
 
 Additional human decision types enforced by the gate engine but not part of a choice-card flow: `package_signoff` (required before `frozen_numbers` may be produced, G4) and `submission_authorization` (consumed by `latex_assembly.py` for the AI-use declaration). Record them in the same JSONL ledger with the same `source` requirements.
+
+## Judgment spectrum
+
+- Fully mechanical (thresholds, syntax, reproducibility, freeze freshness, structure checks): the AI decides and checks; never ask the human.
+- Half-judgment (probe mitigation wording, CONDITIONAL acceptance, choice-card option phrasing): the AI may draft options and candidate mitigations; the human accepts or rejects.
+- Fully human (method choice, result/stability/claim-scope verdicts, physical meaning, contribution, submission authorization): the AI presents evidence only.
+
+## Batch cards and rationale frames
+
+- In `speed` mode, when several subquestions need the same question type, one matrix card may ask the identical question once per subquestion. Each answer is still recorded per-subquestion with its own `decision_id` and verbatim source; never infer one row's answer from another.
+- Cards may attach optional fill-in frames ("我选 X 是因为 ____，并能接受 ____ 代价。") to help the human write a defensible rationale. Frames are prompts, never substitutes — the AI must not fill them in.
 
 # Workflow Gates
 
