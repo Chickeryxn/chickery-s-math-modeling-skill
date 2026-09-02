@@ -29,10 +29,16 @@ def sha256_file(path: Path) -> str:
 
 
 def safe_path(root: Path, raw: str) -> Path:
-    """Resolve a project-relative path and enforce containment inside root."""
+    """Resolve a project-relative path and enforce containment inside root.
+
+    Both sides are resolved before the containment check: on Windows a root
+    carrying an 8.3 short name (RUNNER~1) vs a resolve()-expanded long-name
+    candidate used to make relative_to() raise spuriously.
+    """
+    root = root.resolve()
     p = (root / raw).resolve()
     try:
-        p.relative_to(root.resolve())
+        p.relative_to(root)
     except ValueError:
         raise ValueError(f"path escapes project root: {raw}")
     return p

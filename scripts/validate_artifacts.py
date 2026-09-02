@@ -18,11 +18,15 @@ def artifact_lineage_path(root,ref):
  p=(root/ref).resolve()
  return Path(str(p)+'.lineage.json')
 def validate(root,manifest):
+ # Resolve root once up front: lineage paths are built from resolved
+ # artifacts, and comparing them against an unresolved root on Windows (8.3
+ # short names like RUNNER~1) used to raise spurious 'not in subpath' errors.
+ root=root.resolve()
  data=json.loads(manifest.read_text(encoding='utf-8-sig'));errors=[];checked=[]
  for name,ref in (data.get('artifacts') or {}).items():
   if not isinstance(ref,str) or not ref.strip():continue
   p=(root/ref).resolve()
-  try:p.relative_to(root.resolve())
+  try:p.relative_to(root)
   except ValueError:errors.append(f'{name}: artifact escapes project root');continue
   if not p.is_file():errors.append(f'{name}: artifact missing: {ref}');continue
   lp=artifact_lineage_path(root,ref)

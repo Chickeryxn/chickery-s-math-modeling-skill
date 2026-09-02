@@ -20,9 +20,15 @@ def sha256(path: Path) -> str:
     return h.hexdigest()
 
 def root_path(root: Path, raw: str) -> Path:
-    p=(root/raw).resolve()
-    try: p.relative_to(root.resolve())
-    except ValueError: raise ValueError(f'path escapes project root: {raw}')
+    # Resolve root first (Windows 8.3 short-name safety: resolve() expands
+    # RUNNER~1 -> runneradmin; comparing against an unresolved root raised
+    # spurious 'not in subpath' errors).
+    root = root.resolve()
+    p = (root / raw).resolve()
+    try:
+        p.relative_to(root)
+    except ValueError:
+        raise ValueError(f'path escapes project root: {raw}')
     return p
 
 def refs(root: Path, paths):

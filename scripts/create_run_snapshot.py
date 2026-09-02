@@ -19,11 +19,17 @@ def sha256(path:Path)->str:
   for chunk in iter(lambda:f.read(1024*1024),b''):h.update(chunk)
  return h.hexdigest()
 def safe(root:Path,raw:str)->Path:
+ # Normalize root first: on Windows, an unresolved root may carry a 8.3 short
+ # name (e.g. RUNNER~1) while (root/raw).resolve() expands to the long name
+ # (runneradmin), making relative_to() raise spuriously. Resolving both sides
+ # keeps the containment check correct on every platform.
+ root=root.resolve()
  p=(root/raw).resolve()
  try:p.relative_to(root)
  except ValueError:raise ValueError(f'path escapes project root: {raw}')
  return p
 def manifest(root:Path,paths:list[str])->dict:
+ root=root.resolve()
  out={}
  for raw in paths:
   p=safe(root,raw)
