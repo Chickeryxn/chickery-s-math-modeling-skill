@@ -33,7 +33,7 @@ Modeling contests now allow AI assistance, but letting an Agent "free-wheel" usu
 
 This is exactly the division of labor contest AI rules require: AI is the tool; the modeling judgment and responsibility stay with the contestants.
 
-## Quick start (~5 minutes)
+## Quick start
 
 ```bash
 git clone https://github.com/Chickeryxn/chickery-s-math-modeling-skill.git
