@@ -21,6 +21,7 @@
 - `rigor_profile`: `lean` or `submission`. It changes artifact and audit density, never the human-judgment boundary.
 - Default to `learning + lean` in a fresh workspace.
 - Use `lean` while exploring and iterating. Switch to `submission` only when preparing writer handoff or final assembly.
+- Optional `deadline` (ISO-8601): when present, `workflow_guard.py derive` emits an advisory `deadline_hint` (remaining-time guidance such as "switch to submission", "stop new experiments"); it is never a gate input.
 - For compatibility, read legacy `{ "mode": "learning" | "speed" }` as `interaction_mode`.
 
 # Repository Skill Copies
@@ -105,10 +106,12 @@ Additional human decision types enforced by the gate engine but not part of a ch
 
 # Workflow Gates
 
+The gate engine (`scripts/workflow_guard.py derive Qx [--profile lean|submission|auto]`) derives gates from canonical evidence. `--profile auto` reads `planning/session_config.json` (`rigor_profile`); the engine default is the strict `submission` derivation. In `lean`, the engine caps at the G4 result-judgment subgate (freeze/paper/audits are submission gates). The engine checks artifact existence and structural depth, not semantic PASS verdicts — audit contents are judged by the human at handoff.
+
 ## G1 — PROBLEM_FRAMED
 
 - Parse, classification, data inventory, success criteria, and human framing exist.
-- Note: the gate engine derives G1 from the three mechanical files (`planning/parse/`, `planning/classification/`, `data_inventory`); success-criteria and framing-ledger review remains a human step at this stage.
+- Note: the gate engine derives G1 from the mechanical files and their structural depth: a parse declaring `subquestions` must give each a `goal` and a non-empty `required_outputs`; a classification declaring `subquestions` must give each a `primary_type`. When the parse lists `human_decisions_needed`, a verifiable human `framing` record (`planning/framing_decisions.jsonl` or the Qx ledger) is required before screening. Success-criteria review remains a human step at this stage.
 
 ## G2 — METHOD_SCREENED
 
@@ -140,7 +143,7 @@ Additional human decision types enforced by the gate engine but not part of a ch
 - The human decision ledger contains result, stability, and claim-scope verdicts tied to computed evidence.
 - Final result analysis and robustness report exist.
 - In `submission` profile, the solution package and immutable `frozen_numbers.json` exist and are current.
-- Note: the gate engine derives G4 purely from disk evidence and does not read `rigor_profile`; the profile controls which artifacts are required at handoff, and artifact contents are judged by the human reviewers at G4/G6.
+- Note: the gate engine derives G4 from disk evidence under the active profile. In `lean`, G4 is the result-judgment subgate: the human result/stability/claim-scope verdicts on computed evidence. In `submission`, G4 additionally requires the final result analysis, robustness report, solution package, package sign-off, and current `frozen_numbers.json`. Artifact contents are judged by the human reviewers at G4/G6. G3 gates on the latest experiment round only; older exploratory rounds without run snapshots are advisory, not blocking.
 
 ## G5 — PAPER_SECTION_READY
 
@@ -157,7 +160,7 @@ Run only in `submission` profile. All three must pass:
 - semantic completeness;
 - final quality assurance.
 
-Note: as with G4, the engine checks audit-artifact existence, not their PASS verdicts; the audit contents are verified by the human at handoff. The `rigor_profile` is a workflow-density control, not a gate input.
+Note: as with G4, the engine checks audit-artifact existence, not their PASS verdicts; the audit contents are verified by the human at handoff. G5/G6 are submission-only gates: the engine does not evaluate them under `--profile lean`.
 
 # Risk Probe Contract
 

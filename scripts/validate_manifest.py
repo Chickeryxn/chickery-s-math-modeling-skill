@@ -20,7 +20,8 @@ def main():
   if k not in m:errs.append('missing '+k)
  if m.get('current_gate') not in GATES:errs.append('unknown current_gate')
  try:
-  derived=derive_state(a.root.resolve(),m.get('question_id',''))['gate']
+  prof=m.get('rigor_profile') if m.get('rigor_profile') in ('lean','submission') else 'submission'
+  derived=derive_state(a.root.resolve(),m.get('question_id',''),prof)['gate']
   if gate_value(m.get('current_gate','G1'))>gate_value(derived):errs.append(f'manifest gate {m.get("current_gate")} exceeds evidence-derived {derived}')
  except Exception as e:errs.append(str(e))
  allowed=m.get('allowed',{})

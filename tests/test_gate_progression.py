@@ -87,13 +87,13 @@ class GateProgressionTests(unittest.TestCase):
 
     def test_dict_probe_shape_still_works(self):
         td,root=base_workspace()
-        write(root/'methods/Q1/probes/risk_probe_summary.json',json.dumps({'methods':{'M1':{'verdict':'PASS'}}}))
+        write(root/'methods/Q1/probes/risk_probe_summary.json',json.dumps({'methods':{'M1':{'verdict':'PASS','output_degeneracy':{'status':'PASS','metrics':{}}}}}))
         self.assertEqual(derive_state(root,'Q1')['gate'],'G2.5')
         td.cleanup()
 
     def test_full_progression_reaches_freeze_and_assembly(self):
         td,root=base_workspace()
-        write(root/'methods/Q1/probes/risk_probe_summary.json',json.dumps({'methods':{'M1':{'verdict':'PASS'}}}))
+        write(root/'methods/Q1/probes/risk_probe_summary.json',json.dumps({'methods':{'M1':{'verdict':'PASS','output_degeneracy':{'status':'PASS','metrics':{}}}}}))
         add_g3_evidence(root)
         # G1-G3 plus result evidence complete -> stuck at G4
         self.assertEqual(derive_state(root,'Q1')['gate'],'G4')

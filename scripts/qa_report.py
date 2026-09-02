@@ -66,7 +66,9 @@ def audit(root):
     for p in manifests:
         qid=p.stem
         try:
-            m=json.loads(p.read_text(encoding='utf-8-sig'));state=derive_state(root,qid);lineage=q_artifact_lineages(root,qid,m);runs=q_runs(root,qid);ind=q_independence(root,qid)
+            m=json.loads(p.read_text(encoding='utf-8-sig'))
+            prof=m.get('rigor_profile') if m.get('rigor_profile') in ('lean','submission') else 'submission'
+            state=derive_state(root,qid,prof);lineage=q_artifact_lineages(root,qid,m);runs=q_runs(root,qid);ind=q_independence(root,qid)
             gate='GATE_BLOCKED' if state['blockers'] else state['gate']
             mechanical='MECHANICAL_PASS' if not state['blockers'] and runs['status'] in {'PASS','NOT_RUN'} else 'CONDITIONAL'
             semantic='SEMANTIC_PASS' if not state['blockers'] and ind['status'] in {'RUNTIME_INDEPENDENT','STATICALLY_DISTINCT'} and lineage['status'] in {'CURRENT','NOT_RUN'} else 'CONDITIONAL'

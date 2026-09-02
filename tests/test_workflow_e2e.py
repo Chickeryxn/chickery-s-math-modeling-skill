@@ -15,12 +15,12 @@ class SyntheticWorkflowE2ETests(unittest.TestCase):
  def make_project(self,family):
   td=tempfile.TemporaryDirectory();root=Path(td.name);qid='Q1'
   write(root/'planning/parse/problem_parse.json',json.dumps({'data_inventory':[{'id':'synthetic'}]}))
-  write(root/'planning/classification/problem_classification.json',json.dumps({'subquestions':[{'id':qid}]}))
+  write(root/'planning/classification/problem_classification.json',json.dumps({'subquestions':[{'id':qid,'primary_type':family}]}))
   contract={'schema_version':1,'entities':[{'id':'entity'}],'inputs':[{'id':'input','type':'numeric','domain':'real','unit':'unit','source':'synthetic'}],'state_functions':[{'id':'state','arguments':['t'],'output':'real','definition_ref':'synthetic'}],'decision_variables':[{'id':'decision','type':'numeric','domain':'[0,1]','unit':'unit'}],'hard_constraints':[{'id':'constraint','expression_ref':'synthetic'}],'soft_constraints':[],'objective':{'sense':'MINIMIZE','value_ref':family+'_loss','output_contract':{'type':'scalar'}},'evaluator':{'evaluator_id':family+'_evaluator','implementation_ref':family+'_verifier.py'},'uncertainty':None,'validation_contract':{'independent_checks':['main','baseline','verifier'],'tolerances':{'loss':1e-6}}}
   write(root/'planning/model_contract.json',json.dumps(contract))
   write(root/'workspace/data/data_profile.json',json.dumps({'family':family}))
   write(root/'methods/Q1/q1_method_card.md','# Q1\nmain_candidate\nusable_baseline\n## Baseline validity\n## Risk-probe summary')
-  write(root/'methods/Q1/probes/risk_probe_summary.json',json.dumps({'methods':{'main':{'verdict':'PASS'},'baseline':{'verdict':'PASS'}}}))
+  write(root/'methods/Q1/probes/risk_probe_summary.json',json.dumps({'methods':{'main':{'verdict':'PASS','output_degeneracy':{'status':'PASS','metrics':{}}},'baseline':{'verdict':'PASS','output_degeneracy':{'status':'PASS','metrics':{}}}}}))
   write(root/'methods/Q1/q1_decisions.jsonl',json.dumps(decision('method_choice',family+'-method'))+'\n')
   write(root/'planning/manifests/Q1.json',json.dumps({'schema_version':1,'question_id':'Q1','rigor_profile':'lean','current_gate':'G2.5','status':'pending','artifacts':{},'allowed':{},'blockers':[],'next_action':{}}))
   write(root/'main.py',f'from pathlib import Path; Path("main_result.json").write_text("main-{family}")')

@@ -137,7 +137,8 @@ class WorkflowGuardRegressionTests(unittest.TestCase):
             (root / "methods" / "Q1" / "q1_method_card.md").write_text(
                 "main_candidate: M1\nusable_baseline: M0\nRisk-probe summary\nBaseline validity\n", encoding="utf-8")
             (root / "methods" / "Q1" / "probes" / "risk_probe_summary.json").write_text(json.dumps({
-                "methods": {"M1": {"verdict": "PASS"}, "M2": {"verdict": "FAIL"}}}), encoding="utf-8")
+                "methods": {"M1": {"verdict": "PASS", "output_degeneracy": {"status": "PASS", "metrics": {}}},
+                            "M2": {"verdict": "FAIL"}}}), encoding="utf-8")
             state = wg.derive_state(root, "Q1")
             self.assertNotEqual(state["gate"], "G1")
 
