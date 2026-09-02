@@ -32,7 +32,11 @@ Per Qx require:
 - current frozen numbers;
 - paper section and referenced figures.
 
-Globally require symbol table, assumptions, references, consistency audit, completeness audit, and QA report.
+Globally require symbol table, assumptions, references, the consistency audit,
+and this completeness audit. The QA report is a later stage in the audit
+sequence (consistency → completeness → QA): if it already exists, cross-check
+it; if it does not, list it as "pending QA" instead of blocking completeness —
+otherwise completeness and QA mutually require each other and neither can pass.
 
 # Workflow
 

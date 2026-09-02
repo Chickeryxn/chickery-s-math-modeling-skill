@@ -70,6 +70,9 @@ Typical values:
 - `claim_scope`
 - `package_signoff`
 - `submission_authorization`
+- `decision_stale` — advisory record appended when a decision's cited evidence
+  materially changed (see # Staleness); it names the old `decision_id` in
+  `supersedes` and asks the human to reconfirm through one choice card.
 
 # Staleness
 

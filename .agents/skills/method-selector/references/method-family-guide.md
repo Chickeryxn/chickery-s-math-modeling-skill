@@ -37,3 +37,24 @@ Use this guide to form a shortlist, not as a menu that must be exhausted.
 - Credible baselines: feasible direct rule or nearest-neighbor heuristic.
 - Main families: shortest path, flow, matching, spanning tree, TSP/VRP formulations.
 - Key risks: unrealistic edges or weights, omitted operational constraints, mathematically valid but unusable routes.
+
+## Descriptive and inferential statistics
+
+(Completes the routing table for problem-classifier's descriptive /
+inference types — these families previously had no entry here.)
+
+- Descriptive (summarize/characterize, no causal claim): summary statistics,
+  distributions, indices; credible baselines are simple aggregations (mean /
+  median / rate) that answer the same descriptive question.
+- Inferential (estimate/compare with uncertainty): hypothesis tests, CI
+  construction, regression with uncertainty, bootstrap; credible baselines are
+  the null or simplest estimator.
+- Key risks: p-value misuse, multiple-comparison inflation, ignoring sampling
+  design, overclaiming causation from correlation, small effective sample size.
+
+## Mixed-type routing
+
+When a subquestion mixes types (e.g. prediction + optimization), build the
+shortlist from the dominant output family and treat the secondary family as a
+constraint or evaluation layer; do not silently keep only one paradigm when
+the problem admits several.

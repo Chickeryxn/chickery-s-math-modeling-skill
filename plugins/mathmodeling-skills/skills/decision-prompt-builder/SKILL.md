@@ -26,7 +26,7 @@ Ask the smallest useful question that only the human modeler can answer. Present
 
 1. Identify one load-bearing judgment.
 2. Create 2–3 mutually exclusive options. Each option must state its practical consequence.
-3. Add `都不合适 / 补充约束` when the listed options may not cover the user's intent.
+3. Add `都不合适 / 补充约束` (exactly this wording everywhere) when the listed options may not cover the user's intent.
 4. Ask no more than three questions in one card.
 5. Do not recommend an option in `learning` mode before the answer.
 6. Pass the answer verbatim to `modeler-decision-logger`; do not create a per-skill pending decision file.
@@ -60,7 +60,7 @@ Example:
 - A. 可解释性优先——方法更透明，但可能牺牲部分拟合效果。
 - B. 平衡——接受中等复杂度，要求能解释且优于可信 baseline。
 - C. 性能优先——允许更复杂的方法，但需要额外稳健性和解释工作。
-- D. 都不合适 / 我补充约束。
+- D. 都不合适 / 补充约束。
 ```
 
 ## After a meaningful experiment
@@ -80,6 +80,13 @@ Use only when claim scope or confidence is genuinely judgment-bearing:
 - keep the claim;
 - downgrade it;
 - drop it.
+
+De-duplication: the claim-scope card (above, decision_type `claim_scope`) and
+the package sign-off card (decision_type `package_signoff`, produced by
+`solution-package-builder`) sit at the same freeze point but ask different
+questions. `workflow-orchestrator` routes only one of them per checkpoint
+unless the human explicitly asks to review both separately — do not emit both
+cards back to back on your own initiative.
 
 # Output
 

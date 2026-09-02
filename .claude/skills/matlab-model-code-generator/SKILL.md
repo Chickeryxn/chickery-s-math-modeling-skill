@@ -32,6 +32,7 @@ code/matlab/Qx/
 ├── qx_code_plan.md
 ├── qx_baseline.m
 ├── qx_main.m
+├── qx_verifier.m     % independent verifier planned by model-code-analyzer
 └── run_all.m        % only when useful
 ```
 
@@ -69,7 +70,13 @@ Follow the `model-code-analyzer` contract, including approved decision ID, roles
 
 ## Immutable run requirement
 
-Before and after execution, create an immutable run snapshot with `scripts/create_run_snapshot.py` or an equivalent MATLAB-produced snapshot. Record planned and actual budgets, input/config/code hashes, exact command, runtime, status, result reference, and validation reference. Use `NOT_RUN` when no compatible runtime is available.
+Create the immutable run snapshot with `scripts/create_run_snapshot.py` exactly
+as the Python generator does — a snapshot produced by the MATLAB code itself
+cannot claim `SUCCESS` (the validator requires `executed_by_runner: true` and a
+return code of 0). When no compatible runtime is available, record the round as
+`NOT_RUN` with the snapshot begun but not finalized; never self-certify an
+unexecuted round. Record planned and actual budgets, input/config/code hashes,
+exact command, runtime, status, result reference, and validation reference.
 
 
 ## v0.3 runner requirement

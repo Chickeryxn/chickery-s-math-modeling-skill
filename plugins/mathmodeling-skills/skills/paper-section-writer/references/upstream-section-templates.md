@@ -20,5 +20,5 @@ For each claim record: claim ID → frozen value/source → robustness support �
 
 ## Usage
 
-- These are structural guidance; numbers and interpretations must come from `frozen_numbers.json` and the decision ledger.
+- These are structural guidance; numbers and interpretations must come from the per-subquestion `results/Qx/reports/frozen_numbers.json` and the decision ledger.
 - See `references/upstream/nature-writing/` for the full rule files (main-text-discipline, terminology-ledger, consistency-sweep).

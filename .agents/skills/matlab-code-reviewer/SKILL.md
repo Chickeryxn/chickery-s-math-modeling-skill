@@ -35,7 +35,17 @@ Use the same schema as `python-code-reviewer`, with:
 - `compatibility_target`
 - optional `compatibility` check
 
-Required named checks use `PASS`, `FAIL`, or justified `NOT_APPLICABLE`. Runtime-dependent checks use `NOT_RUN` when execution was impossible; this blocks G3 until executed.
+Required named checks use the single shared code-review status set (identical
+in `python-code-reviewer`):
+- `PASS`: check passed with concrete evidence;
+- `FAIL`: check failed — any required `FAIL` blocks G3;
+- `NOT_APPLICABLE`: check does not apply (justify);
+- `NOT_RUN`: runtime-dependent and not yet executed (e.g. no MATLAB/北太天元
+  runtime) — this blocks G3 until executed;
+- `CONDITIONAL`: passed with named conditions the modeler must confirm.
+
+The report verdict stays in the same vocabulary (`PASSED`, `FAILED`, `NOT_RUN`,
+`CONDITIONAL`, `GATE_BLOCKED`); never mix a second status set into the JSON.
 
 # Rules
 

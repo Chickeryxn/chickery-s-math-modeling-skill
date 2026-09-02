@@ -40,7 +40,7 @@ Test the claims most likely to fail. Choose checks from the model's assumptions 
 
 `robustness/Qx/qx_robustness_report.md`
 
-7. If the stability verdict affects method continuation or claim scope, invoke one choice card and log the human answer in `qx_decisions.jsonl`.
+7. If the stability verdict affects method continuation or claim scope, invoke one choice card and log the human answer in `methods/Qx/qx_decisions.jsonl` with `decision_type: stability_verdict` (a verdict on stability evidence is a human judgment; the AI presents the evidence only).
 
 # Summary Contract
 

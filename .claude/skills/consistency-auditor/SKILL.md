@@ -13,7 +13,7 @@ whenToUse: After CANONICAL or FROZEN changes, or before final assembly, to run s
 
 Prefer:
 
-- `frozen_numbers.json` for paper numbers;
+- `results/Qx/reports/frozen_numbers.json` (per-subquestion) for paper numbers;
 - `qx_decisions.jsonl` for human judgments;
 - `planning/symbol_table.md` for symbols/units;
 - approved code plan and run summary for parameters and executed methods;
@@ -29,7 +29,7 @@ Use legacy decision logs or Markdown reviews only during migration.
 4. Referenced tables, figures, code, and data files exist.
 5. Why-this-method, result verdict, stability, confidence, and claim scope resolve to human decision IDs.
 6. Freeze and decisions are not stale relative to materially changed cited evidence.
-7. Paper figures referenced by sections carry render evidence (run `scripts/figure_render_audit.py .`; every `<figure>.render.json` must be `PASS` and current).
+7. Paper figures referenced by sections carry render evidence (run `scripts/figure_render_audit.py .`; every `<figure>.render.json` must have `status: PASS` and a present `rendered_at`).
 
 # Scoped Workflow
 
@@ -57,7 +57,9 @@ Use legacy decision logs or Markdown reviews only during migration.
 
 - Scope matches the semantic impact.
 - Every divergence identifies source, consumer, and expected repair.
-- Final audit covers all six check classes.
+- Final audit covers all seven check classes listed under # Checks (numerical
+  claims, formula/parameter/method roles, symbols/units, file existence,
+  decision-ID resolution, freeze/decision staleness, figure render evidence).
 - Verdict follows actual evidence rather than an item count.
 
 

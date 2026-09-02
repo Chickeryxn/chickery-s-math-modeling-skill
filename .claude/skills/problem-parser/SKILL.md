@@ -34,7 +34,7 @@ Produce a model-neutral problem contract. Do not start from favorite algorithms 
    - observations from supplied data;
    - proposed relationships;
    - assumptions requiring human judgment.
-5. If output form or success criteria are materially ambiguous, invoke one choice card. Do not choose the framing silently.
+5. If output form or success criteria are materially ambiguous, invoke one choice card. Do not choose the framing silently. After the user answers, hand the verbatim answer to `modeler-decision-logger` so it is appended to `methods/Qx/qx_decisions.jsonl` (or `planning/framing_decisions.jsonl` when the Qx method directory does not exist yet) with `decision_type: framing`; never record the framing yourself.
 6. Save:
    - `planning/parse/problem_parse.json`
    - an optional concise `planning/parse/problem_parse.md` only when a human-readable view is useful.

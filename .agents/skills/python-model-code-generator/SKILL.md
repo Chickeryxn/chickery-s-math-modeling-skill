@@ -11,7 +11,7 @@ whenToUse: When the approved plan targets Python and runnable reproducible code 
 - Required cleaned data and profile exist.
 - The plan targets Python.
 
-Legacy method pools and `code/model-code-analyzer.md` may be read during migration, but they do not override the human choice.
+Legacy method-pool files may be read during migration, but they do not override the human choice. (The old migration note "code/model-code-analyzer.md" referred to a legacy artifact name, not a file to create; the current code plan lives at `code/Qx/qx_code_plan.md`.)
 
 # Workflow
 
@@ -41,6 +41,7 @@ code/Qx/
 ├── qx_code_plan.md
 ├── qx_baseline.py
 ├── qx_main.py
+├── qx_verifier.py    # independent verifier planned by model-code-analyzer
 └── run_all.py        # only when coordination is useful
 ```
 

@@ -40,14 +40,23 @@ whenToUse: In submission after consistency and completeness pass, for the final 
 
 # Workflow
 
-1. Read the two earlier audits and unresolved blockers.
+1. Read the two earlier audits (consistency → completeness) and unresolved blockers.
 2. Sample canonical sources directly; do not trust summaries alone.
 3. Record blocking and nonblocking findings with artifact paths and repair owners.
 4. Save `paper/qa_report.md`.
-5. Set verdict:
-   - `PASSED`
-   - `FAILED`
-   - `NOT_RUN`
+5. Set verdict using the single layered vocabulary below (`PASSED`, `FAILED`,
+   `NOT_RUN`, `CONDITIONAL`, `GATE_BLOCKED`) — never mix a second status set
+   into the report.
+
+# Verdict vocabulary (single set)
+
+- `PASSED`: all five dimensions pass and no blocking layer is missing/stale/not run.
+- `FAILED`: a dimension failed on sampled evidence.
+- `NOT_RUN`: QA ran before all inputs existed (record what is missing).
+- `CONDITIONAL`: accepted with named conditions that the modeler must confirm.
+- `GATE_BLOCKED`: a blocking layer is missing, stale, not run, or awaiting a
+  human judgment — the overall verdict must be `CONDITIONAL` or `GATE_BLOCKED`
+  whenever any blocking evidence is missing, even if individual scripts return `PASS`.
 
 # Rules
 

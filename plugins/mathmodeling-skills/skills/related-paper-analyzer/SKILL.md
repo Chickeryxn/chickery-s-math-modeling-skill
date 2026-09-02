@@ -26,9 +26,17 @@ Use this skill:
 
 The following should already exist or be provided:
 
-- A validated problem parse.
-- A validated problem classification artifact.
+- A problem parse or classification when the workspace has one (they are
+  used for mapping cues to subquestions, never overridden);
 - At least one original paper file under `workspace/papers/`.
+
+Resolution of the "validated parse/classification required?" ambiguity: the
+paper analysis is a **supplemental literature briefing**, not a gate. If a
+validated `planning/parse/problem_parse.json` or
+`planning/classification/problem_classification.json` exists, use it to map
+cues to subquestions; if neither exists yet, run the analysis anyway and label
+the mapping as "unframed — awaiting problem parse/classification" instead of
+blocking or inventing a framework.
 
 If no paper originals are present under `workspace/papers/`, stop and remind the user to place them there before analysis begins.
 

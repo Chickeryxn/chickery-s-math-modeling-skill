@@ -28,6 +28,32 @@ Produce a complete solution for one training round in **closed-book** mode. This
 4. Save everything under `results/training/roundN/solution/` (method card, probe, code, run_summary, results, sections).
 5. Do not look at the showcase library; do not self-evaluate against it here.
 
+# Isolation rule (mandatory, prevents training/contest cross-contamination)
+
+A training round runs in the SAME repository as the real contest workspace, so
+it must never touch the contest's canonical paths:
+
+- **Never write to** `methods/Qx/`, `code/Qx/`, `code/matlab/Qx/`,
+  `planning/parse/`, `planning/classification/`, `planning/manifests/`,
+  `planning/framing_decisions.jsonl`, `planning/symbol_table.md`,
+  `planning/model_assumptions.md`, `workspace/`, `paper/`, `robustness/Qx/`,
+  `results/Qx/`, or the global `planning/session_config.json` /
+  `planning/training_config.json`.
+- **Never modify** the real contest's decision ledgers or global planning
+  files; the training round's ledger is its own file under
+  `results/training/roundN/` (e.g. `.../solution/round_decisions.jsonl`).
+- Mirror every workflow artifact under `results/training/roundN/solution/`
+  with a neutral layout (e.g. `.../solution/parse.json`,
+  `.../solution/method_card.md`, `.../solution/code/main.py`,
+  `.../solution/run_summary.json`); do not expect the contest-gate validators
+  to run against training artifacts.
+- When the round needs a scratch workspace (data cleaning, extra runs), put it
+  under `results/training/roundN/scratch/`, never under `workspace/`.
+
+Consequence: the normal contest flow (G1–G6) never reads `results/training/`
+and training never writes the contest's canonical paths, so the two stay
+isolated even in one repository.
+
 # Output
 
 A compact round report in conversation plus the saved artifacts. Then hand off to `training-reflector` with the round path.
@@ -43,3 +69,6 @@ A compact round report in conversation plus the saved artifacts. Then hand off t
 - No `resource-library/` path appears in this phase's reads.
 - Solution artifacts exist under `results/training/roundN/solution/`.
 - Human choice is recorded before code generation (per workflow gates).
+- No contest-canonical path (`methods/Qx`, `code/Qx`, `planning/parse`,
+  `planning/classification`, `planning/manifests`, `workspace/`, `paper/`,
+  `results/Qx`) was written during the round.

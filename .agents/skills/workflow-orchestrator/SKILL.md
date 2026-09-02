@@ -111,11 +111,18 @@ In `submission`, additionally require:
 - robustness report;
 - package sign-off in the decision ledger;
 - solution package;
-- current `frozen_numbers.json`.
+- current `results/Qx/reports/frozen_numbers.json`.
 
 ## G5 — PAPER_SECTION_READY
 
-Require the three writer rules, frozen-number sourcing, human-confirmed interpretation/claim scope, and verified figures.
+Require the three writer prerequisites (defined identically in
+`paper-section-writer`), plus frozen-number sourcing, human-confirmed
+interpretation/claim scope, and verified figures. The three are:
+
+1. a final method explanation exists (`methods/Qx/qx_final_method_explanation.md`);
+2. a final result analysis exists (`results/Qx/reports/qx_final_result_analysis.md`);
+3. every numerical claim in the section traces to the per-subquestion
+   `results/Qx/reports/frozen_numbers.json`.
 
 ## G6 — FINAL_AUDIT_PASSED
 

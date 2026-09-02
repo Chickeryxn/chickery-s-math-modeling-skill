@@ -55,7 +55,7 @@ Use a source line only for stable text files; use a JSON path, table key, or row
 # Rules
 
 - Do not create `solution-package-builder_modeler_decision.md`.
-- Do not emit `frozen_numbers.json` before human package sign-off.
+- Do not emit `results/Qx/reports/frozen_numbers.json` before human package sign-off.
 - Never edit an existing freeze by hand.
 - Transcribe human rationales; do not re-compose them as stronger claims.
 - The package may cite the compact method-card history but must not depend on a separate iteration log.
@@ -65,7 +65,7 @@ Use a source line only for stable text files; use a JSON path, table key, or row
 
 When a canonical source changes after freeze:
 
-1. append the reason to `freeze_change_log.md`;
+1. append the reason to `results/Qx/reports/freeze_change_log.md`;
 2. update and rerun the canonical source;
 3. obtain renewed human judgment when the evidence changed materially;
 4. regenerate the freeze;

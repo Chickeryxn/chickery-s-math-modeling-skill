@@ -11,9 +11,13 @@ whenToUse: In submission, when paper sections must be drafted from the solution 
 # Preconditions
 
 - `rigor_profile` is `submission`.
-- Final method explanation exists.
-- Final result analysis exists.
-- Solution package and current frozen numbers exist.
+- The three writer prerequisites hold (numbered exactly as in
+  `workflow-orchestrator` G5 and AGENTS.md "Submission Artifact Contract"):
+  1. a final method explanation exists (`methods/Qx/qx_final_method_explanation.md`);
+  2. a final result analysis exists (`results/Qx/reports/qx_final_result_analysis.md`);
+  3. the solution package and current per-question frozen numbers exist
+     (`results/Qx/reports/qx_solution_package_for_writer.md` and
+     `results/Qx/reports/frozen_numbers.json`).
 - Required human claim-scope and physical/domain-meaning decisions are recorded.
 
 If any prerequisite is missing, return to its producer rather than drafting around the gap.
@@ -22,8 +26,8 @@ If any prerequisite is missing, return to its producer rather than drafting arou
 
 Use, in order:
 
-1. `qx_solution_package_for_writer.md`
-2. `frozen_numbers.json`
+1. `results/Qx/reports/qx_solution_package_for_writer.md`
+2. `results/Qx/reports/frozen_numbers.json` (per-subquestion frozen claims)
 3. `qx_decisions.jsonl`
 4. verified paper figures/tables
 5. final method explanation and robustness report for clarification
@@ -63,7 +67,7 @@ Transcribe these from the decision ledger with provenance. If absent, invoke a c
 
 # Rules
 
-- Every numerical claim must match `frozen_numbers.json`.
+- Every numerical claim must match `results/Qx/reports/frozen_numbers.json` for its subquestion.
 - Do not overclaim against untested methods or populations.
 - Do not fabricate citations or causal meaning.
 - Avoid procedural diary prose and ceremonial detail.
@@ -72,7 +76,8 @@ Transcribe these from the decision ledger with provenance. If absent, invoke a c
 
 # Verification
 
-- Three writer prerequisites pass.
+- The three writer prerequisites (final method explanation, final result
+  analysis, solution package + frozen numbers) all pass.
 - Claim map resolves all numbers and judgments.
 - Method, results, and figures match canonical artifacts.
 - Physical meaning and contribution are human-owned.

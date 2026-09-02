@@ -46,7 +46,17 @@ whenToUse: When Python model code must be reviewed and run against the plan, dat
 }
 ```
 
-Statuses are `PASS`, `FAIL`, or `NOT_APPLICABLE` with a reason. Any required `FAIL` blocks G3.
+Statuses use the single shared code-review status set (identical in
+`matlab-code-reviewer`):
+- `PASS`: the check passed with concrete evidence;
+- `FAIL`: the check failed — any required `FAIL` blocks G3;
+- `NOT_APPLICABLE`: the check does not apply to this code (give the reason);
+- `NOT_RUN`: runtime-dependent, not yet executed — blocks G3 until executed;
+- `CONDITIONAL`: passed with named conditions the modeler must confirm.
+
+The report-level verdict stays in the same vocabulary (`PASSED`, `FAILED`,
+`NOT_RUN`, `CONDITIONAL`, `GATE_BLOCKED`); never mix a second status set into
+the JSON.
 
 # Rules
 

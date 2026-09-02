@@ -40,7 +40,17 @@ results/Qx/experiments/roundN/
 
 Create `logs/` only for failures, warnings, or reproducibility needs.
 7. Write `code/Qx/qx_code_plan.md` for Python or `code/matlab/Qx/qx_code_plan.md` for MATLAB.
-8. Hand off to the matching language generator.
+8. **Produce the two artifacts that have no other owner** (the gate and the
+   independence checks depend on them, so leaving them to be discovered later
+   deadlocks G3):
+   - a resolved problem contract at `planning/model_contract.json` (validated
+     by `scripts/validate_model_contract.py`) covering objective, hard
+     constraints, variables, evaluator, and validation contract shared by main,
+     baseline, and verifier;
+   - a minimal independent verifier plan: `code/Qx/qx_verifier.py` for Python
+     or `code/matlab/Qx/qx_verifier.m` for MATLAB. The verifier is a separate
+     role: it must not read the main result as its only numeric input.
+9. Hand off to the matching language generator.
 
 # Run Summary Contract
 
@@ -54,6 +64,7 @@ Require:
   "implementation_target": "python",
   "random_seed": 2026,
   "approved_decision_id": "q1_method_choice",
+  "contract_hash": "<sha256 of the resolved planning/model_contract.json>",
   "methods": [
     {
       "method_id": "M1",

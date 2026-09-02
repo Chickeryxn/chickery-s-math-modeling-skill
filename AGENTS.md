@@ -24,13 +24,37 @@
 - Optional `deadline` (ISO-8601): when present, `workflow_guard.py derive` emits an advisory `deadline_hint` (remaining-time guidance such as "switch to submission", "stop new experiments"); it is never a gate input.
 - For compatibility, read legacy `{ "mode": "learning" | "speed" }` as `interaction_mode`.
 
+The file also carries an `artifact_policy` block whose switches mirror the
+executable contract and are ON by default:
+
+```json
+"artifact_policy": {
+  "require_lineage": true,
+  "require_run_snapshot": true,
+  "require_human_decision_source": true,
+  "allow_downstream_on_blocked_gate": false
+}
+```
+
+- `require_lineage`: key artifacts need a sibling `.lineage.json` or equivalent lineage object (`scripts/validate_artifacts.py`).
+- `require_run_snapshot`: completed experiments need an immutable run snapshot from the unified runner (`scripts/create_run_snapshot.py`).
+- `require_human_decision_source`: `DECIDED` ledger records need the nested user-answer `source`.
+- `allow_downstream_on_blocked_gate`: when `false`, sensitive downstream artifacts stay blocked until the evidence-derived gate passes; validators never override this.
+
+Turning a switch off is a workspace-wide relaxation: record the reason in the
+run snapshot or work log, and restore the defaults before `submission`.
+
 # Repository Skill Copies
 
+- **`.codex/skills/` is the edit source.** All skill edits land there first;
+  the other three copies are refreshed from it with `python scripts/sync_plugin.py .`
+  (never edit `.claude/skills/`, `.agents/skills/`, or
+  `plugins/mathmodeling-skills/skills/` directly).
 - `.codex/skills/` and `.claude/skills/` are two complete, independently usable skill trees; `.agents/skills/` is the third standalone copy, auto-discovered by DeepSeek Harness (DSH) 0.7.0 when the repo is opened as the workspace (project-level root, no installation needed).
 - Every skill and referenced local resource required at runtime must exist in every tree; no tree may depend on a wrapper, symlink, or path into another tree.
 - When a shared skill contract changes, update and validate all copies in the same change.
 - Runtime-specific wording may differ only when necessary, but each copy must remain standalone and behaviorally consistent with this policy.
-- `plugins/mathmodeling-skills/skills/` is the generated distribution copy used by the native Codex and Claude plugin manifests. After the standalone trees agree, refresh the distribution copy with `python scripts/sync_plugin.py .` (portable, works on Windows) or the POSIX wrapper `scripts/sync-plugin.sh`, and verify with `python scripts/sync_plugin.py . --check` / `scripts/sync-plugin.sh --check`. Run `--dry-run` first to review what would change without writing.
+- `plugins/mathmodeling-skills/skills/` is the generated distribution copy used by the native Codex and Claude plugin manifests. After the standalone trees agree, refresh the distribution copy with `python scripts/sync_plugin.py .` (portable, works on Windows) or the POSIX wrapper `scripts/sync-plugin.sh`, and verify with `python scripts/sync_plugin.py . --check` / `scripts/sync-plugin.sh --check`. Run `--dry-run` first to review what would change without writing. `scripts/validate_skill_trees.py` is the standalone consistency gate used by `validate_repo.py`; `sync_plugin.py --check` additionally verifies the AGENTS.md/LICENSE distribution copies.
 - Keep both plugin manifests and the marketplace catalog aligned for every release. Bump the version in both plugin manifests and keep the marketplace catalog aligned.
 
 # Runtime Notes (DeepSeek Harness desktop 0.7.0)
@@ -118,7 +142,7 @@ Additional human decision types enforced by the gate engine but not part of a ch
 
 # Workflow Gates
 
-The gate engine (`scripts/workflow_guard.py derive Qx [--profile lean|submission|auto]`) derives gates from canonical evidence. `--profile auto` reads `planning/session_config.json` (`rigor_profile`); the engine default is the strict `submission` derivation. In `lean`, the engine caps at the G4 result-judgment subgate (freeze/paper/audits are submission gates). The engine checks artifact existence and structural depth, not semantic PASS verdicts — audit contents are judged by the human at handoff.
+The gate engine (`python scripts/workflow_guard.py <repo-root> derive Qx [--profile lean|submission|auto]`) derives gates from canonical evidence. `--profile auto` reads `planning/session_config.json` (`rigor_profile`); the engine default is the strict `submission` derivation. In `lean`, the engine caps at the G4 result-judgment subgate (freeze/paper/audits are submission gates). The engine checks artifact existence and structural depth, not semantic PASS verdicts — audit contents are judged by the human at handoff.
 
 ## G1 — PROBLEM_FRAMED
 
@@ -148,12 +172,21 @@ The gate engine (`scripts/workflow_guard.py derive Qx [--profile lean|submission
   - `method_alignment`
   - `reproducibility`
   - `output_contract`
-- New review artifacts use `code/Qx/reviews/qx_<lang>_review.json`. Legacy Markdown reviews may be read during migration.
+- New review artifacts live next to the reviewed code, following each language
+  generator's layout: Python uses `code/Qx/reviews/qx_python_review.json`,
+  MATLAB/北太天元 uses `code/matlab/Qx/reviews/qx_matlab_review.json`.
+  (General rule: review path mirrors the code path.) Legacy Markdown reviews
+  may be read during migration.
 
 ## G4 — RESULTS_JUDGED_AND_FROZEN
 
 - The human decision ledger contains result, stability, and claim-scope verdicts tied to computed evidence.
-- Final result analysis and robustness report exist.
+- Final result analysis and the robustness evidence exist. Robustness comes in
+  two forms with one producer (`robustness-checker`): the lean/probe-level
+  `robustness/Qx/qx_robustness_summary.json` and the submission-level
+  `robustness/Qx/qx_robustness_report.md`; G4 in `submission` requires the
+  report (the gate engine accepts either file, but submission handoff uses the
+  report).
 - In `submission` profile, the solution package and immutable `frozen_numbers.json` exist and are current.
 - Note: the gate engine derives G4 from disk evidence under the active profile. In `lean`, G4 is the result-judgment subgate: the human result/stability/claim-scope verdicts on computed evidence. In `submission`, G4 additionally requires the final result analysis, robustness report, solution package, package sign-off, and current `frozen_numbers.json`. Artifact contents are judged by the human reviewers at G4/G6. G3 gates on the latest experiment round only; older exploratory rounds without run snapshots are advisory, not blocking.
 
@@ -216,7 +249,7 @@ Before writer handoff, add:
 
 ```text
 methods/Qx/qx_final_method_explanation.md
-code/Qx/reviews/qx_<lang>_review.json
+code/Qx/reviews/qx_python_review.json        # code/matlab/Qx/reviews/qx_matlab_review.json for MATLAB/北太天元
 results/Qx/reports/qx_final_result_analysis.md
 robustness/Qx/qx_robustness_report.md
 results/Qx/reports/qx_solution_package_for_writer.md
@@ -295,7 +328,7 @@ Create `logs/` only when a failure, warning, or reproducibility need justifies i
 - Do not approve final assembly while any G6 auditor fails.
 
 
-# Machine-Enforced Workflow Integrity (v0.3)
+# Machine-Enforced Workflow Integrity
 
 The prose rules above are paired with repository-local validators under `scripts/`. Skills must treat these as the executable contract:
 

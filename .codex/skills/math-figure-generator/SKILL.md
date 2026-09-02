@@ -30,14 +30,14 @@ Load only what the requested chart needs:
 6. Render the final output and inspect it visually.
 7. Check clipping, overlap, illegible text, misleading axes, legends, empty panels, and source/claim mismatch.
 8. Iterate until render checks pass.
-9. For a figure destined for the paper (Type 2 in the paper, Type 3, or Type 4), write a sibling render-evidence record `<name>.render.json` next to the image with `status: PASS`, `rendered_at`, and the checks you performed. `scripts/figure_render_audit.py` verifies these records at audit time; do not write a PASS record for an unverified render.
+9. For a figure destined for the paper (Type 2 in the paper, Type 3, or Type 4), write a sibling render-evidence record `<name>.render.json` next to the image with the unified key set: `status` (`PASS`), `rendered_at`, `checks` (the render checks you performed), and `source` (the data/code the figure was rendered from). `scripts/figure_render_audit.py` verifies `status == "PASS"` and a present `rendered_at` at audit time; do not write a PASS record for an unverified render.
 
 # Output Locations
 
 - Type 1/2 exploration: `results/Qx/experiments/roundN/figures/`
-- Type 3/4 submission: `paper/figures/`
+- Type 2 placed in the paper, Type 3/4 submission: `paper/figures/`
 
-Use stable descriptive filenames. Do not copy Type 1 diagnostics into the paper directory. Type 2 figures placed in the paper are subject to the same render-evidence rule as Type 3/4 in `submission`.
+Use stable descriptive filenames. Do not copy Type 1 diagnostics into the paper directory. When a Type 2 figure is selected for the paper, copy it into `paper/figures/` (giving it a unique descriptive name) and write its `<name>.render.json` there — Type 2 figures in the paper are subject to the same render-evidence rule as Type 3/4 in `submission`.
 
 # Figure Requirements
 

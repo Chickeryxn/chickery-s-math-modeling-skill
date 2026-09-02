@@ -172,13 +172,24 @@ Use or request:
 
 1. **BLOCKING**: Verify or remove `Someone2024Method` — appears to be fabricated.
 2. **SUGGESTION**: Add Hwang & Yoon (1981) as the foundational TOPSIS reference.
-3. **SUGGESTION**: Verify all DOIs resolve correctly before final submission.
+3. **NOTE**: DOI resolution is an optional online check; if network verification
+   is used, declare it in this audit report (offline-first rule in
+   `references/upstream-citation-rules.md`).
 ```
 
 # Citation Verification Rules
 
+Two levels of BibTeX completeness are NOT in conflict:
+
+- **Hard minimum (every entry)**: author/editor, title, year — an entry missing
+  any of these is flagged and blocks acceptance.
+- **Type-specific requirements (when generating the entry)**: use the fuller
+  per-type field list from step 4 above (`@article` volume/number/pages/doi if
+  available, `@inproceedings` booktitle/pages, `@misc` howpublished/url…).
+  Absence of a *type-optional* field (e.g. no DOI on an older article) is a
+  note, not a blocker; absence of a hard-minimum field is a blocker.
+
 - Every `\cite{...}` in the paper must have a corresponding entry in `paper/refs.bib`.
-- Every entry in `paper/refs.bib` must have at minimum: author, title, year.
 - A citation without any verifiable source (file, metadata, or user confirmation) is flagged as potentially fabricated.
 - Contest papers should cite: the problem statement, key methodology references, data sources (if external), and comparison baselines.
 - Do not fabricate DOIs, page numbers, volume numbers, or author names.
@@ -264,7 +275,7 @@ The handoff should include:
 
 | Citation | Risk | Reason |
 |----------|------|--------|
-| `Smith2025BestMethod` | HIGH | No paper file found. No metadata in related_paper_analysis.md. Author "Smith" + generic title "Best Method for Evaluation" looks auto-generated. Google Scholar shows no match. |
+| `Smith2025BestMethod` | HIGH | No paper file found. No metadata in related_paper_analysis.md. Author "Smith" + generic title "Best Method for Evaluation" looks auto-generated. No offline source confirms it (online search, if used, must be declared per the offline-first rule). |
 
 **Recommendation**: Remove this citation or provide the actual paper. Do not submit the paper with this citation.
 ```
