@@ -15,6 +15,11 @@ python scripts/workflow_guard.py . require Q1 model_code
 python scripts/lineage.py assess . path/to/artifact.lineage.json
 python scripts/validate_artifacts.py . planning/manifests/Q1.json
 python scripts/validate_run_snapshot.py . results/Q1/experiments/run1
+python scripts/work_record.py init .
+python scripts/work_record.py log "parse done" . --subject Q1 --artifacts planning/parse/problem_parse.json
+python scripts/work_record.py gate Q1 G2 . --evidence methods/Q1/probes/risk_probe_summary.json
+python scripts/work_record.py decision Q1 q1_method_choice .
+python scripts/work_record.py check .
 ```
 
 ## Contracts
@@ -29,6 +34,7 @@ python scripts/validate_run_snapshot.py . results/Q1/experiments/run1
 - `sync_plugin.py`: portable skill-tree synchronization and hash check.
 - `resource_index.py`: scans `resource-library/` and (re)builds `index.json`; `--check` verifies the index matches disk.
 - `training_scorecard.py`: literacy training scorecard contract. `round <dir>` scaffolds/validates one round's `scorecard.json` (six dimensions, agent self-scores with evidence paths, null user scores, mechanical-check list); `summary <dir>` aggregates rounds into `summary.json` (radar, ranking, mechanical tally); `--check` modes validate without writing.
+- `work_record.py`: work-record tree (see `docs/work-record.md`). `init` scaffolds `records/`; `log` appends a timestamped session entry; `gate` records a monotonic gate transition with existing evidence; `decision` mirrors a ledger record into a decision card (refuses to fabricate); `retro` scaffolds a review; `index` rebuilds `records/README.md`; `check` validates index sync, links, timestamps, and gate monotonicity. `--runtime` auto-detects codex/claude/dsh.
 
 ## Run lifecycle
 

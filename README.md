@@ -2,15 +2,15 @@
 
 [简体中文](README.md) | [English](README.en.md)
 
-**Math Modeling Skill** — 面向 CUMCM / MCM/ICM 等数学建模竞赛的 Agent 技能库与可执行工作流框架：31 个 Claude/Codex 技能 + 14 个纯标准库校验脚本，把「AI 写代码、人类做决策、一切可复现可审计」变成机器可强制的过程契约。
+**Math Modeling Skill** — 面向 CUMCM / MCM/ICM 等数学建模竞赛的 Agent 技能库与可执行工作流框架：32 个 Claude/Codex/DSH 技能 + 27 个纯标准库校验脚本，把「AI 写代码、人类做决策、一切可复现可审计」变成机器可强制的过程契约。
 
 | 徽章 | 值 |
 |---|---|
 | 许可 | [MIT](LICENSE) |
-| 版本 | 0.5.0（插件 manifest 同步） |
-| 运行环境 | Python 3（仅标准库，无第三方依赖） |
+| 版本 | 0.6.0（插件 manifest 同步） |
+| 运行环境 | Python 3.10+（仅标准库，无第三方依赖） |
 | 平台 | Windows / Linux / macOS |
-| 测试 | 124 个用例，`python scripts/run_tests.py` 全绿 |
+| 测试 | 138 个用例，`python scripts/run_tests.py` 全绿 |
 
 ## 目录
 
@@ -18,7 +18,7 @@
 - [功能特性](#功能特性)
 - [快速开始](#快速开始)
 - [工作流与门禁](#工作流与门禁)
-- [技能清单 31 个](#技能清单-31-个)
+- [技能清单 32 个](#技能清单-32-个)
 - [契约体系](#契约体系)
 - [命令速查](#命令速查)
 - [目录结构](#目录结构)
@@ -28,6 +28,8 @@
 - [上游融合](#上游融合)
 - [学习与复盘](#学习与复盘)
 - [训练模式](#训练模式)
+- [工作记录树](#工作记录树)
+- [DeepSeek Harness 适配](#deepseek-harness-适配)
 - [限制与边界](#限制与边界)
 - [许可与致谢](#许可与致谢)
 
@@ -42,7 +44,7 @@
 
 ### 它的方案
 
-本项目把一次竞赛拆成 6 个门禁关卡（G1–G6），每过一关必须留下可核对的**证据工件**；由 `scripts/` 下的校验器自动检查，门禁只能由证据推动、不能自我声明。同时用 31 个职责单一的技能覆盖从读题到交论文的每一步，AI 与人类分工明确。
+本项目把一次竞赛拆成 6 个门禁关卡（G1–G6），每过一关必须留下可核对的**证据工件**；由 `scripts/` 下的校验器自动检查，门禁只能由证据推动、不能自我声明。同时用 32 个职责单一的技能覆盖从读题到交论文的每一步，AI 与人类分工明确。
 
 ### 三条核心原则
 
@@ -71,7 +73,7 @@ cd chickery-s-math-modeling-skill
 git checkout mathmodeling-new-skeleton
 ```
 
-用 Codex 或 Claude 打开仓库根目录，把题目与附件放入：
+用 Codex、Claude 或 **DeepSeek Harness（DSH）桌面版**打开仓库根目录，把题目与附件放入：
 
 ```text
 workspace/problem.txt
@@ -111,9 +113,9 @@ problem-parser → problem-classifier → data-auditor-cleaner → workflow-orch
 
 更多状态机与证据链图示：[门禁生命周期](docs/diagrams/archify/assets/mm-gate-lifecycle.png) · [技能架构](docs/diagrams/archify/assets/mm-workspace-architecture.png) · [文档冻结链](docs/diagrams/archify/assets/mm-document-chain.png)（交互 HTML 为生成物不入库，可按需用 Node 本地再生成，见 `docs/diagrams/archify/README.md`）。
 
-## 技能清单 31 个
+## 技能清单 32 个
 
-技能树在 `.codex/skills/` 与 `.claude/skills/` 各有一份完整独立副本（`plugins/mathmodeling-skills/skills/` 为分发副本）。按流水线分五组，另加一组训练模式技能：
+技能树在 `.codex/skills/`、`.claude/skills/`、`.agents/skills/`（DSH 自动发现）各有一份完整独立副本（`plugins/mathmodeling-skills/skills/` 为分发副本）。按流水线分五组，另加一组训练模式技能：
 
 ### 问题理解
 
@@ -167,6 +169,7 @@ problem-parser → problem-classifier → data-auditor-cleaner → workflow-orch
 | `completeness-auditor` | 按当前 profile 核对交付证据是否存在且未过期 | `paper/audits/completeness_audit.md` |
 | `consistency-auditor` | 跨介质核对数字/符号/参数/决策与文件一致性 | `paper/audits/cross_media_consistency_audit.md` |
 | `quality-assurance-auditor` | 最终提交级五维审计（流程/证据/方法/论文/呈现） | `paper/qa_report.md` |
+| `work-logger` | 维护 `records/` 工作记录树：会话日志、门禁迁移、决策卡镜像 | `records/`（`scripts/work_record.py`） |
 
 ### 训练模式
 
@@ -211,12 +214,13 @@ problem-parser → problem-classifier → data-auditor-cleaner → workflow-orch
 
 ```text
 .
-├── .codex/skills/                 # Codex 技能树（31 个，同步源）
+├── .codex/skills/                 # Codex 技能树（32 个，同步源）
 ├── .claude/skills/                # Claude 技能树（完整独立副本）
+├── .agents/skills/                # DeepSeek Harness 技能树（仓库内自动发现，完整独立副本）
 ├── plugins/mathmodeling-skills/   # 插件分发包（两个 manifest + 技能副本 + hooks）
 ├── .agents/plugins/marketplace.json  # marketplace 目录清单
 ├── AGENTS.md                      # 工作流政策唯一事实来源（门禁/工件/人工决策/冻结/审计）
-├── CLAUDE.md                      # Claude 运行规则（Codex 侧由 AGENTS.md 覆盖）
+├── CLAUDE.md                      # Claude 运行规则（Codex/DSH 侧由 AGENTS.md 覆盖）
 ├── planning/                      # 会话配置、parse/classification、manifests、presets、示例契约
 ├── methods/Qx/                    # 方法卡、决策账本、风险探针、最终方法说明
 ├── code/                          # 模型代码与评审（code/Qx/、code/matlab/Qx/）
@@ -226,16 +230,17 @@ problem-parser → problem-classifier → data-auditor-cleaner → workflow-orch
 ├── paper/                         # 论文章节、图、引用与三审报告
 ├── workspace/                     # problem.txt、data_raw/（只读）、data_clean/、papers/
 ├── resource-library/              # 训练模式示范资源库（papers/ideas/figures/formulas/tables/assets）
+├── records/                       # 工作记录树（sessions/subjects/gates/decisions/retros，advisory）
 ├── references/                    # 上游知识库（历史决策，advisory，非强制）
 ├── schemas/                       # 领域无关契约（4 个 schema + 说明）
-├── scripts/                       # 16 个纯标准库校验/运行脚本
+├── scripts/                       # 27 个纯标准库脚本（含 1 个 bash 兼容包装）
 ├── docs/diagrams/archify/         # 通用流程图（PNG/SVG/交互 HTML/JSON 源）
-└── tests/                         # 124 个测试用例
+└── tests/                         # 138 个测试用例
 ```
 
 ## 测试覆盖
 
-`python scripts/run_tests.py`（124 个用例，全标准库）覆盖：
+`python scripts/run_tests.py`（138 个用例，全标准库）覆盖：
 
 - 门禁证据推导与单调迁移（含完整 G1→G6 推进链到 `final_assembly`）
 - 人类决策溯源（伪造人类、未注册证据、路径逃逸均被拒绝）
@@ -253,6 +258,7 @@ problem-parser → problem-classifier → data-auditor-cleaner → workflow-orch
 - 图表一致性（`figure_consistency_check`）与论文章节结构检查（`section_structure_check`）
 - 摘要/结论质量（`abstract_checker`，含结论子问题覆盖）
 - 资源库索引（`resource_index`）与训练记分卡（`training_scorecard`：模板、证据路径校验、跨轮次汇总与漂移检测）
+- 工作记录树（`work_record`：建树/日志/门禁迁移/决策卡镜像/索引/校验，含时间与门禁单调性、链接与索引同步检查）
 
 ## 学习与复盘
 
@@ -271,6 +277,19 @@ problem-parser → problem-classifier → data-auditor-cleaner → workflow-orch
 - **开卷复盘**：`training-reflector` 对照资源库逐维（数学/创新/图/表达/证据/完整）找出差距与可迁移点。
 - **多维审核**：`training-auditor` 先跑机械检查（质量门/题目覆盖/摘要/AI 痕迹/泄漏/图表一致性/章节结构），再起草六维记分卡（`python scripts/training_scorecard.py round|summary ...`），由你在多个结果中挑选逼近方向并打分。
 - 每轮产物落 `results/training/roundN/`（solution/、reflection.md、scorecard.json），汇总见 `results/training/summary.json`；普通竞赛流程从不读取资源库。
+
+## 工作记录树
+
+详细记录工作过程的可读日志层（详见 [`docs/work-record.md`](docs/work-record.md)）：`records/` 一个文件夹下多级 Markdown 文档组成记录树——`sessions/`（会话流水）、`subjects/`（子问题叙事）、`gates/`（门禁迁移）、`decisions/`（决策卡，从账本镜像）、`retros/`（复盘）。工具 `python scripts/work_record.py`（init/log/gate/decision/retro/index/check，纯标准库），`work-logger` 技能指导 agent 何时记、记什么。记录树是 **advisory**：只记事实与证据链接、永不参与门禁判定。
+
+## DeepSeek Harness 适配
+
+完整适配报告见 [`docs/dsh-compatibility.md`](docs/dsh-compatibility.md)。要点：
+
+- DSH 0.7.0 自动发现仓库内 `.agents/skills/`（32 技能，打开即用，无需安装）；`AGENTS.md`/`CLAUDE.md` 自动注入；默认沙箱 `workspace-write` 可写仓库。
+- 前置：`python`（≥3.10）与 `git` 在 PATH；决策账本 `user_message_id` 用约定 `dsh:<$env:DSH_SESSION_ID>:<序号>`。
+- 4 树同步：`python scripts/sync_plugin.py . [--check]`（Windows 便携；POSIX 另有 `sync-plugin.sh`）；`validate_skill_trees.py` 校验 4 树 + 双 manifest + marketplace。
+- Claude/Codex 兼容性不变：`.codex-plugin`/`.claude-plugin`/`marketplace.json`/`hooks.json` 原样保留并继续被校验；`hooks.json` 在 DSH 中默认不生效（可选补丁见适配报告）。
 
 ## 常见问题 FAQ
 
@@ -323,7 +342,7 @@ Type 1 诊断图只做内部调试，永不进论文；Type 3/4 才可进论文�
 
 ## 上游融合
 
-本项目在**不改变治理核心**（AGENTS.md / schemas / scripts、G1–G6 门禁、28 技能骨架 + 3 训练技能、零第三方运行时依赖、单一 matplotlib 引擎）的前提下，融合了 6 个上游项目的知识规则层与纯标准库工具层：
+本项目在**不改变治理核心**（AGENTS.md / schemas / scripts、G1–G6 门禁、28 技能骨架 + 3 训练技能 + 1 记录技能、零第三方运行时依赖、单一 matplotlib 引擎）的前提下，融合了 6 个上游项目的知识规则层与纯标准库工具层：
 
 | 上游 | 引入内容 | 方式 |
 |---|---|---|

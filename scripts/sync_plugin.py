@@ -13,7 +13,7 @@ def sync_tree(src,dst):
         target=dst/rel;target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(src/rel,target)
 def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('root',type=Path);ap.add_argument('--check',action='store_true');args=ap.parse_args();r=args.root.resolve();src=r/'.codex/skills';targets=[r/'.claude/skills',r/'plugins/mathmodeling-skills/skills']
+    ap=argparse.ArgumentParser();ap.add_argument('root',type=Path);ap.add_argument('--check',action='store_true');args=ap.parse_args();r=args.root.resolve();src=r/'.codex/skills';targets=[r/'.claude/skills',r/'plugins/mathmodeling-skills/skills',r/'.agents/skills']
     if not src.is_dir():print('missing source tree',file=sys.stderr);return 2
     if not args.check:
         for dst in targets:sync_tree(src,dst)

@@ -25,12 +25,22 @@
 
 # Repository Skill Copies
 
-- `.codex/skills/` and `.claude/skills/` are two complete, independently usable skill trees.
-- Every skill and referenced local resource required at runtime must exist in both trees; neither tree may depend on a wrapper, symlink, or path into the other.
-- When a shared skill contract changes, update and validate both copies in the same change.
+- `.codex/skills/` and `.claude/skills/` are two complete, independently usable skill trees; `.agents/skills/` is the third standalone copy, auto-discovered by DeepSeek Harness (DSH) 0.7.0 when the repo is opened as the workspace (project-level root, no installation needed).
+- Every skill and referenced local resource required at runtime must exist in every tree; no tree may depend on a wrapper, symlink, or path into another tree.
+- When a shared skill contract changes, update and validate all copies in the same change.
 - Runtime-specific wording may differ only when necessary, but each copy must remain standalone and behaviorally consistent with this policy.
-- `plugins/mathmodeling-skills/skills/` is the generated distribution copy used by both native plugin manifests. After the two standalone trees agree, refresh it with `scripts/sync-plugin.sh` and verify it with `scripts/sync-plugin.sh --check`.
+- `plugins/mathmodeling-skills/skills/` is the generated distribution copy used by the native Codex and Claude plugin manifests. After the standalone trees agree, refresh the distribution copy with `python scripts/sync_plugin.py .` (portable, works on Windows) or the POSIX wrapper `scripts/sync-plugin.sh`, and verify with `python scripts/sync_plugin.py . --check` / `scripts/sync-plugin.sh --check`.
 - Keep both plugin manifests and the marketplace catalog aligned for every release. Bump the version in both plugin manifests and keep the marketplace catalog aligned.
+
+# Runtime Notes (DeepSeek Harness desktop 0.7.0)
+
+DSH runs the same workspace and scripts; the workflow contract is unchanged. Operational notes:
+
+- The workspace root opened in DSH is `PROJECT_ROOT`; the sandbox default is `workspace-write`, which allows writing inside the workspace root plus platform temp dirs. Scripts that must write outside (e.g. `--out` to an external path) require a wider sandbox permission with justification.
+- `python` and `git` must be on `PATH` (the harness inherits the environment; it ships no Python).
+- The per-session identifier is `$env:DSH_SESSION_ID`; record it as `user_message_id` in decision ledgers using the convention `dsh:<session_id>:<seq>` (a non-empty string per the decision schema). `$env:DSH_SESSION_JSONL` points at the session log if referenced.
+- Agent hooks are not active by default in DSH; the optional SessionStart guardrail banner requires a profile patch (see `docs/dsh-compatibility.md`). The Claude-only `hooks/hooks.json` remains inert in DSH and Codex.
+- Console encoding: scripts force UTF-8 output; `validate_repo.py` captures child output as UTF-8 with replacement errors, so CJK text is safe on GBK consoles.
 
 # Workflow Discipline
 

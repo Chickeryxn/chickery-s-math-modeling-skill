@@ -10,7 +10,7 @@
 2. Lupynow/math-modeling-skills —— 去 AI 味 + 四轮自审等写作质控。
 3. Yuan1z0825/nature-skills —— nature-figure 期刊级配图引擎（历史上游，见 5AB 修正）。
 4. XiaoMaColtAI/math-modeling-skill —— 门禁主干（方法论骨架，历史上游；现行门禁见下）。
-5. 本仓库 —— 安装/项目模式、AGENTS.md、31 skills（28 骨架 + 3 训练技能）、results/Qx/ 目录与 frozen_numbers.json 数字真相源。
+5. 本仓库 —— 安装/项目模式、AGENTS.md、32 skills（28 骨架 + 3 训练 + 1 记录）、results/Qx/ 目录与 frozen_numbers.json 数字真相源。
 6. jihe520/sci-box —— 常规图/示意图引擎（历史上游，见 5AB 修正）。
 
 ## 12 项已锁定决策

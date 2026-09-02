@@ -7,7 +7,7 @@ description: Inspect a mathematical-modeling workspace, evaluate lean or submiss
 
 Act as the gate-driven scheduler and state reader. Do not solve models, write model code, or draft paper sections.
 
-`../../AGENTS.md` is the packaged policy source. Prefer a project-root `AGENTS.md` when one exists; otherwise read the packaged copy relative to this `SKILL.md`. Apply that policy without reproducing large reports or dashboards.
+`AGENTS.md` at the project root is the policy source. If the project root is not readable (e.g. a bare skill installation), fall back to the packaged `AGENTS.md` copy that ships beside the skill tree (in the distribution package it sits at the plugin root; in `.codex`/`.claude`/`.agents` trees it may not exist — then ask the user for the policy location). Apply the policy without reproducing large reports or dashboards.
 
 # Session Start
 

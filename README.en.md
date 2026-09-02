@@ -2,15 +2,15 @@
 
 [简体中文](README.md) | [English](README.en.md)
 
-**Math Modeling Skill** — an Agent skill library and executable workflow framework for mathematical-modeling contests (CUMCM / MCM/ICM): 31 Claude/Codex skills plus 14 standard-library-only validation scripts turn "AI writes code, humans make decisions, everything reproducible and auditable" into a machine-enforced process contract.
+**Math Modeling Skill** — an Agent skill library and executable workflow framework for mathematical-modeling contests (CUMCM / MCM/ICM): 32 Claude/Codex/DSH skills plus 27 standard-library-only validation scripts turn "AI writes code, humans make decisions, everything reproducible and auditable" into a machine-enforced process contract.
 
 | Badge | Value |
 |---|---|
 | License | [MIT](LICENSE) |
-| Version | 0.5.0 (plugin manifests in sync) |
-| Runtime | Python 3 (standard library only, no third-party dependencies) |
+| Version | 0.6.0 (plugin manifests in sync) |
+| Runtime | Python 3.10+ (standard library only, no third-party dependencies) |
 | Platforms | Windows / Linux / macOS |
-| Tests | 124 cases, `python scripts/run_tests.py` all green |
+| Tests | 138 cases, `python scripts/run_tests.py` all green |
 
 ## Table of Contents
 
@@ -18,7 +18,7 @@
 - [Features](#features)
 - [Quick start](#quick-start)
 - [Workflow and gates](#workflow-and-gates)
-- [Skill catalog 31](#skill-catalog-31)
+- [Skill catalog 32](#skill-catalog-32)
 - [Contract system](#contract-system)
 - [Command reference](#command-reference)
 - [Directory layout](#directory-layout)
@@ -28,6 +28,8 @@
 - [Upstream integration](#upstream-integration)
 - [Learning and review](#learning-and-review)
 - [Training mode](#training-mode)
+- [Work record tree](#work-record-tree)
+- [DeepSeek Harness adaptation](#deepseek-harness-adaptation)
 - [Limitations](#limitations)
 - [License and acknowledgements](#license-and-acknowledgements)
 
@@ -42,7 +44,7 @@ AI assistance is allowed in modeling contests, but letting an agent "free-wheel"
 
 ### The approach
 
-This project splits a contest into six gate stages (G1–G6). Passing each gate requires **evidence artifacts** that can be verified on disk; the validators under `scripts/` check them automatically, so gates are driven by evidence and can never be self-declared. Meanwhile, 31 single-purpose skills cover every step from reading the problem to delivering the paper, with a clear division of labor between AI and human.
+This project splits a contest into six gate stages (G1–G6). Passing each gate requires **evidence artifacts** that can be verified on disk; the validators under `scripts/` check them automatically, so gates are driven by evidence and can never be self-declared. Meanwhile, 32 single-purpose skills cover every step from reading the problem to delivering the paper, with a clear division of labor between AI and human.
 
 ### Three core principles
 
@@ -71,7 +73,7 @@ cd chickery-s-math-modeling-skill
 git checkout mathmodeling-new-skeleton
 ```
 
-Open the repository root in Codex or Claude, then put the problem statement and attachments in:
+Open the repository root in Codex, Claude, or **DeepSeek Harness (DSH) desktop**, then put the problem statement and attachments in:
 
 ```text
 workspace/problem.txt
@@ -111,9 +113,9 @@ Every subquestion (Q1, Q2, …) advances independently through the same gates. G
 
 More diagrams: [gate lifecycle](docs/diagrams/archify/assets/mm-gate-lifecycle.png) · [skill architecture](docs/diagrams/archify/assets/mm-workspace-architecture.png) · [document freeze chain](docs/diagrams/archify/assets/mm-document-chain.png) (interactive HTML is generated on demand with Node ≥ 18; see `docs/diagrams/archify/README.md`).
 
-## Skill catalog 31
+## Skill catalog 32
 
-The skill tree ships as two complete standalone copies under `.codex/skills/` and `.claude/skills/` (`plugins/mathmodeling-skills/skills/` is the distribution copy). Grouped by pipeline stage, plus a training-mode group:
+The skill tree ships as complete standalone copies under `.codex/skills/`, `.claude/skills/`, and `.agents/skills/` (auto-discovered by DSH; `plugins/mathmodeling-skills/skills/` is the distribution copy). Grouped by pipeline stage, plus a training-mode group:
 
 ### Problem understanding
 
@@ -167,6 +169,7 @@ The skill tree ships as two complete standalone copies under `.codex/skills/` an
 | `completeness-auditor` | Checks required evidence per active profile is present and current | `paper/audits/completeness_audit.md` |
 | `consistency-auditor` | Cross-media checks of numbers, symbols, parameters, decisions, and files | `paper/audits/cross_media_consistency_audit.md` |
 | `quality-assurance-auditor` | Final five-dimension audit (workflow/evidence/method/paper/presentation) | `paper/qa_report.md` |
+| `work-logger` | Maintains the `records/` work-record tree: session logs, gate transitions, mirrored decision cards | `records/` (`scripts/work_record.py`) |
 
 ### Training mode
 
@@ -211,8 +214,9 @@ See [`scripts/README.md`](scripts/README.md) for detailed arguments and [`schema
 
 ```text
 .
-├── .codex/skills/                 # Codex skill tree (31 skills; sync source)
+├── .codex/skills/                 # Codex skill tree (32 skills; sync source)
 ├── .claude/skills/                # Claude skill tree (complete standalone copy)
+├── .agents/skills/                # DeepSeek Harness skill tree (auto-discovered in-repo, complete standalone copy)
 ├── plugins/mathmodeling-skills/   # Distribution package (two manifests + skills + hooks)
 ├── .agents/plugins/marketplace.json  # marketplace catalog entry
 ├── AGENTS.md                      # Single source of truth for workflow policy (gates/artifacts/decisions/freeze/audits)
@@ -226,16 +230,17 @@ See [`scripts/README.md`](scripts/README.md) for detailed arguments and [`schema
 ├── paper/                         # Sections, figures, references, and the three final audits
 ├── workspace/                     # problem.txt, data_raw/ (read-only), data_clean/, papers/
 ├── resource-library/              # Training-mode showcase library (papers/ideas/figures/formulas/tables/assets)
+├── records/                       # Work-record tree (sessions/subjects/gates/decisions/retros; advisory)
 ├── references/                    # Upstream knowledge base (historical decisions, advisory, not required)
 ├── schemas/                       # Domain-neutral contracts (4 schemas + README)
-├── scripts/                       # 16 standard-library-only runner/validator scripts
+├── scripts/                       # 27 standard-library-only scripts (incl. 1 bash-compatible wrapper)
 ├── docs/diagrams/archify/         # Generic flow diagrams (PNG/SVG/JSON sources; interactive HTML generated on demand)
-└── tests/                         # 124 test cases
+└── tests/                         # 138 test cases
 ```
 
 ## Test coverage
 
-`python scripts/run_tests.py` (124 cases, standard library only) covers:
+`python scripts/run_tests.py` (138 cases, standard library only) covers:
 
 - Evidence-derived gate computation and monotonic transitions (including a full G1→G6 progression to `final_assembly`)
 - Human-decision provenance (fake human, unregistered evidence, escaping paths all rejected)
@@ -253,6 +258,7 @@ See [`scripts/README.md`](scripts/README.md) for detailed arguments and [`schema
 - Figure-set consistency (`figure_consistency_check`) and paper section-structure check (`section_structure_check`)
 - Abstract/conclusion quality (`abstract_checker`, with subquestion conclusion coverage)
 - Resource-library index (`resource_index`) and training scorecard (`training_scorecard`: template, evidence-path validation, cross-round aggregation, drift detection)
+- Work-record tree (`work_record`: scaffold/log/gate/decision-card/index/check, incl. time and gate monotonicity, link and index-sync checks)
 
 ## Learning and review
 
@@ -271,6 +277,19 @@ A dedicated literacy-training loop for high-quality modeling answers (full manua
 - **Open-book reflection**: `training-reflector` compares the solution with the showcase per dimension (mathematical / innovation / figure / expression / evidence / completeness) and writes transferable gaps.
 - **Multi-dimensional audit**: `training-auditor` first runs the mechanical checks (quality gate / claim coverage / abstract / AI-trace / leakage / figure consistency / section structure), then drafts the 6-dimension scorecard (`python scripts/training_scorecard.py round|summary ...`) so you can pick the next direction and finalize scores.
 - Each round lands in `results/training/roundN/` (solution/, reflection.md, scorecard.json); aggregation in `results/training/summary.json`. Normal contest flow never reads the library.
+
+## Work record tree
+
+A detailed, human-readable process log layered over the machine-readable contracts (full manual: [`docs/work-record.md`](docs/work-record.md)): `records/` is one folder with a multi-level tree of Markdown docs — `sessions/` (session logs), `subjects/` (per-subquestion narratives), `gates/` (gate transitions), `decisions/` (decision cards mirrored from the ledger), `retros/` (retrospectives). Tool: `python scripts/work_record.py` (init/log/gate/decision/retro/index/check; pure stdlib); the `work-logger` skill tells the agent when and what to record. The tree is **advisory**: facts and evidence links only, never part of gate judgment.
+
+## DeepSeek Harness adaptation
+
+Full audit: [`docs/dsh-compatibility.md`](docs/dsh-compatibility.md). Key points:
+
+- DSH 0.7.0 auto-discovers the in-repo `.agents/skills/` tree (32 skills, open-and-use, no install); `AGENTS.md`/`CLAUDE.md` are auto-injected; the default `workspace-write` sandbox allows writing inside the opened repo.
+- Prerequisites: `python` (≥3.10) and `git` on PATH; decision-ledger `user_message_id` convention `dsh:<$env:DSH_SESSION_ID>:<seq>`.
+- 4-tree sync: `python scripts/sync_plugin.py . [--check]` (portable, Windows; POSIX wrapper `sync-plugin.sh`); `validate_skill_trees.py` verifies all 4 trees + both manifests + marketplace.
+- Claude/Codex compatibility unchanged: `.codex-plugin`/`.claude-plugin`/`marketplace.json`/`hooks.json` remain and stay validated; `hooks.json` is inert in DSH by default (optional patch documented in the audit).
 
 ## FAQ
 
@@ -323,7 +342,7 @@ This project merges six upstream projects (XiaoMaColtAI, CUMCMThesis, Lupynow, n
 
 ## Upstream integration
 
-Without changing the governance core (AGENTS.md / schemas / scripts, G1–G6 gates, the 28-skill skeleton plus 3 training skills, zero third-party runtime dependencies, single matplotlib engine), this project integrates the knowledge-rule layer and pure-standard-library tool layer of six upstream projects:
+Without changing the governance core (AGENTS.md / schemas / scripts, G1–G6 gates, the 28-skill skeleton plus 3 training skills and 1 record-keeping skill, zero third-party runtime dependencies, single matplotlib engine), this project integrates the knowledge-rule layer and pure-standard-library tool layer of six upstream projects:
 
 | Upstream | What is integrated | How |
 |---|---|---|

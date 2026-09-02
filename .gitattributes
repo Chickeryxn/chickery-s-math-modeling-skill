@@ -1,0 +1,25 @@
+# Normalize line endings: LF in the repo, LF in working trees on all platforms.
+# Keeps the byte-hash-locked 4-tree sync (sync_plugin.py / validate_skill_trees.py)
+# stable across Windows (autocrlf) and POSIX checkouts.
+* text=auto
+
+*.md      text eol=lf
+*.py      text eol=lf
+*.sh      text eol=lf
+*.json    text eol=lf
+*.yml     text eol=lf
+*.yaml    text eol=lf
+*.tex     text eol=lf
+*.bib     text eol=lf
+*.txt     text eol=lf
+*.svg     text eol=lf
+*.gitignore text eol=lf
+.gitattributes text eol=lf
+
+*.png     binary
+*.jpg     binary
+*.jpeg    binary
+*.gif     binary
+*.pdf     binary
+*.zip     binary
+*.ipynb   binary

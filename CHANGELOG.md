@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.0 — 2026-09-01
+
+- **Work record tree**: added `records/` — a human-readable, evidence-linked process log (sessions/subjects/gates/decisions/retros) managed by `scripts/work_record.py` (init/log/gate/decision/retro/index/check; pure stdlib; advisory only, never gate-blocking); new `work-logger` skill (32nd) guiding when and what to record; manual `docs/work-record.md`.
+- **DeepSeek Harness 0.7.0 adaptation**: full audit `docs/dsh-compatibility.md` (skill discovery via in-repo `.agents/skills/`, AGENTS/CLAUDE injection, sandbox, decision `user_message_id` convention `dsh:<session>:<seq>`, optional hooks patch). Skill tree now has a 4th standalone copy `.agents/skills/` (DSH auto-discovery), synced by `sync_plugin.py` and verified by `validate_skill_trees.py` (4 trees + manifests + marketplace).
+- **Governance & docs**: AGENTS.md dual-tree policy → multi-runtime policy + "Runtime Notes (DeepSeek Harness)" section; portable `python scripts/sync_plugin.py .` promoted alongside `sync-plugin.sh`; workflow-orchestrator AGENTS.md reference made location-agnostic; modeler-decision-logger documents the DSH message-id convention; `.gitattributes` added (LF normalization) to stabilize hash-locked 4-tree sync; README bilingual updated (32 skills, 27 scripts, 138 tests, 0.6.0, two new sections); scripts/README updated.
+- Tests grew to 138 (work_record: 14).
+
 ## 0.5.0 — 2026-09-01
 
 - **Training mode (literacy training loop)**: added `resource-library/` — six showcase categories (papers/ideas/figures/formulas/tables/assets) with per-category READMEs and self-written example templates, plus `scripts/resource_index.py` (scans the library and (re)builds `index.json`; `--check` verifies it). The library is a literacy benchmark, never an answer key: the normal contest flow never reads it.

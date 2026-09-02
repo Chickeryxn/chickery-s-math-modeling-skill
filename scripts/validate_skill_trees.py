@@ -9,7 +9,7 @@ def hashes(root):return {rel:hashlib.sha256((root/rel).read_bytes()).hexdigest()
 def load(p):return json.loads(p.read_text(encoding='utf-8-sig'))
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('root',type=Path);a=ap.parse_args();r=a.root.resolve();errors=[]
- trees=[r/'.codex/skills',r/'.claude/skills',r/'plugins/mathmodeling-skills/skills'];base=trees[0]
+ trees=[r/'.codex/skills',r/'.claude/skills',r/'plugins/mathmodeling-skills/skills',r/'.agents/skills'];base=trees[0]
  if not base.is_dir():errors.append('missing source skill tree')
  else:
   source=hashes(base)

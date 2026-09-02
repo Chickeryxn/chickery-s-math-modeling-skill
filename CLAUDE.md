@@ -4,7 +4,7 @@
 
 `.claude/skills/` is a complete standalone skill tree, not an adapter to `.codex/skills/`. When maintaining a shared skill, keep the full counterpart in both trees and validate both; do not replace either copy with wrappers or symlinks.
 
-The native distribution package lives under `plugins/mathmodeling-skills/`. After updating both standalone trees, run `scripts/sync-plugin.sh` (or, on Windows, the portable `python scripts/sync_plugin.py .`) and validate both platform manifests before release.
+The native distribution package lives under `plugins/mathmodeling-skills/`. After updating both standalone trees, run `scripts/sync-plugin.sh` (or, on Windows, the portable `python scripts/sync_plugin.py .`) and validate both platform manifests before release. DeepSeek Harness (DSH) reads the `.agents/skills/` tree; runtime notes for DSH live in `AGENTS.md` and `docs/dsh-compatibility.md`.
 
 # Claude-Specific Operating Rules
 
