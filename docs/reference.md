@@ -87,7 +87,7 @@
 | `python scripts/validate_repo.py .` | 仓库级完整性总检（技能树、测试、契约、快照、血缘、QA） |
 | `python scripts/validate_skill_trees.py .` | 四棵技能树哈希一致性 + 插件 manifest 版本一致 |
 | `python scripts/sync_plugin.py . [--check]` | 同步 `.codex/skills/` → `.claude/skills/`、`.agents/skills/` 与插件分发副本 |
-| `python scripts/workflow_guard.py . derive Q1` | 从证据推导 Q1 当前门禁 |
+| `python scripts/workflow_guard.py . derive Q1 --profile lean\|submission\|auto` | 从证据推导 Q1 当前门禁（lean 止于 G4 结果判定子门；auto 读 `session_config`；缺省 submission）；可选 `--deadline` 输出剩余时间提示 |
 | `python scripts/workflow_guard.py . require Q1 model_code` | 产出敏感工件前检查门禁（不满足则 GATE_BLOCKED） |
 | `python scripts/validate_model_contract.py planning/model_contract.example.json` | 校验模型契约结构并输出合同哈希 |
 | `python scripts/validate_decisions.py . methods/Q1/q1_decisions.jsonl` | 校验决策账本（人类溯源、追加式、时间戳） |
@@ -96,7 +96,12 @@
 | `python scripts/lineage.py assess . path/to/artifact.lineage.json` | 评估产物血缘 CURRENT/STALE/MISSING |
 | `python scripts/validate_artifacts.py . planning/manifests/Q1.json` | 校验 manifest 声明的工件均有 CURRENT 血缘 |
 | `python scripts/qa_report.py .` | 生成分层 QA 报告（任何阻塞层缺失即非 PASS） |
-| `python scripts/work_record.py check .` | 校验工作记录树（索引同步/链接/时间与门禁单调） |
+| `python scripts/work_record.py check .` | 校验工作记录树（索引同步/链接/时间与门禁单调；账本无镜像决策卡为 advisory 提示） |
+| `python scripts/check_frozen_freshness.py .` | 冻结数字新鲜度（源文件存在且不晚于 `frozen_at`；已接入 validate_repo） |
+| `python scripts/figure_render_audit.py .` | 论文引图存在性 + `<图名>.render.json` 渲染证据审计 |
+| `python scripts/preflight.py .` | 提交前预检一键汇总（claim_coverage/abstract/ai_trace/latex `--strict`/图一致性/骨架） |
+| `python scripts/polish_stats.py <章节文件>` | 量化写作指标（>30 词长句比例/占位套话/AI 连接词），`paper-polisher` 前置扫描 |
+| `python scripts/sync_plugin.py . --dry-run` | 预览四树同步将覆盖的差异（不写盘） |
 
 详细参数见 [`scripts/README.md`](../scripts/README.md)，契约说明见 [`schemas/README.md`](../schemas/README.md)。
 
@@ -123,7 +128,7 @@
 ├── records/                       # 工作记录树（sessions/subjects/gates/decisions/retros，advisory）
 ├── references/                    # 上游知识库（历史决策，advisory，非强制）
 ├── schemas/                       # 领域无关契约（4 个 schema + 说明）
-├── scripts/                       # 28 个纯标准库脚本（含 1 个 bash 兼容包装）
+├── scripts/                       # 32 个纯标准库脚本（含 1 个 bash 兼容包装）
 ├── docs/                          # 手册（索引/学习/训练/记录/复盘/DSH/论文/参考）
 ├── docs/diagrams/archify/         # 通用流程图（PNG/SVG/交互 HTML/JSON 源）
 └── tests/                         # 171 个测试用例
@@ -131,7 +136,7 @@
 
 ## 测试覆盖
 
-`python scripts/run_tests.py`（171 个用例，全标准库）覆盖：
+`python scripts/run_tests.py`（215 个用例，全标准库）覆盖：
 
 - 门禁证据推导与单调迁移（含完整 G1→G6 推进链到 `final_assembly`）
 - 人类决策溯源（伪造人类、未注册证据、路径逃逸均被拒绝）
@@ -150,6 +155,10 @@
 - 资源库索引（`resource_index`，含嵌套目录）与训练记分卡（`training_scorecard`）
 - 工作记录树（`work_record`）与 hooks 守卫（`guard_frozen`，含 DSH 小写工具）
 - 文档计数守卫（`doc_claims`）与治理层 e2e（`governance_e2e`）
+- 门禁 profile 双轨（lean 子门 / submission 全链 / auto 读配置）、结构深度检查（parse/classification/probe 退化块）与 framing 决策阻塞
+- 冻结新鲜度（`check_frozen_freshness`）、图渲染证据（`figure_render_audit`）、提交预检编排（`preflight`）
+- 量化写作指标（`polish_stats`）、运行快照可选 `vcs` 记录、决策 `unavailable:` 消息 ID 标记策略
+- 金样例守卫（`test_examples`）与 work_record 决策卡镜像 advisory
 
 ## 术语表
 

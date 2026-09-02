@@ -7,7 +7,7 @@
 | Badge | Value |
 |---|---|
 | License | [MIT](LICENSE) |
-| Version | 0.7.1 (plugin manifests in sync) |
+| Version | 0.8.0 (plugin manifests in sync) |
 | Runtime | Python 3.10+ (standard library only, no third-party dependencies) |
 | Platforms | Windows / Linux / macOS |
 | Tests | 215 cases, `python scripts/run_tests.py` all green |

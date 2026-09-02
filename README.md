@@ -7,7 +7,7 @@
 | 徽章 | 值 |
 |---|---|
 | 许可 | [MIT](LICENSE) |
-| 版本 | 0.7.1（插件 manifest 同步） |
+| 版本 | 0.8.0（插件 manifest 同步） |
 | 运行环境 | Python 3.10+（仅标准库，无第三方依赖） |
 | 平台 | Windows / Linux / macOS |
 | 测试 | 215 个用例，`python scripts/run_tests.py` 全绿 |
