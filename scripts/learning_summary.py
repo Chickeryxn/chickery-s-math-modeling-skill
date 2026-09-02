@@ -64,8 +64,7 @@ def decision_line(rec: dict) -> str:
     status = rec.get("status", "?")
     choice = rec.get("choice")
     choice_s = f" → {choice}" if choice else ""
-    verdict = rec.get("status") if rec.get("status") == "DECIDED" else status
-    return f"- `{rec.get('decision_id','?')}` [{dtype}] {verdict}{choice_s}"
+    return f"- `{rec.get('decision_id','?')}` [{dtype}] {status}{choice_s}"
 
 
 def render(root: Path) -> str:
