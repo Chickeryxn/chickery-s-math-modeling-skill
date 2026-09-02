@@ -11,8 +11,8 @@ Audit-fix follow-up implementing the full P0–P2 finding list (see
   accidentally nested inside another test method and never executed — the
   suite ran 245 of the 247 documented tests. Re-indented; `run_tests.py` now
   refuses a false green when the executed count differs from the static
-  definition count. Docs counts synced to the executed total (269 with all
-  new guards).
+  definition count. Docs counts synced to the executed total (271 with all
+  new guards and the resource-library index tests).
 - **Validator bugs (P0, B-01…B-10)**: uncertainty keys matched by substring
   (`mean_squared_error` satisfied the requirement); frozen-value units emitted
   outside `\newcommand` (stray preamble text) and digit-led macro names;
@@ -27,6 +27,19 @@ Audit-fix follow-up implementing the full P0–P2 finding list (see
   `pluginRoot`; `method-index` wrong-depth links fixed (hashes refreshed);
   resource-library index regenerated and now covered by `validate_repo` and CI;
   upstream usage map extended to all groups with a conflict-precedence section.
+- **resource-library (post-release, `493959c`)**: per-category templates made
+  more detailed in place (required/optional fields, a 6-dimension literacy
+  alignment block, training-comparison anchors, and a completeness checklist);
+  entries are now self-contained directories
+  `<category>/<entry_id>/{README.md, content/, code/, data/}` so figure/table/
+  formula/paper entries have a real place for the rendered artifact and for the
+  generator script (python/matlab/other); `assets/` gains `data/`, `code/`,
+  `figures/`; `resource_index.py` treats `content/code/data/figures` as
+  supporting assets (reported per category, never as training entries) and an
+  entry directory's README is the entry, with `index.json` schema bumped to v2;
+  flat "material + same-prefix description" entries remain supported (migration
+  compatibility); demo shown by `figures/example-rank-bar/` (real PNG produced
+  by `code/plot_rank_bar.py` from `data/rank_scores.csv`).
 - **Skill contract convergence (P1)**: the three writer prerequisites are
   defined once in AGENTS.md; three skills that wrote `qx_decisions.jsonl`
   directly now delegate to `modeler-decision-logger`; render-evidence key set
