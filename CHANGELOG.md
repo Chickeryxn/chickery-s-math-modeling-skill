@@ -1,5 +1,49 @@
 # Changelog
 
+## 0.9.1 — 2026-09-02
+
+Audit-fix follow-up implementing the full P0–P2 finding list (see
+`docs/audit-fix-0.9.0.md` lineage; 3 commits: `0693c3f` P0 · `e93f935` P1 ·
+`05d5a4c` P2):
+
+- **Test correctness (P0)**: two security regression tests in
+  `test_gate_derivation.py` (QID path traversal, snapshot path escape) were
+  accidentally nested inside another test method and never executed — the
+  suite ran 245 of the 247 documented tests. Re-indented; `run_tests.py` now
+  refuses a false green when the executed count differs from the static
+  definition count. Docs counts synced to the executed total (269 with all
+  new guards).
+- **Validator bugs (P0, B-01…B-10)**: uncertainty keys matched by substring
+  (`mean_squared_error` satisfied the requirement); frozen-value units emitted
+  outside `\newcommand` (stray preamble text) and digit-led macro names;
+  claim-coverage abstract check degenerated to "whole text has any digit";
+  figure-reference `lstrip('./')` folded `../` escapes into basenames;
+  3+ hyphen runs and CJK punctuation miscounted by `ai_trace_checker`;
+  `qa_report` lineage prefix glob never matched lowercase `q1_*` lineages;
+  interrupted runs left snapshots RUNNING forever; `sync_plugin` silently
+  deleted target-tree extras (now `--prune` only).
+- **Docs/contract contradictions**: README figure-type rule aligned with
+  AGENTS.md (Type 2–4 may enter the paper); DSH hooks patch documents
+  `pluginRoot`; `method-index` wrong-depth links fixed (hashes refreshed);
+  resource-library index regenerated and now covered by `validate_repo` and CI;
+  upstream usage map extended to all groups with a conflict-precedence section.
+- **Skill contract convergence (P1)**: the three writer prerequisites are
+  defined once in AGENTS.md; three skills that wrote `qx_decisions.jsonl`
+  directly now delegate to `modeler-decision-logger`; render-evidence key set
+  has a single source; auditor status vocabulary unified; two-pass
+  symbol/assumption maintenance documented.
+- **Schemas (P1)**: `schemas/*.schema.json` documented as contracts (nothing
+  loads them at runtime); `tests/test_schemas_consistency.py` binds their
+  `required`/status vocabularies to the validators and golden examples.
+- **Engineering (P1/P2)**: `validate_skill_trees` ghost-reference check;
+  `validate_repo` empty artifact groups report "no artifacts to check";
+  contest-content `.gitignore` privacy guard; LF-explicit writers across 8
+  scripts; `validate_decisions` real-calendar-date check; figure consistency
+  duplicate/extensionless handling; CLI file-read guards; CI no longer runs
+  the suite twice and covers Python 3.13.
+- Tests grew 247 → 269 (all green; 1 test skips on case-insensitive
+  filesystems); plugin manifests/marketplace bumped to 0.9.1.
+
 ## 0.9.0 — 2026-09-02
 
 Maintenance release from a full multi-angle audit (P0 correctness → P3 engineering):
