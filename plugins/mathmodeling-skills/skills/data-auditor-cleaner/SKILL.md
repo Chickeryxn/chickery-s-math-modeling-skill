@@ -1,6 +1,7 @@
 ---
 name: data-auditor-cleaner
 description: Map contest attachments to subquestions, audit and clean raw data, and emit one reusable data profile with quality, coverage, imbalance, concentration, and method-readiness evidence for downstream risk screening.
+whenToUse: When contest attachments must be mapped, audited, profiled, and cleaned before risk screening.
 ---
 
 # Purpose
@@ -93,10 +94,14 @@ Accept legacy `workspace/data/data_clean/` as an input/output location during mi
     "concentration_metrics": {}
   },
   "per_question_readiness": {},
-  "cleaned_files": [],
+  "cleaned_files": [{"file": "workspace/data_clean/cities_indicator.csv",
+                    "cleaned_from": "workspace/data_raw/附件1-xx.xlsx",
+                    "transform_ref": "workspace/code/scripts/clean.py"}],
   "unresolved_risks": []
 }
 ```
+
+Record a light data lineage: each cleaned file lists `cleaned_from` (the raw source path) and `transform_ref` (the cleaning script or rule) so downstream STALE checks and paper provenance can trace cleaning steps.
 
 Use `null` with an explanation when a field is not applicable; do not invent a value to fill the schema.
 

@@ -445,6 +445,29 @@ def cmd_check(args) -> int:
             lp = root / fm["ledger"]
             if not lp.is_file():
                 errors.append(f"{p}: ledger missing {fm['ledger']}")
+    # Advisory: ledger DECIDED records without a mirrored decision card
+    mirrors = [p.name for p in rec(root, "decisions").glob("*.md")]
+    missing_mirrors = []
+    ledgers = ([root / "planning/framing_decisions.jsonl"]
+               + sorted(root.glob("methods/*/q*_decisions.jsonl")))
+    for ledger in ledgers:
+        if not ledger.is_file():
+            continue
+        for line in ledger.read_text(encoding="utf-8-sig").splitlines():
+            if not line.strip():
+                continue
+            try:
+                r = json.loads(line)
+            except Exception:
+                continue
+            if r.get("status") == "DECIDED" and r.get("decision_id") \
+               and not any(r["decision_id"] in name for name in mirrors):
+                missing_mirrors.append(f"{ledger.relative_to(root).as_posix()} #{r['decision_id']}")
+    if missing_mirrors:
+        shown = ", ".join(missing_mirrors[:8])
+        extra = f" (+{len(missing_mirrors) - 8} more)" if len(missing_mirrors) > 8 else ""
+        print(f"advisory: decision cards missing for {shown}{extra} "
+              "(run `work_record.py decision Qx <decision_id>` to mirror)", file=sys.stderr)
     if errors:
         print("\n".join(errors), file=sys.stderr)
         return 2

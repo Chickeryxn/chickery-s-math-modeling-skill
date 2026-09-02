@@ -1,6 +1,7 @@
 ---
 name: python-code-reviewer
 description: Review, run, debug, and verify approved Python modeling code against its code plan, data contract, method decision, risk conditions, and experiment outputs, saving one compact JSON review.
+whenToUse: When Python model code must be reviewed and run against the plan, data contract, and outputs (five named checks).
 ---
 
 # Preconditions

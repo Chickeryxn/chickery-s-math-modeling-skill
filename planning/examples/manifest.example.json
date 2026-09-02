@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "question_id": "Q1",
+  "rigor_profile": "submission",
+  "current_gate": "G1",
+  "status": "problem_framed",
+  "artifacts": {
+    "method_card": "planning/examples/method-card.example.md",
+    "decision_ledger": "planning/examples/decisions.example.jsonl",
+    "risk_probe": "planning/examples/risk_probe_summary.example.json",
+    "latest_run": "planning/examples/run_summary.example.json"
+  },
+  "allowed": {
+    "code_generation": false,
+    "freeze": false,
+    "paper_writing": false,
+    "final_assembly": false
+  },
+  "blockers": ["本目录为示例：真实门禁需由 workspace 根目录下的证据推导（见 AGENTS.md）"],
+  "next_action": {
+    "owner": "agent",
+    "skill": "problem-parser",
+    "reason": "example only; in a real workspace G1 derives from planning/parse and planning/classification"
+  },
+  "profile_snapshot": {"profile": "submission", "recorded_at": "2026-09-02T03:00:00Z"},
+  "updated_at": "2026-09-02T03:00:00Z"
+}

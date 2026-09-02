@@ -1,6 +1,7 @@
 ---
 name: symbol-table-builder
 description: Build and maintain one global mathematical symbol and unit table from the problem frame and active method cards, resolving cross-subquestion conflicts before code or paper work.
+whenToUse: When symbols and units across subquestions must be unified before code or paper work.
 ---
 
 # Purpose

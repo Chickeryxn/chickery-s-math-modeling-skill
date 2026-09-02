@@ -1,6 +1,7 @@
 ---
 name: reference-manager
 description: Manage and verify references for mathematical modeling contest papers, generating BibTeX entries, checking citation completeness, and ensuring all references are traceable to actual sources.
+whenToUse: When paper citations must be inventoried, verified against sources, and emitted as BibTeX without fabrication.
 license: MIT
 ---
 

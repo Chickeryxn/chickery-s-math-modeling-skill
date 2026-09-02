@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "question_id": "Q1",
+  "generated_at": "2026-09-02T00:00:00Z",
+  "data_refs": ["problem_parse.example.json", "problem_classification.example.json"],
+  "methods": [
+    {
+      "id": "M1",
+      "role": "main_candidate",
+      "executability": {"status": "PASS", "evidence": {"runtime_seconds": 0.2}},
+      "data_coverage": {"status": "PASS", "evidence": {"rows_used": 40, "effective_sample_size": 40, "missing_rate": 0.0}},
+      "assumption_checks": [
+        {"name": "indicator_redundancy", "status": "PASS", "metric": "max_corr", "value": 0.62, "threshold": 0.9}
+      ],
+      "output_degeneracy": {
+        "status": "PASS",
+        "metrics": {"unique_output_count": 40, "coefficient_of_variation": 0.18, "top_k_mass": 0.22}
+      },
+      "perturbation_sensitivity": {
+        "status": "PASS",
+        "perturbation": "weights +/- 5%",
+        "metric": "top_10_overlap",
+        "value": 0.92
+      },
+      "scale_check": {"status": "PASS", "representative_n": 40, "runtime_seconds": 0.2, "peak_memory_mb": 12},
+      "verdict": "PASS",
+      "conditions": [],
+      "evidence_refs": []
+    },
+    {
+      "id": "M0",
+      "role": "usable_baseline",
+      "executability": {"status": "PASS", "evidence": {"runtime_seconds": 0.1}},
+      "data_coverage": {"status": "PASS", "evidence": {"rows_used": 40, "effective_sample_size": 40, "missing_rate": 0.0}},
+      "assumption_checks": [],
+      "output_degeneracy": {
+        "status": "PASS",
+        "metrics": {"unique_output_count": 40, "coefficient_of_variation": 0.12, "top_k_mass": 0.31}
+      },
+      "perturbation_sensitivity": {
+        "status": "PASS",
+        "perturbation": "weights +/- 5%",
+        "metric": "top_10_overlap",
+        "value": 0.85
+      },
+      "scale_check": {"status": "PASS", "representative_n": 40, "runtime_seconds": 0.1, "peak_memory_mb": 10},
+      "verdict": "PASS",
+      "conditions": [],
+      "evidence_refs": []
+    }
+  ]
+}

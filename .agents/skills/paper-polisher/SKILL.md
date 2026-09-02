@@ -1,6 +1,7 @@
 ---
 name: paper-polisher
 description: Polish mathematical modeling paper drafts for grammar, clarity, formula consistency, hedging calibration, overclaim detection, and contest formatting compliance. Use after paper-section-writer has drafted sections.
+whenToUse: After sections are drafted, to polish language, calibrate claims, and verify notation before QA.
 license: MIT
 ---
 

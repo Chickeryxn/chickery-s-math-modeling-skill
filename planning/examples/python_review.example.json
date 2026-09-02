@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "question_id": "Q1",
+  "language": "python",
+  "reviewed_files": ["code/Q1/q1_main.py", "code/Q1/q1_baseline.py"],
+  "decision_id": "method_choice-example",
+  "checks": {
+    "syntax": {"status": "PASS", "evidence": ["code/Q1/q1_main.py 无语法错误且可执行"]},
+    "input_contract": {"status": "PASS", "evidence": ["输入字段/单位与 data_profile 一致", "未读写 workspace/data_raw/"]},
+    "method_alignment": {"status": "PASS", "evidence": ["熵权-TOPSIS 公式与 final method explanation 一致", "主/基线角色与批准范围一致"]},
+    "reproducibility": {"status": "PASS", "evidence": ["固定随机种子 2026", "run snapshot 记录输入/代码哈希与命令"]},
+    "output_contract": {"status": "PASS", "evidence": ["输出得分/排序与 model_contract.output_contract 一致", "退化指标已存盘"]}
+  },
+  "findings": [],
+  "verdict": "PASSED",
+  "reviewed_at": "2026-09-02T00:00:00Z"
+}

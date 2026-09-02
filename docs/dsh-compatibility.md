@@ -67,6 +67,8 @@ plugins:
 
 或使用 Codex 桥（`@deepseek-ai/dsh-hooks-codex`，事件：SessionStart/UserPromptSubmit/PreToolUse/PostToolUse/Stop；仅同步命令钩子）。钩子经 shell 执行，JSON 载荷在 stdin；退出码 0=放行、2=阻断。`guard_frozen.py` 支持 `--check` 自测（`python plugins/mathmodeling-skills/hooks/guard_frozen.py --check`）。**默认不启用**：零配置即可用完整工作流。
 
+> 边界：PreToolUse 守卫只拦截**写**工具；没有跨平台的"读拦截"钩子。闭卷训练（`training-solver`）的隔离依赖 `training_config` 双声明 + 人工监督（见 `docs/training.md` §七），不依赖本钩子。
+
 ## 六、DSH 冒烟清单
 
 1. 用 DSH 打开仓库根目录 → 会话技能目录应出现 32 个技能（含 `work-logger`）。

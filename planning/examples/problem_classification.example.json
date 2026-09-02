@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "subquestions": [
+    {
+      "id": "Q1",
+      "primary_type": "evaluation",
+      "secondary_type": null,
+      "confidence": "high",
+      "evidence": ["problem_parse.example.json#Q1.required_outputs"],
+      "required_validation": ["权重扰动稳定性", "得分集中度", "Top-k 重叠"],
+      "framing_decision_id": "framing-example-1",
+      "risks": ["指标冗余", "权重主导", "分数集中导致排序脆弱"]
+    },
+    {
+      "id": "Q2",
+      "primary_type": "prediction",
+      "secondary_type": "descriptive",
+      "confidence": "medium",
+      "evidence": ["problem_parse.example.json#Q2.required_outputs"],
+      "required_validation": ["切分无泄漏", "残差诊断", "区间覆盖率"],
+      "framing_decision_id": null,
+      "risks": ["时序泄漏", "短序列外推"]
+    }
+  ]
+}

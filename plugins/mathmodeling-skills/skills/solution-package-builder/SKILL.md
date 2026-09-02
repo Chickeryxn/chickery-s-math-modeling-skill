@@ -1,6 +1,7 @@
 ---
 name: solution-package-builder
 description: Assemble a submission-ready writer package from final method, result, robustness, figure, and human-decision artifacts, then freeze approved numerical claims with provenance.
+whenToUse: In submission, when the writer package must be assembled and approved numerical claims frozen with provenance.
 ---
 
 # Purpose

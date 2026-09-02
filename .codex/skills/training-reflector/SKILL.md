@@ -1,6 +1,7 @@
 ---
 name: training-reflector
 description: Open-book literacy reflection. After training-solver produced a closed-book solution, compare it against the resource-library showcase (papers/ideas/figures/formulas/tables) dimension by dimension and write a literacy learning report. Used in docs/training.md phase B.
+whenToUse: In the literacy-training loop phase B: compare the closed-book solution with the showcase library dimension by dimension.
 ---
 
 # Purpose

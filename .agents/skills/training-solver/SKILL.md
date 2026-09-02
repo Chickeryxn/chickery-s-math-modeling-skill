@@ -1,6 +1,7 @@
 ---
 name: training-solver
 description: Closed-book training solver. Solve a training problem from start to finish WITHOUT reading resource-library/, then hand off to training-reflector. Used in the literacy-training loop (docs/training.md).
+whenToUse: In the literacy-training loop phase A: solve closed-book without reading resource-library or prior-round solutions.
 ---
 
 # Purpose
@@ -10,7 +11,8 @@ Produce a complete solution for one training round in **closed-book** mode. This
 # Closed-book rule (mandatory)
 
 - In `closed` mode, **do not read anything under `resource-library/`** during this phase (config: `planning/training_config.json` → `mode`; `closed_phase_forbidden_paths`).
-- You may use normal project resources (AGENTS.md rules, `references/abstraction-patterns.md`, method index, skills) — the ban is only on the showcase library.
+- When the round config enables clean rounds (e.g. `round_problem_sources` lists a fresh problem per round, or the human asks for a clean solve), also **do not read earlier rounds' solutions** under `results/training/roundN-1/solution/` — each round must be solved independently.
+- You may use normal project resources (AGENTS.md rules, `references/abstraction-patterns.md`, method index, skills) — the ban is only on the showcase library and prior solutions when a clean round is requested.
 - If the user explicitly switches `mode` to `open`, the ban is lifted and you may consult the library before solving.
 
 # Workflow

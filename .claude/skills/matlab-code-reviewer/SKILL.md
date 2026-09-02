@@ -1,6 +1,7 @@
 ---
 name: matlab-code-reviewer
 description: Review, run, debug, and verify approved MATLAB or Beita Tianyuan modeling code against its plan, data contract, method decision, compatibility constraints, and experiment outputs, saving one compact JSON review.
+whenToUse: When MATLAB or Beita Tianyuan code must be reviewed and run against the plan, contract, and compatibility constraints.
 ---
 
 # Preconditions

@@ -1,6 +1,7 @@
 ---
 name: consistency-auditor
 description: Run scoped or final cross-media consistency checks for mathematical-modeling artifacts, comparing canonical numbers, symbols, parameters, decisions, files, and paper claims without performing full-workspace audits for low-risk changes.
+whenToUse: After CANONICAL or FROZEN changes, or before final assembly, to run scoped or final cross-media consistency checks.
 ---
 
 # Modes

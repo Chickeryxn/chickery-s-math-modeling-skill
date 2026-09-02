@@ -1,6 +1,7 @@
 ---
 name: workflow-orchestrator
 description: Inspect a mathematical-modeling workspace, evaluate lean or submission gates per subquestion, update machine-readable manifests, classify change impact, and route one next action without duplicating downstream work.
+whenToUse: When asked to inspect workspace state, evaluate gates, update manifests, or decide the next workflow action.
 ---
 
 # Purpose

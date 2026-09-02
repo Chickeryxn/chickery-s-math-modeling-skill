@@ -44,6 +44,7 @@ python scripts/work_record.py check [root]                       # 校验：索�
 - **只记事实**：做了什么、产出哪些工件、人类做了哪些决定；人类理由一律从账本镜像，绝不代写。
 - **链接不复制**：条目引用仓库内相对路径的工件，不把工件内容抄进记录树。
 - **advisory**：记录缺失不得阻塞任何工作；`check` 失败只提示补 `index`，不构成门禁。
+- **judgment digest（可选）**：`records/session-digests/` 可放一行式对话内摘要（judgment-bearing 的决定要义 + 路径），供 `replay` 与复盘补充原料；仍是 advisory，不替代正式记录。
 - 与 `logs/`（失败/复现用控制台日志，按 AGENTS.md 仅在需要时创建）区分：记录树是结构化过程叙事。
 - 三运行时（Codex / Claude / DSH）行为一致；`work-logger` 技能负责指导 agent 何时记、记什么。
 

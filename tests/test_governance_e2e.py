@@ -85,6 +85,18 @@ class SyncDriftTests(unittest.TestCase):
             p = run_script("validate_skill_trees.py", str(root))
             self.assertEqual(p.returncode, 2)
 
+    def test_sync_dry_run_reports_without_writing(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            self.make_trees(root)
+            target = root / ".claude" / "skills" / "smoke-skill" / "SKILL.md"
+            target.write_text(SKILL_SRC + "// mutated\n", encoding="utf-8")
+            p = run_script("sync_plugin.py", str(root), "--dry-run")
+            self.assertEqual(p.returncode, 0, p.stderr)
+            self.assertIn("would_copy", p.stdout)
+            p = run_script("sync_plugin.py", str(root), "--check")
+            self.assertEqual(p.returncode, 2)  # dry-run must not have written
+
 
 class ManifestAndSnapshotCliTests(unittest.TestCase):
     def test_validate_manifest_overclaim_rejected(self):

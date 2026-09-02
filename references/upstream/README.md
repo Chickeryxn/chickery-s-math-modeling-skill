@@ -24,6 +24,7 @@
 - 技能引用时用相对路径（如 `../../references/upstream/nature-figure/figure-contract.md`）。
 - 不修改被引入的上游文件内容；如需改编，复制到技能自己的 `references/` 再改并在头部注明来源。
 - 上游规则中的数字/断言（如"However 51 ≫ Furthermore 22"、Nature 图注 <250 词）为语料/历史统计，引用时标注时点。
+- 每个 `UPSTREAM.md` 可附加可选的 `Reviewed at: YYYY-MM-DD` 行，记录维护者最近一次复核时间（advisory，不强校验）；语料统计类断言继续标注时点引用。
 
 ## 明确未引入（许可证或边界原因）
 

@@ -1,6 +1,7 @@
 ---
 name: related-paper-analyzer
 description: Collect and analyze relevant papers, reports, and reference methods to inform method selection without fabricating references or copying models blindly.
+whenToUse: When user-supplied papers exist under workspace/papers and method selection should be grounded in them.
 license: MIT
 ---
 
@@ -114,6 +115,7 @@ Suggested sections:
 - Do not override the validated problem parse or classification.
 - Do not copy a paper's model blindly without checking fit to the current subquestion, data, and contest constraints.
 - Do not skip the initial check for paper originals in `workspace/papers/`.
+- When no user papers exist: state the evidence gap explicitly and hand off to `method-selector` with an empty literature-cue set — do not fabricate a literature summary or pretend the gap is closed. If the team later supplies papers, re-run this skill before final method selection.
 
 # Verification
 

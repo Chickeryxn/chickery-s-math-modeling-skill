@@ -1,6 +1,7 @@
 ---
 name: result-report-generator
 description: Summarize modeling experiment evidence, compare the approved main method with a usable baseline, surface fallback triggers, and produce a decision-point or final report without creating routine per-round prose.
+whenToUse: When experiment artifacts must be condensed into decision-point or final evidence without choosing a winner.
 ---
 
 # Purpose

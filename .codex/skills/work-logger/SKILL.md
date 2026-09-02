@@ -1,6 +1,7 @@
 ---
 name: work-logger
 description: Maintain the human-readable work-record tree (records/) — append session log entries, gate transitions, and mirrored decision cards after each workflow action, using scripts/work_record.py. Advisory narrative layer; never invents rationale.
+whenToUse: After gate transitions, decisions, experiment rounds, freezes, or session ends, to keep the records/ narrative tree in sync.
 ---
 
 # Purpose

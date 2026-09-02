@@ -1,6 +1,7 @@
 ---
 name: math-figure-generator
 description: Generate and render-verify publication-quality mathematical-modeling figures from saved evidence, using the approved figure plan, source data, claim, type, and consistent visual system.
+whenToUse: When approved figures must be generated at publication quality and render-verified from saved evidence.
 ---
 
 # Preconditions

@@ -30,7 +30,7 @@
 - Every skill and referenced local resource required at runtime must exist in every tree; no tree may depend on a wrapper, symlink, or path into another tree.
 - When a shared skill contract changes, update and validate all copies in the same change.
 - Runtime-specific wording may differ only when necessary, but each copy must remain standalone and behaviorally consistent with this policy.
-- `plugins/mathmodeling-skills/skills/` is the generated distribution copy used by the native Codex and Claude plugin manifests. After the standalone trees agree, refresh the distribution copy with `python scripts/sync_plugin.py .` (portable, works on Windows) or the POSIX wrapper `scripts/sync-plugin.sh`, and verify with `python scripts/sync_plugin.py . --check` / `scripts/sync-plugin.sh --check`.
+- `plugins/mathmodeling-skills/skills/` is the generated distribution copy used by the native Codex and Claude plugin manifests. After the standalone trees agree, refresh the distribution copy with `python scripts/sync_plugin.py .` (portable, works on Windows) or the POSIX wrapper `scripts/sync-plugin.sh`, and verify with `python scripts/sync_plugin.py . --check` / `scripts/sync-plugin.sh --check`. Run `--dry-run` first to review what would change without writing.
 - Keep both plugin manifests and the marketplace catalog aligned for every release. Bump the version in both plugin manifests and keep the marketplace catalog aligned.
 
 # Runtime Notes (DeepSeek Harness desktop 0.7.0)

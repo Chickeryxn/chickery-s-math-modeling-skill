@@ -1,6 +1,7 @@
 ---
 name: python-model-code-generator
 description: Generate and run minimal reproducible Python modeling code for the human-approved main method and usable baseline, saving compact experiment artifacts and a canonical run summary.
+whenToUse: When the approved plan targets Python and runnable reproducible code must be generated and executed.
 ---
 
 # Preconditions

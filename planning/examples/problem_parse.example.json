@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "problem_source": ["workspace/problem.txt", "workspace/data_raw/附件1-xx.xlsx"],
+  "global_goal": "对问题中的 XX 对象进行评价/预测/优化（按题目实际改写），并为每个子问题给出可辩护的数值结论。",
+  "objects": ["候选对象（如城市/方案/工序）", "指标/特征集", "时间范围与空间范围"],
+  "data_inventory": [
+    {"file": "workspace/data_raw/附件1-xx.xlsx", "sheets": ["指标数据", "说明"], "mapped_to": "Q1"},
+    {"file": "workspace/data_raw/附件2-yy.csv", "mapped_to": "Q2"}
+  ],
+  "global_constraints": [
+    {"text": "所有输入与输出必须保持题目给定单位", "kind": "hard"}
+  ],
+  "subquestions": [
+    {
+      "id": "Q1",
+      "statement": "题目原文（保留原意，逐字摘录关键句）",
+      "goal": "对 N 个对象按给定指标给出排序并解释排序稳定性",
+      "inputs": ["指标矩阵（行=对象，列=指标）"],
+      "unknowns_or_decisions": ["综合得分", "排序结果"],
+      "constraints": ["指标方向已知（正向/负向）", "无缺失值或缺失已有处理方案"],
+      "required_outputs": ["每个对象的综合得分", "完整排序", "Top-5 及分数集中度说明"],
+      "success_criteria": ["得分可解释（权重有客观来源）", "排序对权重扰动稳定（Top-10 重叠>=0.9）"],
+      "dependencies": [],
+      "proposed_relationships": [{"text": "指标得分越高，综合排名越靠前（待确认）", "status": "proposed"}],
+      "ambiguities": ["评价指标的权重是否允许主观赋值？"]
+    },
+    {
+      "id": "Q2",
+      "statement": "题目原文（保留原意）",
+      "goal": "预测未来 T 期的目标量并给出不确定性区间",
+      "inputs": ["历史时序数据（含时间戳）"],
+      "unknowns_or_decisions": ["未来 T 期的预测值", "预测区间"],
+      "constraints": ["不得使用未来信息（无泄漏）"],
+      "required_outputs": ["逐期预测值", "区间或误差估计", "训练/测试切分说明"],
+      "success_criteria": ["测试期误差量化（如 RMSE/MAE）", "与基线（naive/移动平均）可比"],
+      "dependencies": [],
+      "proposed_relationships": [],
+      "ambiguities": []
+    }
+  ],
+  "missing_material": [],
+  "human_decisions_needed": ["Q1 权重是否允许主观赋值（输出形式与解释优先级）"]
+}

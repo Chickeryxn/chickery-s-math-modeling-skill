@@ -1,6 +1,7 @@
 ---
 name: code-reviewer
 description: Detect whether approved modeling code is Python or MATLAB/Beita Tianyuan and route it to the matching reviewer using the compact named-check review contract.
+whenToUse: When approved model code needs routing to the matching language reviewer.
 ---
 
 # Workflow
