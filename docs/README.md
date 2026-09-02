@@ -25,7 +25,7 @@
 | 内容 | 文档 |
 |---|---|
 | 技能全表/契约体系/命令速查/目录结构/测试覆盖/术语表/上游融合 | [参考手册](reference.md) |
-| 0.9.0 审查修复对照表（问题→落实状态） | [审计修复清单](audit-fix-0.9.0.md) |
+| 0.9.0 审计修复对照（0.9.1 变更见 [CHANGELOG](../CHANGELOG.md)） | [审计修复清单](audit-fix-0.9.0.md) |
 | 脚本命令契约 | [scripts/README](../scripts/README.md) |
 | schema 契约说明 | [schemas/README](../schemas/README.md) |
 | 上游来源与许可 | [references/README](../references/README.md)、[NOTICE](../NOTICE.md) |

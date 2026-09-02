@@ -100,7 +100,7 @@ Pick by goal (full index: [docs/](docs/README.md)):
 | Train high-quality modeling answers | [Training mode](docs/training.md) |
 | Build the paper (xelatex + CUMCMThesis) | [Paper build](docs/paper-build.md) |
 | Skills / commands / layout / glossary | [Reference](docs/reference.md) |
-| 0.9.0 audit-fix ledger (issue → resolution) | [Audit-fix list](docs/audit-fix-0.9.0.md) |
+| 0.9.0 audit-fix ledger (0.9.1 changes in the [CHANGELOG](CHANGELOG.md)) | [Audit-fix list](docs/audit-fix-0.9.0.md) |
 
 ## FAQ
 
@@ -118,6 +118,9 @@ No. Changing a frozen value requires thaw → edit source → rerun → refreeze
 
 **Q: Where do I start on my first run?**
 Follow the [learning path](docs/learning-path.md); or run one contest problem end-to-end with the default `learning + lean` config and watch where the workflow stops to ask you.
+
+**Q: Will the problem set, data, or drafts be accidentally committed to git?**
+No (unless you force it with `git add -f`): `.gitignore` already ignores `workspace/` data and contest artifacts under `methods/`, `results/`, `robustness/`, `paper/`, `code/Q*/`, `scratch/`, and the per-contest planning outputs (placeholder `.gitkeep` files stay tracked). For full isolation, run a contest in a separate directory or `git worktree` and copy back only the reviews/records you want to keep.
 
 **Q: What is the relationship to XiaoMaColtAI and other upstream libraries?**
 This project merged 6 upstream projects and locked 12 decisions (history in [references/README.md](references/README.md)); the current executable contract is `AGENTS.md`, `schemas/`, and `scripts/`.

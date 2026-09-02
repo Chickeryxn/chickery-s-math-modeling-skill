@@ -100,7 +100,7 @@ cd chickery-s-math-modeling-skill
 | 训练 Agent 的高品质建模能力 | [训练模式](docs/training.md) |
 | 构建论文（xelatex + CUMCMThesis） | [论文构建](docs/paper-build.md) |
 | 技能全表/命令速查/目录结构/术语表 | [参考手册](docs/reference.md) |
-| 0.9.0 审查修复对照（问题→落实） | [审计修复清单](docs/audit-fix-0.9.0.md) |
+| 0.9.0 审计修复对照（0.9.1 变更见 [CHANGELOG](CHANGELOG.md)） | [审计修复清单](docs/audit-fix-0.9.0.md) |
 
 ## 常见问题
 
@@ -120,7 +120,7 @@ cd chickery-s-math-modeling-skill
 看 [学习路径](docs/learning-path.md)；或用默认 `learning + lean` 配置直接拿一道赛题练一轮，体会它在哪些节点停下来问你。
 
 **Q：赛题/数据/草稿会被 git 误提交吗？**
-不会（除非强制 `git add -f`）：`.gitignore` 已忽略 `workspace/` 数据与 `methods/results/robustness/paper/code/Q*/scratch` 等竞赛产物（占位 `.gitkeep` 仍保留）。若要完全隔离，推荐在独立目录或 `git worktree` 中跑竞赛，赛后只把需要的复盘/记录拷回。
+不会（除非强制 `git add -f`）：`.gitignore` 已忽略 `workspace/` 数据与 `methods/results/robustness/paper/code/Q*/scratch` 及当次赛题规划产物（`planning/parse|classification|manifests` 与 `framing_decisions.jsonl`/`model_contract.json`）等竞赛内容（占位 `.gitkeep` 仍保留）。若要完全隔离，推荐在独立目录或 `git worktree` 中跑竞赛，赛后只把需要的复盘/记录拷回。
 
 **Q：与 XiaoMaColtAI 等上游库是什么关系？**
 本项目合并了 6 个上游项目并锁定 12 项决策（历史见 [references/README.md](references/README.md)）；现行可执行契约以 `AGENTS.md`、`schemas/`、`scripts/` 为准。
