@@ -131,12 +131,12 @@
 ├── scripts/                       # 32 个纯标准库脚本（含 1 个 bash 兼容包装）
 ├── docs/                          # 手册（索引/学习/训练/记录/复盘/DSH/论文/参考）
 ├── docs/diagrams/archify/         # 通用流程图（PNG/SVG/交互 HTML/JSON 源）
-└── tests/                         # 269 个测试用例
+└── tests/                         # 271 个测试用例
 ```
 
 ## 测试覆盖
 
-`python scripts/run_tests.py`（269 个用例，全标准库）覆盖：
+`python scripts/run_tests.py`（271 个用例，全标准库）覆盖：
 
 - 门禁证据推导与单调迁移（含完整 G1→G6 推进链到 `final_assembly`）
 - 人类决策溯源（伪造人类、未注册证据、路径逃逸均被拒绝）

@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "categories": {
     "assets": {
       "entries": [
@@ -7,14 +7,21 @@
       ],
       "docs": [
         "README.md"
-      ]
+      ],
+      "supporting": []
     },
     "figures": {
       "entries": [
+        "example-rank-bar/README.md",
         "example.md"
       ],
       "docs": [
         "README.md"
+      ],
+      "supporting": [
+        "example-rank-bar/code/plot_rank_bar.py",
+        "example-rank-bar/content/rank_bar.png",
+        "example-rank-bar/data/rank_scores.csv"
       ]
     },
     "formulas": {
@@ -23,7 +30,8 @@
       ],
       "docs": [
         "README.md"
-      ]
+      ],
+      "supporting": []
     },
     "ideas": {
       "entries": [
@@ -31,7 +39,8 @@
       ],
       "docs": [
         "README.md"
-      ]
+      ],
+      "supporting": []
     },
     "papers": {
       "entries": [
@@ -39,7 +48,8 @@
       ],
       "docs": [
         "README.md"
-      ]
+      ],
+      "supporting": []
     },
     "tables": {
       "entries": [
@@ -47,7 +57,8 @@
       ],
       "docs": [
         "README.md"
-      ]
+      ],
+      "supporting": []
     }
   }
 }

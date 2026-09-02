@@ -6,6 +6,8 @@
 ## 一、资源库（resource-library/）
 
 - 6 类子目录：`papers/`（优秀论文）、`ideas/`（解题思路卡片）、`figures/`（优秀图）、`formulas/`（公式）、`tables/`（表格）、`assets/`（赛题/其它）。
+- **条目目录**结构：每条目一个 `resource-library/<类>/<entry_id>/{README.md, content/, code/, data/}`（自包含；`README.md` 是入口说明）。`content/`（成品）、`code/`（生成/复现脚本，python/matlab/其它）、`data/`（输入数据）、`figures/`（渲染图）为**支持目录**，由 `resource_index.py` 归入 `supporting`，不作为训练条目。见图示：`figures/example-rank-bar/`。
+- 每条目说明按各类 README 内嵌的**详细模板**填写（公共元数据 + 类别字段 + 6 维素养对照 + 训练对照锚点 + 完整性自检清单）；`example*.md` 为填好值的演示范本。
 - 放入素材的格式与登记规则见 `resource-library/README.md` 与各类 README。
 - 登记：`python scripts/resource_index.py .` 重建 `index.json`；`--check` 校验一致性。
 
