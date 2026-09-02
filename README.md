@@ -33,7 +33,7 @@
 
 这正是各竞赛 AI 使用规则要求的分工：AI 是工具，建模判断与成果负责仍是参赛者本人。
 
-## 快速开始（约 5 分钟）
+## 快速开始
 
 ```bash
 git clone https://github.com/Chickeryxn/chickery-s-math-modeling-skill.git
