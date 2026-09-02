@@ -9,7 +9,7 @@
 | 版本 | [0.9.0](CHANGELOG.md)（插件 manifest 同步） |
 | 组成 | 32 个技能 · 32 个纯标准库脚本 · Python 3.10+（零第三方依赖） |
 | 平台 | Windows / Linux / macOS |
-| CI | [![CI](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml) Ubuntu/Windows × Py 3.10–3.12，247 个用例全绿 |
+| CI | [![CI](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml) Ubuntu/Windows × Py 3.10–3.12，260 个用例全绿 |
 | 许可 | [MIT](LICENSE) |
 
 ## 它解决什么问题
@@ -73,7 +73,7 @@ cd chickery-s-math-modeling-skill
 **几条铁律：**
 
 - **改数必须走流程**：论文里每个数字来自 `results/Qx/reports/frozen_numbers.json`；改数 = 解冻 → 改源头 → 重跑 → 重冻结，并在 `freeze_change_log.md` 记原因，禁止手改。
-- **图分四型**：Type 1 只做内部调试，永不进论文；Type 3/4 才进论文且须通过渲染校验。
+- **图分四型**：Type 1 只做内部调试，永不进论文；Type 2–4 可进论文，凡进论文的图在 `submission` 模式都须通过渲染校验。
 - **G5/G6 只在 `submission` 模式启用**；`lean` 模式下推进到 G4 判定即可。
 
 ## 32 个技能一览

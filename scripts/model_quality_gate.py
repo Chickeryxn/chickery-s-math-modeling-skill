@@ -22,7 +22,18 @@ try:
 except Exception:
     pass
 
-UNCERTAINTY_KEYS = ("uncertainty", "ci", "std", "stddev", "interval", "error")
+# Accepted uncertainty keys, matched on the *whole key name* (or a
+# snake/underscore prefix such as `ci_lower`), never by substring: a plain
+# error metric like `mean_squared_error`/`test_error` is NOT an uncertainty
+# estimate and must not satisfy the uncertainty requirement.
+UNCERTAINTY_KEYS = ("uncertainty", "ci", "std", "stddev", "interval")
+_UNCERTAINTY_KEY_RE = re.compile(
+    r"^(uncertainty|ci|std|stddev|interval)(?:_|$)")
+
+
+def is_uncertainty_key(key: str) -> bool:
+    kl = key.lower()
+    return bool(_UNCERTAINTY_KEY_RE.match(kl))
 
 
 def latest_run_summary(root: Path, qid: str) -> Path | None:
@@ -67,8 +78,7 @@ def flatten_metrics(obj) -> list:
 def has_uncertainty(obj) -> bool:
     if isinstance(obj, dict):
         for k, v in obj.items():
-            kl = k.lower()
-            if any(u in kl for u in UNCERTAINTY_KEYS) and v not in (None, "", []):
+            if is_uncertainty_key(str(k)) and v not in (None, "", []):
                 return True
             if isinstance(v, (dict, list)) and has_uncertainty(v):
                 return True

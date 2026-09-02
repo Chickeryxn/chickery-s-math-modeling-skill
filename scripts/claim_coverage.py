@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
 """Claim coverage check: every subquestion must have a paper section, frozen
-numbers, and abstract coverage.
+numbers, and an abstract that states at least one of its frozen numbers.
 
 Reads:
 - planning/parse/problem_parse.json  -> subquestions[].id (Qx list);
 - paper/sections/*.tex               -> sections (filename `q1.tex` or section
   headings containing 问题一 / Q1 / Q1.);
-- results/*/reports/frozen_numbers.json -> claim_ids (prefix `q1_` maps to Q1);
+- results/*/reports/frozen_numbers.json -> claim values (prefix `q1_` maps to Q1);
 - the abstract (LaTeX abstract env or Markdown Abstract/摘要 heading) for
   per-subquestion number coverage.
+
+The abstract check only reads the abstract region. When no abstract region
+exists, or when the parse file is missing, that is reported explicitly as
+"unverifiable" instead of silently passing on whole-text numbers or a Q1
+fallback.
 
 Pure standard library. Exit: 0 all covered, 1 partial, 2 strict-missing.
 """
@@ -22,13 +27,11 @@ try:
 except Exception:
     pass
 
-import sys as _sys
-from pathlib import Path as _P
-if str(_P(__file__).resolve().parent) not in _sys.path:
-    _sys.path.insert(0, str(_P(__file__).resolve().parent))
-from abstract_checker import extract_abstract
-
 SECTION_RE = re.compile(r"\\section\*?\{([^}]*)\}", flags=re.S)
+LATEX_ABSTRACT_RE = re.compile(r"\\begin\{abstract\}(.*?)\\end\{abstract\}", flags=re.S)
+MD_ABSTRACT_RE = re.compile(
+    r"(?:^|\n)(#{1,3}\s*(?:Abstract|摘要)\s*\n+)(.*?)(?=\n#{1,3}|\Z)", flags=re.S)
+NUMBER_RE = re.compile(r"\d+(?:\.\d+)?")
 
 # Chinese numerals used in section headings such as 问题一 / 问题十二.
 _CN_DIGITS = {"一": 1, "二": 2, "两": 2, "三": 3, "四": 4, "五": 5,
@@ -109,30 +112,92 @@ def frozen_per_qid(root: Path) -> dict[str, list[str]]:
     return out
 
 
+def frozen_values_per_qid(root: Path) -> dict[str, list[float]]:
+    """Map each subquestion to the numeric values of its frozen claims."""
+    out: dict[str, list[float]] = {}
+    for p in sorted((root / "results").glob("*/reports/frozen_numbers.json")):
+        try:
+            data = json.loads(p.read_text(encoding="utf-8-sig"))
+        except Exception:
+            continue
+        claims = data.get("claims") if isinstance(data, dict) else None
+        if not isinstance(claims, list):
+            claims = [v for k, v in data.items()
+                      if isinstance(v, dict) and "claim_id" in v] if isinstance(data, dict) else []
+        for c in claims:
+            if not isinstance(c, dict):
+                continue
+            cid = c.get("claim_id")
+            v = c.get("value")
+            if not cid:
+                continue
+            m = re.match(r"(q\d+|Q\d+)", str(cid))
+            qid = m.group(1).upper() if m else "GLOBAL"
+            if isinstance(v, (int, float)) and not isinstance(v, bool):
+                out.setdefault(qid, []).append(float(v))
+    return out
+
+
+def extract_abstract_region(sections_text: str) -> str | None:
+    """Return the abstract region only, or None when no abstract exists."""
+    m = LATEX_ABSTRACT_RE.search(sections_text)
+    if m:
+        return m.group(1)
+    m = MD_ABSTRACT_RE.search(sections_text)
+    if m:
+        return m.group(2)
+    return None
+
+
+def _abstract_states_frozen_number(abstract: str, values: list[float]) -> bool:
+    """True when a number token in the abstract equals any frozen value."""
+    tokens = [float(t) for t in NUMBER_RE.findall(abstract)]
+    return any(
+        abs(t - v) <= max(1e-9, 1e-6 * abs(v))
+        for v in values for t in tokens)
+
+
 def coverage(root: Path) -> dict:
     qids = load_subquestions(root)
     sections = section_qids(root)
     frozen = frozen_per_qid(root)
-    # abstract numbers
-    abstract_text = ""
-    for p in sorted((root / "paper" / "sections").glob("*.tex")):
-        abstract_text += extract_abstract(p.read_text(encoding="utf-8-sig")) + "\n"
-    abstract_numbers = len(re.findall(r"\d+(?:\.\d+)?", abstract_text))
+    values = frozen_values_per_qid(root)
+    section_files = sorted((root / "paper" / "sections").glob("*.tex"))
+    sections_text = "".join(p.read_text(encoding="utf-8-sig") for p in section_files)
+    abstract = extract_abstract_region(sections_text)
+    abstract_numbers = len(NUMBER_RE.findall(abstract)) if abstract else 0
     matrix = []
     missing = []
-    for qid in qids or ["Q1"]:
+    if abstract is None:
+        missing.append("abstract section not found "
+                       "(per-subquestion number coverage unverifiable)")
+    if not qids:
+        if not (root / "planning" / "parse" / "problem_parse.json").is_file():
+            missing.append("planning/parse/problem_parse.json missing "
+                           "(cannot verify per-subquestion coverage)")
+        else:
+            missing.append("problem_parse.json declares no subquestions "
+                           "(cannot verify per-subquestion coverage)")
+    for qid in qids:
         has_section = any(qid in v for v in sections.values())
+        q_values = values.get(qid, [])
         n_frozen = len(frozen.get(qid, []))
+        stated = (abstract is not None and q_values
+                  and _abstract_states_frozen_number(abstract, q_values))
         row = {"question": qid, "section": "PRESENT" if has_section else "MISSING",
-               "frozen_count": n_frozen, "frozen_ok": n_frozen > 0}
+               "frozen_count": n_frozen, "frozen_ok": n_frozen > 0,
+               "abstract_states_frozen_number": stated}
         matrix.append(row)
         if not has_section:
             missing.append(f"{qid}: no paper section")
         if n_frozen == 0:
             missing.append(f"{qid}: no frozen numbers")
-    if abstract_numbers == 0:
-        missing.append("abstract has no numbers (per-subquestion coverage unverifiable)")
-    return {"subquestions": qids or ["Q1"], "abstract_numbers": abstract_numbers,
+        elif abstract is not None and not stated:
+            sample = ", ".join(str(v) for v in q_values[:3])
+            missing.append(f"{qid}: abstract states none of its frozen numbers ({sample})")
+    if abstract is not None and abstract_numbers == 0:
+        missing.append("abstract has no numbers")
+    return {"subquestions": qids, "abstract_numbers": abstract_numbers,
             "matrix": matrix, "missing": missing,
             "status": "PASS" if not missing else "PARTIAL"}
 

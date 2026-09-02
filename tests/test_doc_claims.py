@@ -99,6 +99,25 @@ class DocClaimTests(unittest.TestCase):
         for tree in (".codex", ".claude", ".agents"):
             self.assertTrue((ROOT / tree / "skills").is_dir(), f"missing {tree}/skills")
 
+    def test_figure_type_rules_agree(self):
+        # Regression: README claimed only Type 3/4 may enter the paper while
+        # AGENTS.md permits Type 2 (comparison figures) as well; cross-doc
+        # figure-type rules must not drift apart again.
+        agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        zh = readme_zh()
+        en = readme_en()
+        self.assertIn("may appear in paper", agents)
+        self.assertIn("Type 2", zh)
+        self.assertIn("Type 2", en)
+        self.assertNotIn("Type 3/4 才进论文", zh)
+        self.assertNotIn("only Type 3/4 may", en)
+
+    def test_dsh_patch_documents_pluginroot(self):
+        # Regression: the DSH hooks patch relied on ${CLAUDE_PLUGIN_ROOT}
+        # substitution but the patch documentation never mentioned pluginRoot;
+        # per CHANGELOG 0.7.0, without it every tool call would be blocked.
+        self.assertIn("pluginRoot", dsh_doc())
+
 
 if __name__ == "__main__":
     unittest.main()

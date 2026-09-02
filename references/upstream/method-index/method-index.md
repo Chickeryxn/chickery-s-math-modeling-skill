@@ -11,7 +11,7 @@
 | 综合评价 | TOPSIS、灰色关联、秩和比、FCE、DEA | 多指标打分/排名 | 方向/权重不当、分数集中 |
 | 排序稳定性 | 扰动分析、top-k 重叠 | 任何排名结果 | 排名脆弱 |
 
-参考：[Lupynow model-selection-matrix](../../lupynow-writing/model-selection-matrix.md)、[nature-figure 图契约](../../nature-figure/figure-contract.md)。
+参考：[Lupynow model-selection-matrix](../lupynow-writing/model-selection-matrix.md)、[nature-figure 图契约](../nature-figure/figure-contract.md)。
 
 ## 预测/估计类（prediction / estimation）
 

@@ -22,7 +22,7 @@ def main():
     ap.add_argument('--only', nargs='+', default=[],
                     help='run only these check groups: skill_trees tests contract '
                          'snapshots lineage independence qa upstream figures frozen '
-                         'decisions manifests artifacts')
+                         'decisions manifests artifacts resources')
     ap.add_argument('--skip-tests', action='store_true',
                     help='skip the unittest suite (useful for quick runs)')
     a = ap.parse_args()
@@ -89,6 +89,10 @@ def main():
         frozen_files = list(r.glob('results/*/reports/frozen_numbers.json'))
         if frozen_files:
             add('frozen', [py, str(r / 'scripts' / 'check_frozen_freshness.py'), str(r)])
+    if want('resources') and (r / 'resource-library').is_dir():
+        # resource-library index must match disk: an out-of-sync committed
+        # index used to be invisible to every CI step and repo check.
+        add('resources', [py, str(r / 'scripts' / 'resource_index.py'), str(r), '--check'])
 
     result = {'status': 'PASS' if not errors else 'FAIL',
               'errors': errors, 'checks': reports}

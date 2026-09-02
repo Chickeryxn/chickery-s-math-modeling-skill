@@ -62,6 +62,10 @@ DSH 0.7.0 默认不挂载任何钩子。本仓库的 `plugins/mathmodeling-skill
 plugins:
   - id: "@deepseek-ai/dsh-hooks-claude-code"
     config:
+      # 关键：必须配置 pluginRoot 为仓库绝对路径。hooks.json 中的
+      # ${CLAUDE_PLUGIN_ROOT} 依赖该变量做替换；缺省时不替换，
+      # 守卫命令会变成无效路径，导致每次工具调用都被阻断（CHANGELOG 0.7.0）。
+      pluginRoot: "<仓库绝对路径>"
       configPath: "<仓库绝对路径>/plugins/mathmodeling-skills/hooks/hooks.json"
 ```
 
@@ -85,7 +89,7 @@ python scripts/validate_repo.py .                 # 仓库级总检（含 4 树�
 python scripts/sync_plugin.py . --check           # 4 树哈希一致性
 python scripts/validate_skill_trees.py .          # 4 树 + manifest 版本 + marketplace
 python scripts/work_record.py check .             # 记录树一致性
-python scripts/run_tests.py                       # 247 用例
+python scripts/run_tests.py                       # 260 用例
 ```
 
 ## 八、边界与保留项

@@ -71,6 +71,10 @@ def sanitize_macro_name(name: str) -> str:
     import hashlib
     clean = re.sub(r"[^A-Za-z0-9]", "", name)
     if clean:
+        if clean[0].isdigit():
+            # LaTeX control words cannot start with a digit (\2000cap is
+            # invalid); prefix so digit-led claim ids still compile.
+            return "fz" + clean
         return clean
     # All-symbol ids would all collapse to the same name; make it unique.
     return "frozenvalue" + hashlib.sha1(name.encode("utf-8")).hexdigest()[:8]
@@ -181,8 +185,11 @@ def macros_for_frozen(frozen: dict) -> tuple[str, list[str]]:
             skipped.append(cid)
             continue
         unit = latex_escape(str(c.get("unit", ""))) if c.get("unit") else ""
-        lines.append(f"\\newcommand{{{mapping[cid]}}}{{{val}}}"
-                     + (f"\\text{{{unit}}}" if unit else ""))
+        # Embed any unit inside the macro body: appending it after the closing
+        # brace would emit stray text at the definition site (e.g. in the
+        # preamble) instead of traveling with the value.
+        body = f"{val}\\,{unit}" if unit else val
+        lines.append(f"\\newcommand{{{mapping[cid]}}}{{{body}}}")
     return "\n".join(lines), skipped
 
 

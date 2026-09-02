@@ -36,7 +36,7 @@ class AiTraceCheckerTests(unittest.TestCase):
         # 2 furthermore + 1 moreover in a short text: each <= 2 but combined > 2
         r = analyze("Furthermore a. Furthermore b. Moreover c.")
         self.assertEqual(r["verdict"], "WARN")
-        self.assertTrue(hit(r, "furthermore")["ok"])          # 2 vs limit 2*words/1000
+        self.assertTrue(hit(r, "furthermore")["ok"])          # 2 vs absolute limit 2
         self.assertTrue(hit(r, "moreover")["ok"])
         self.assertFalse(hit(r, "furthermore+moreover (combined)")["ok"])
 
@@ -66,6 +66,22 @@ class AiTraceCheckerTests(unittest.TestCase):
     def test_count_words_mixed(self):
         self.assertEqual(count_words("abc def"), 2)
         self.assertEqual(count_words("模型A与B"), 3 + 2)  # 3 CJK + 2 latin tokens
+
+    def test_count_words_excludes_cjk_punctuation(self):
+        # Regression: 、。！？etc. (U+3000-303F) were counted as words, inflating
+        # abstract length bounds ("模型。结果、分析！" used to report 8 words).
+        self.assertEqual(count_words("模型。结果、分析！"), 6)
+        self.assertEqual(count_words("模型：结果；分析？"), 6)
+        self.assertEqual(count_words("（模型）—结果"), 4)
+
+    def test_em_dash_run_counts_once(self):
+        # Regression: '---'/'----' matched zero times (only '--' counted).
+        r = analyze("A --- B ---- C")
+        self.assertEqual(hit(r, "em-dash")["count"], 2)
+        self.assertEqual(r["verdict"], "PASS")  # 2 runs == limit 2
+        # a single hyphen is not an em dash
+        r2 = analyze("well-known result state-of-the-art")
+        self.assertEqual(hit(r2, "em-dash")["count"], 0)
 
     def test_config_overrides_limits(self):
         cfg = load_config(Path(__import__("tempfile").mkdtemp()) / "x")

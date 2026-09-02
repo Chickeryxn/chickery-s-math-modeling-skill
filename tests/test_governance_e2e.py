@@ -97,6 +97,27 @@ class SyncDriftTests(unittest.TestCase):
             p = run_script("sync_plugin.py", str(root), "--check")
             self.assertEqual(p.returncode, 2)  # dry-run must not have written
 
+    def test_sync_keeps_target_extras_without_prune(self):
+        # Regression: plain sync used to silently delete target-tree files that
+        # do not exist in the source tree (user-local additions were lost).
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            self.make_trees(root)
+            extra = root / ".claude" / "skills" / "local-skill" / "SKILL.md"
+            extra.parent.mkdir(parents=True)
+            extra.write_text("# local skill\n", encoding="utf-8")
+            p = run_script("sync_plugin.py", str(root))
+            self.assertEqual(p.returncode, 0, p.stderr)
+            self.assertIn("kept_extras", p.stdout)
+            self.assertTrue(extra.is_file(), "extra file was silently deleted")
+            p = run_script("sync_plugin.py", str(root), "--check")
+            self.assertEqual(p.returncode, 2, "check must flag kept extras")
+            p = run_script("sync_plugin.py", str(root), "--prune")
+            self.assertEqual(p.returncode, 0, p.stderr)
+            self.assertFalse(extra.is_file(), "--prune should remove extras")
+            p = run_script("sync_plugin.py", str(root), "--check")
+            self.assertEqual(p.returncode, 0, p.stderr)
+
 
 class ManifestAndSnapshotCliTests(unittest.TestCase):
     def test_validate_manifest_overclaim_rejected(self):

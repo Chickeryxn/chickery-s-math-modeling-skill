@@ -20,19 +20,37 @@ except Exception:
 STATUSES=['MECHANICAL_PASS','SEMANTIC_PASS','CONDITIONAL','HUMAN_JUDGMENT_PENDING','GATE_BLOCKED','NOT_RUN','CURRENT','STALE','MISSING']
 
 def q_artifact_lineages(root,qid,manifest=None):
-    candidates=list((root/'planning').rglob(f'{qid}*.lineage.json'))+list((root/'results'/qid).rglob('*.lineage.json'))+list((root/'methods'/qid).rglob('*.lineage.json'))+list((root/'robustness'/qid).rglob('*.lineage.json'))
-    artifact_refs=[]
+    root=root.resolve()
+    # Lineage files follow validate_artifacts' convention: sibling of the
+    # artifact (artifact path + '.lineage.json'), derived exactly from the
+    # manifest's declared artifact refs. The previous `{qid}*.lineage.json`
+    # prefix glob never matched lowercase `q1_*` lineages and false-matched
+    # Q10_* when scanning Q1.
+    required=[]
     if isinstance(manifest,dict):
-        artifact_refs=[v for v in (manifest.get('artifacts') or {}).values() if isinstance(v,str) and (root/v).is_file()]
-    if not candidates and not artifact_refs:return {'status':'NOT_RUN','errors':[],'checked':0}
-    errors=[];statuses=[];lineage_names={p.name for p in candidates}
-    for ref in artifact_refs:
-        name=Path(ref).name
-        # lineage files follow the `<artifact>.lineage.json` convention; the
-        # old second disjunct (p.stem == name) could never be true for such
-        # files and has been removed.
-        if f'{name}.lineage.json' not in lineage_names:
-            errors.append({'path':ref,'reason':'LINEAGE_MISSING'});statuses.append('MISSING')
+        for ref in (manifest.get('artifacts') or {}).values():
+            if isinstance(ref,str) and ref.strip() and (root/ref).is_file():
+                p=(root/ref).resolve()
+                try:p.relative_to(root)
+                except ValueError:continue
+                lp=Path(str(p)+'.lineage.json')
+                if lp.is_file():
+                    required.append(str(lp.relative_to(root).as_posix()))
+                else:
+                    return {'status':'MISSING','errors':[{'path':ref,'reason':'LINEAGE_MISSING'}],'checked':0}
+    search_dirs=[]
+    for d in (root/'planning'/'manifests', root/'results'/qid,
+              root/'methods'/qid, root/'robustness'/qid):
+        if d.is_dir():search_dirs.append(d)
+    candidates=[]
+    for d in search_dirs:
+        candidates += [p for p in d.rglob('*.lineage.json') if p.is_file()]
+    if not required and not candidates:return {'status':'NOT_RUN','errors':[],'checked':0}
+    errors=[];statuses=[]
+    cand_rel={p.relative_to(root).as_posix() for p in candidates}
+    for rp in required:
+        if rp not in cand_rel:
+            errors.append({'path':rp,'reason':'LINEAGE_MISSING'});statuses.append('MISSING')
     for p in candidates:
         try:d=assess_lineage(root,p);statuses.append(d.get('status'));errors.extend(d.get('stale_reasons',[]))
         except Exception as exc:errors.append({'path':str(p),'reason':str(exc)});statuses.append('STALE')

@@ -87,3 +87,11 @@ class SectionStructureTests(unittest.TestCase):
         self.assertEqual(slot_of("摘要"), "abstract")
         self.assertEqual(slot_of("模型构建"), "model")
         self.assertIsNone(slot_of("任意其他"))
+        # English titles whose words merely contain ASCII substrings of a slot
+        # keyword must not be swallowed by that slot (e.g. "ai" inside
+        # "main analysis"); only genuine keyword hits classify.
+        self.assertIsNone(slot_of("Main analysis"))
+        self.assertIsNone(slot_of("Data details"))
+        self.assertIsNone(slot_of("Certain aspects"))
+        self.assertEqual(slot_of("Model Construction"), "model")
+        self.assertEqual(slot_of("Robustness analysis"), "robustness")

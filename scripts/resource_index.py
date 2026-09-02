@@ -28,7 +28,7 @@ def _utf8_streams() -> None:
         pass
 
 DOC_FILES = {"README.md", "index.json"}
-SKIP_NAMES = {".gitkeep", ".DS_Store"}
+SKIP_NAMES = {".gitkeep", ".DS_Store", "Thumbs.db"}
 
 
 def scan(root: Path) -> dict:

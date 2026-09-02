@@ -96,6 +96,47 @@ class FigureRenderAuditTests(unittest.TestCase):
                                 str(root)], capture_output=True, text=True, encoding='utf-8')
             self.assertEqual(p.returncode, 0, p.stderr)
 
+    def test_parent_traversal_reference_rejected(self):
+        # Regression: lstrip('./') used to fold '../outside.png' into
+        # 'outside.png', so an escaping reference matched a same-named figure.
+        root = self.make_workspace()
+        write(root / 'paper/sections/q1.tex',
+              r'\includegraphics{../outside.png}' + '\n'
+              r'\includegraphics{figures/q1_main.png}')
+        write(root / 'paper/figures/q1_main.png', 'png')
+        render_evidence(root / 'paper/figures/q1_main.png')
+        write(root / 'outside.png', 'png')  # outside paper/figures, must not satisfy
+        out = audit(root)
+        self.assertIn('FAIL', out['status'])
+        self.assertTrue(any('escaping figure reference' in e['reason'] for e in out['errors']),
+                        out['errors'])
+
+    def test_absolute_reference_rejected(self):
+        root = self.make_workspace()
+        write(root / 'paper/sections/q1.tex', r'\includegraphics{/etc/passwd.png}')
+        out = audit(root)
+        self.assertTrue(any('absolute figure reference' in e['reason'] for e in out['errors']))
+
+    def test_extensionless_reference_resolved(self):
+        # LaTeX often omits the extension; a unique match must resolve.
+        root = self.make_workspace()
+        write(root / 'paper/sections/q1.tex', r'\includegraphics{q1_main}')
+        write(root / 'paper/figures/q1_main.png', 'png')
+        render_evidence(root / 'paper/figures/q1_main.png')
+        out = audit(root)
+        self.assertEqual(out['status'], 'PASS', out['errors'])
+
+    def test_duplicate_basename_is_ambiguous(self):
+        root = self.make_workspace()
+        write(root / 'paper/sections/q1.tex', r'\includegraphics{figures/plot.png}')
+        write(root / 'paper/figures/a/plot.png', 'png')
+        write(root / 'paper/figures/b/plot.png', 'png')
+        render_evidence(root / 'paper/figures/a/plot.png')
+        render_evidence(root / 'paper/figures/b/plot.png')
+        out = audit(root)
+        self.assertEqual(out['status'], 'FAIL')
+        self.assertTrue(any('ambiguous' in e['reason'] for e in out['errors']), out['errors'])
+
 
 if __name__ == '__main__':
     unittest.main()

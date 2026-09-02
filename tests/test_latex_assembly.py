@@ -58,7 +58,7 @@ class LatexAssemblyTests(unittest.TestCase):
         out = render_main(root / "templates" / "paper" / "main.tex", root,
                           ["paper/sections/q1.tex"], frozen, ["\\section*{AI 工具使用声明}\nx"])
         self.assertIn("\\input{paper/sections/q1.tex}", out)
-        self.assertIn("\\newcommand{\\q1mainrmse}{2.4}", out)
+        self.assertIn("\\newcommand{\\q1mainrmse}{2.4\\,m}", out)
         self.assertIn("AI 工具使用声明", out)
         self.assertNotIn("__INPUTS__", out)
         td.cleanup()
@@ -67,6 +67,9 @@ class LatexAssemblyTests(unittest.TestCase):
         self.assertEqual(sanitize_macro_name("q1_main_rmse"), "q1mainrmse")
         self.assertTrue(sanitize_macro_name("!!!").startswith("frozenvalue"))
         self.assertNotEqual(sanitize_macro_name("!!!"), sanitize_macro_name("???"))
+        # LaTeX control words cannot start with a digit; a letter prefix is added.
+        self.assertTrue(sanitize_macro_name("2000_cap").startswith("fz"))
+        self.assertEqual(sanitize_macro_name("2000_cap"), "fz2000cap")
 
     def test_build_report_counts(self):
         td, root = make_workspace()
@@ -94,7 +97,9 @@ class LatexAssemblyTests(unittest.TestCase):
                   "txt": {"value": "a%b", "unit": ""}}
         macros, skipped = macros_for_frozen(frozen)
         self.assertEqual(skipped, ["bad"])
-        self.assertIn("\\newcommand{\\ok}{1.5}\\text{m}", macros)
+        # The unit travels inside the macro body; stray \text at the definition
+        # site would land in the preamble/flow instead of with the value.
+        self.assertIn("\\newcommand{\\ok}{1.5\\,m}", macros)
         self.assertIn("\\newcommand{\\txt}{a\\%b}", macros)
         self.assertNotIn("bad", macros)
 

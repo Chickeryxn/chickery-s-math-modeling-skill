@@ -9,7 +9,7 @@
 | Version | [0.9.0](CHANGELOG.md) (plugin manifests in sync) |
 | Contents | 32 skills · 32 standard-library-only scripts · Python 3.10+ (zero third-party deps) |
 | Platforms | Windows / Linux / macOS |
-| CI | [![CI](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml) Ubuntu/Windows × Py 3.10–3.12, 247 test cases all green |
+| CI | [![CI](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml) Ubuntu/Windows × Py 3.10–3.12, 260 test cases all green |
 | License | [MIT](LICENSE) |
 
 ## What problem it solves
@@ -73,7 +73,7 @@ Each subquestion (Q1, Q2, …) advances independently through the same gates. "W
 **Hard rules:**
 
 - **Changing a number requires a process**: every number in the paper comes from `results/Qx/reports/frozen_numbers.json`; to change one: thaw → edit the canonical source → rerun → refreeze, and record the reason in `freeze_change_log.md`; never hand-edit.
-- **Figures are typed**: Type 1 is internal debugging only and never enters the paper; only Type 3/4 may, after passing render verification.
+- **Figures are typed**: Type 1 is internal debugging only and never enters the paper; Type 2–4 may enter the paper, and any figure that does must pass render verification in `submission` mode.
 - **G5/G6 run only in `submission` mode**; in `lean` mode the workflow stops at the G4 judgment.
 
 ## The 32 skills at a glance

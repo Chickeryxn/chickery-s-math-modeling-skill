@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python: ["3.10", "3.11", "3.12"]
+        python: ["3.10", "3.11", "3.12", "3.13"]
     env:
       # Windows runners default to cp1252 pipes; the repo emits UTF-8 (and CJK)
       # test messages, so force UTF-8 stdio everywhere.
@@ -45,7 +45,9 @@ jobs:
 
       - name: Repository validation
         shell: bash
-        run: python scripts/validate_repo.py .
+        # --skip-tests: the "Unit tests" step already ran the suite, so
+        # validate_repo must not execute it a second time per job.
+        run: python scripts/validate_repo.py . --skip-tests
 
       - name: Skill-tree consistency
         shell: bash

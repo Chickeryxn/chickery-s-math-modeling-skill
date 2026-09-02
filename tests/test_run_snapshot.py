@@ -24,4 +24,23 @@ class RunSnapshotTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             root=Path(td);(root/'config.json').write_text('{}');(root/'input.txt').write_text('i');(root/'code.py').write_text('c');(root/'result.json').write_text('r');(root/'validation.json').write_text('v');run=root/'runs/r1';d=begin(root,run,self.make_args(root))
             with self.assertRaises(RuntimeError):finish(root,run,'SUCCESS','result.json','validation.json',0,False)
+
+    def test_interrupted_run_finalizes_as_interrupted(self):
+        # Regression: a KeyboardInterrupt inside the unified runner used to
+        # leave run_metadata.json RUNNING forever (unfinalizable snapshot).
+        import unittest.mock as mock, create_run_snapshot as crs
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);(root/'input.txt').write_text('i');(root/'code.py').write_text('c');(root/'config.json').write_text('{}')
+            args=self.make_args(root);args.result_ref='result.json';args.validation_ref='validation.json';run_dir=root/'runs/r1'
+            orig = crs.subprocess.run
+            def boom(*a, **k): raise KeyboardInterrupt()
+            crs.subprocess.run = boom
+            try:
+                with self.assertRaises(KeyboardInterrupt):
+                    run(root, run_dir, args)
+            finally:
+                crs.subprocess.run = orig
+            md=json.loads((run_dir/'run_metadata.json').read_text(encoding='utf-8-sig'))
+            self.assertEqual(md['status'],'INTERRUPTED')
+            self.assertEqual(validate(root,run_dir)['status'],'PASS')
 if __name__=='__main__':unittest.main()

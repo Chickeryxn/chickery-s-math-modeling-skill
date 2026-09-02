@@ -11,7 +11,7 @@ Rules (self-authored subset, aligned with the upstream caps):
   - `significantly` / 显著地 / 关键的 : <= 1 total
   - zero-tolerance phrases: `delve`, `it is worth noting`, `it should be noted`,
     `in conclusion`, `综上所述`, `深入探讨`, `重要的是`, `不可忽视的`, `高度复杂的`
-  - em dash `--`/`—` : <= 2 total
+  - em dash `--`/`—` (2+ consecutive hyphens count as one): <= 2 total
 
 Usage:
   python scripts/ai_trace_checker.py path/to/section.md [--strict] [--json]
@@ -41,11 +41,13 @@ LIMITS = {
 GROUPS = [
     (["furthermore", "moreover"], 2),   # upstream de-ai-writing: moreover+furthermore <= 2 total
 ]
-EM_DASH_RE = re.compile(r"[—–]|(?<!-)--(?!-)")
+EM_DASH_RE = re.compile(r"[—–]|(?<!-)-{2,}(?!-)")
 
 def count_words(text: str) -> int:
-    # CJK chars count as words; latin runs count as one word each
-    cjk = len(re.findall(r"[\u4e00-\u9fff\u3000-\u303f]", text))
+    # CJK ideographs count as words; latin runs count as one word each.
+    # CJK punctuation (、。！？；：""'' …—) is NOT a word and must not inflate
+    # word counts used for abstract length bounds.
+    cjk = len(re.findall(r"[\u4e00-\u9fff]", text))
     latin = len(re.findall(r"[A-Za-z0-9]+(?:['’-][A-Za-z0-9]+)*", text))
     return cjk + latin
 

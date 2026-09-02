@@ -2,7 +2,9 @@
   "schema_version": 1,
   "categories": {
     "assets": {
-      "entries": [],
+      "entries": [
+        "problems/README.md"
+      ],
       "docs": [
         "README.md"
       ]

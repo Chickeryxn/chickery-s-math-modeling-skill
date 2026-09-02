@@ -9,7 +9,8 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from claim_coverage import load_subquestions, section_qids, frozen_per_qid, coverage, cn_num_to_arabic
 
 
-def make_workspace(with_sections=True, with_frozen=True):
+def make_workspace(with_sections=True, with_frozen=True, with_abstract=True,
+                   abstract_numbers="2.4 与 0.88"):
     td = tempfile.TemporaryDirectory()
     root = Path(td.name)
     (root / "planning" / "parse").mkdir(parents=True)
@@ -19,8 +20,10 @@ def make_workspace(with_sections=True, with_frozen=True):
     (root / "planning" / "parse" / "problem_parse.json").write_text(
         json.dumps({"subquestions": [{"id": "Q1"}, {"id": "Q2"}]}), encoding="utf-8")
     if with_sections:
+        abstract = ("\\begin{abstract}本模型的主要结果为 %s。\\end{abstract}\n"
+                    % abstract_numbers) if with_abstract else ""
         (root / "paper" / "sections" / "q1.tex").write_text(
-            "\\section{问题一：建模}\n结果 2.4。\n", encoding="utf-8")
+            "\\section{问题一：建模}\n结果 2.4。\n" + abstract, encoding="utf-8")
         (root / "paper" / "sections" / "q2.tex").write_text(
             "\\section{问题二：验证}\n结果 0.88。\n", encoding="utf-8")
     if with_frozen:
@@ -93,6 +96,33 @@ class ClaimCoverageTests(unittest.TestCase):
         c = coverage(root)
         self.assertEqual(c["status"], "PARTIAL")
         self.assertTrue(any("no frozen numbers" in m for m in c["missing"]))
+        td.cleanup()
+
+    def test_abstract_with_wrong_numbers_fails(self):
+        # Regression: an abstract that contains *some* number but none of the
+        # frozen values must not pass ("any digit anywhere" used to pass).
+        td, root = make_workspace(abstract_numbers="9.99")
+        c = coverage(root)
+        self.assertEqual(c["status"], "PARTIAL")
+        self.assertTrue(any("abstract states none of its frozen numbers" in m
+                            for m in c["missing"]))
+        td.cleanup()
+
+    def test_no_abstract_reported_as_unverifiable(self):
+        # Regression: extract_abstract used to fall back to the whole section
+        # text, so a missing abstract silently passed on body-text numbers.
+        td, root = make_workspace(with_abstract=False)
+        c = coverage(root)
+        self.assertEqual(c["status"], "PARTIAL")
+        self.assertTrue(any("abstract section not found" in m for m in c["missing"]))
+        td.cleanup()
+
+    def test_missing_parse_reported(self):
+        td, root = make_workspace()
+        (root / "planning" / "parse" / "problem_parse.json").unlink()
+        c = coverage(root)
+        self.assertEqual(c["status"], "PARTIAL")
+        self.assertTrue(any("problem_parse.json missing" in m for m in c["missing"]))
         td.cleanup()
 
 
