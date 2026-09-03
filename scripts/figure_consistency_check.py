@@ -77,8 +77,18 @@ def scan(root: Path, manifest: Path | None) -> dict:
     for group, items in png_groups.items():
         widths = {s[0] for _, s in items}
         if len(widths) > 1:
-            sizes = ", ".join(f"{n}={s[0]}x{s[1]}" for n, s in items)
-            findings.append(f"group '{group}' has inconsistent PNG widths: {sizes}")
+            # Same width is always consistent. Different widths are acceptable
+            # when every image in the group shares one aspect-ratio family (a
+            # full-width and a half-width rendering of the same figure keep the
+            # same w/h), per the documented "same width or same aspect family"
+            # rule. Only a mix of genuinely different shapes is flagged.
+            aspect = [s[0] / float(s[1]) for _, s in items]
+            spread = (max(aspect) - min(aspect)) / max(min(aspect), 1e-9)
+            if spread > 0.02:
+                sizes = ", ".join(f"{n}={s[0]}x{s[1]}" for n, s in items)
+                findings.append(
+                    f"group '{group}' has inconsistent PNG sizes "
+                    f"(widths differ and aspect ratios are not in one family): {sizes}")
     return {"figures": [p.name for p in files], "png_groups": {k: len(v) for k, v in png_groups.items()},
             "findings": findings, "status": "PASS" if not findings else "FAIL"}
 

@@ -10,15 +10,17 @@ Freshness semantics (mtime based):
   `frozen_at` (ISO-8601). A git checkout, unpack, or copy that resets mtimes
   can produce false STALE verdicts; re-freeze after such operations or treat
   a STALE result as "verify and re-freeze", not as proof of tampering.
-- `frozen_at` should carry an explicit timezone. Naive timestamps are
-  interpreted as UTC and produce an advisory warning; if the freezing tool
-  wrote local time, use an explicit offset to avoid misjudged verdicts.
+- `frozen_at` must carry an explicit timezone. A naive timestamp (no offset or
+  Z) cannot be compared with source mtimes in UTC: interpreting a local-time
+  value as UTC could hide a genuinely stale claim (false FRESH), so the check
+  fails closed and marks the claim STALE until it is re-frozen with an explicit
+  offset.
 - `source_file` must be a project-relative path that resolves inside the
   workspace root; absolute paths and escaping `..` references are rejected.
 
 Exit codes: 0 = all frozen claims current; 2 = at least one claim STALE
-(missing source, escaping source, source newer than frozen_at, or
-unparsable frozen_at).
+(missing source, escaping source, naive (timezone-less) frozen_at, source
+newer than frozen_at, or unparsable frozen_at).
 """
 from __future__ import annotations
 import argparse, json, re, sys
@@ -130,10 +132,13 @@ def audit(root: Path) -> dict:
                               "reason": f"invalid or missing frozen_at: {frozen_at!r}"})
                 continue
             if naive:
-                warnings.append({"claim_id": claim_id, "file": rel,
-                                 "reason": "frozen_at has no timezone; interpreted as UTC — "
-                                           "if the freezing tool wrote local time, this claim "
-                                           "may be misjudged stale/fresh (use an explicit offset)"})
+                # Fail closed: a local-time value read as UTC can compare newer
+                # than a source that was actually modified after freezing.
+                stale.append({"claim_id": claim_id, "file": rel,
+                              "reason": "frozen_at has no explicit timezone (no Z or ±hh:mm offset); "
+                                        "a naive local timestamp cannot be verified against source "
+                                        "mtimes in UTC — re-freeze with an explicit offset"})
+                continue
             mtime = _mtime_utc(src)
             if mtime > parsed:
                 stale.append({"claim_id": claim_id, "file": rel,

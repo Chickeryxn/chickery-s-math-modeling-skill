@@ -11,7 +11,8 @@ Rules (self-authored subset, aligned with the upstream caps):
   - `significantly` / 显著地 / 关键的 : <= 1 total
   - zero-tolerance phrases: `delve`, `it is worth noting`, `it should be noted`,
     `in conclusion`, `综上所述`, `深入探讨`, `重要的是`, `不可忽视的`, `高度复杂的`
-  - em dash `--`/`—` (2+ consecutive hyphens count as one): <= 2 total
+  - em dash (2+ consecutive hyphens count as one usage; a CJK `——`/`――`
+    double-dash — one typographic unit — also counts once): <= 2 total
 
 Usage:
   python scripts/ai_trace_checker.py path/to/section.md [--strict] [--json]
@@ -41,7 +42,10 @@ LIMITS = {
 GROUPS = [
     (["furthermore", "moreover"], 2),   # upstream de-ai-writing: moreover+furthermore <= 2 total
 ]
-EM_DASH_RE = re.compile(r"[—–]|(?<!-)-{2,}(?!-)")
+# Runs of CJK dashes (——, ――) or ASCII hyphens (--, ---) each count as ONE
+# em-dash usage: a CJK double-dash is a single typographic unit, and upstream
+# caps are per usage, not per character. Single —/– still count individually.
+EM_DASH_RE = re.compile(r"[—–]{2,}|[—–]|(?<!-)-{2,}(?!-)")
 
 def count_words(text: str) -> int:
     # CJK ideographs count as words; latin runs count as one word each.

@@ -40,6 +40,29 @@ class FigureConsistencyTests(unittest.TestCase):
         self.assertTrue(any("inconsistent" in f for f in r["findings"]))
         td.cleanup()
 
+    def test_same_aspect_family_different_widths_passes(self):
+        # Regression: only pixel widths were compared although the docstring
+        # promises "same width or same aspect family". A full-width and a
+        # half-width rendering of the same figure keep the same aspect ratio
+        # and are consistent.
+        td = tempfile.TemporaryDirectory()
+        d = Path(td.name)
+        make_png(d / "q1_a.png", 800, 600)
+        make_png(d / "q1_b.png", 400, 300)
+        r = fscan(d, None)
+        self.assertEqual(r["status"], "PASS", r["findings"])
+        td.cleanup()
+
+    def test_different_aspect_families_still_fail(self):
+        td = tempfile.TemporaryDirectory()
+        d = Path(td.name)
+        make_png(d / "q1_a.png", 800, 600)
+        make_png(d / "q1_b.png", 600, 800)
+        r = fscan(d, None)
+        self.assertEqual(r["status"], "FAIL")
+        self.assertTrue(any("inconsistent" in f for f in r["findings"]))
+        td.cleanup()
+
     def test_manifest_missing_fails(self):
         td = tempfile.TemporaryDirectory()
         d = Path(td.name)

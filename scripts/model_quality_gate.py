@@ -75,16 +75,70 @@ def flatten_metrics(obj) -> list:
     return out
 
 
+_DECLARATION_KEY_SUFFIXES = ("_note", "_reason", "_na_reason")
+
+
+def _is_evidence_slot(key: str) -> bool:
+    """An uncertainty-shaped key that is a slot for an estimate (not a
+    `*_note`/`*_reason` declaration field holding prose)."""
+    return is_uncertainty_key(key) and not key.lower().endswith(_DECLARATION_KEY_SUFFIXES)
+
+
+def _value_is_real_uncertainty(v) -> bool:
+    """Whether a value under an uncertainty-shaped key is real evidence.
+
+    Numbers (and numeric lists/dicts) count. Strings count only when they
+    carry a numeric token or ±/~ (e.g. '±0.02', '95% CI 1.2–2.4'); bare
+    placeholder text ('n/a', 'none', 'tbd', '待定', '-') does NOT satisfy the
+    uncertainty requirement — the explicit `uncertainty: null` + note path is
+    the only sanctioned "not applicable" declaration.
+    """
+    if v is None or isinstance(v, bool):
+        return False
+    if isinstance(v, (int, float)):
+        return True
+    if isinstance(v, (dict, list)):
+        items = v.values() if isinstance(v, dict) else v
+        return any(_value_is_real_uncertainty(x) for x in items)
+    if isinstance(v, str):
+        s = v.strip()
+        if not s:
+            return False
+        return (any(ch.isdigit() for ch in s) or "±" in s or "~" in s)
+    return False
+
+
 def has_uncertainty(obj) -> bool:
     if isinstance(obj, dict):
         for k, v in obj.items():
-            if is_uncertainty_key(str(k)) and v not in (None, "", []):
+            if _is_evidence_slot(str(k)) and _value_is_real_uncertainty(v):
                 return True
             if isinstance(v, (dict, list)) and has_uncertainty(v):
                 return True
     elif isinstance(obj, list):
         return any(has_uncertainty(x) for x in obj)
     return False
+
+
+def placeholder_uncertainty_values(obj, prefix: str = "") -> list[str]:
+    """Collect uncertainty-shaped evidence slots whose value is placeholder
+    text (reported explicitly instead of silently passing or silently failing).
+    `*_note`/`*_reason` declaration prose is not scanned as a slot."""
+    out = []
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            key = f"{prefix}{k}"
+            if _is_evidence_slot(str(k)):
+                if isinstance(v, str) and not _value_is_real_uncertainty(v) and v.strip():
+                    out.append(f"{key}: {v!r}")
+                if isinstance(v, dict):
+                    out.extend(placeholder_uncertainty_values(v, key + "."))
+            elif isinstance(v, (dict, list)):
+                out.extend(placeholder_uncertainty_values(v, prefix))
+    elif isinstance(obj, list):
+        for x in obj:
+            out.extend(placeholder_uncertainty_values(x, prefix))
+    return out
 
 
 def gate(root: Path, qid: str) -> dict:
@@ -120,17 +174,27 @@ def gate(root: Path, qid: str) -> dict:
     if not baseline_metrics_ok:
         findings.append("usable_baseline has no numeric metrics_summary (baseline not comparable)")
     if not has_uncertainty(data):
-        # Per the docstring contract, an explicit `uncertainty: null` with a
-        # human-written note is an acceptable "not applicable" declaration.
-        top_unc = data.get("uncertainty")
-        declared_na = top_unc is None and bool(
-            data.get("uncertainty_note") or data.get("uncertainty_na_reason")
-            or (isinstance(data, dict) and any(
-                isinstance(v, str) and ("n/a" in v.lower() or "不适用" in v or "not applicable" in v.lower())
-                for k, v in data.items() if "uncertain" in k.lower())))
-        if not declared_na:
-            findings.append("no uncertainty/CI/std recorded anywhere in run_summary "
-                            "(add uncertainty or declare uncertainty: null with a note)")
+        # A placeholder string under an uncertainty key must be reported as the
+        # specific problem instead of passing silently (it is not evidence).
+        junk = placeholder_uncertainty_values(data)
+        if junk:
+            findings.append(
+                "uncertainty key(s) hold placeholder text, not a real estimate: "
+                + ", ".join(junk)
+                + " (record a numeric CI/std/interval, or declare "
+                  "'uncertainty': null with an explicit note)")
+        else:
+            # Per the docstring contract, an explicit `uncertainty: null` with
+            # a human-written note is an acceptable "not applicable" declaration.
+            top_unc = data.get("uncertainty")
+            declared_na = top_unc is None and bool(
+                data.get("uncertainty_note") or data.get("uncertainty_na_reason")
+                or (isinstance(data, dict) and any(
+                    isinstance(v, str) and ("n/a" in v.lower() or "不适用" in v or "not applicable" in v.lower())
+                    for k, v in data.items() if "uncertain" in k.lower())))
+            if not declared_na:
+                findings.append("no uncertainty/CI/std recorded anywhere in run_summary "
+                                "(add uncertainty or declare uncertainty: null with a note)")
     contract = load_contract(root)
     out_contract = ((contract.get("objective") or {}).get("output_contract")) if contract else None
     if not out_contract:

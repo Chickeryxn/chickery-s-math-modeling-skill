@@ -32,6 +32,8 @@ LATEX_ABSTRACT_RE = re.compile(r"\\begin\{abstract\}(.*?)\\end\{abstract\}", fla
 MD_ABSTRACT_RE = re.compile(
     r"(?:^|\n)(#{1,3}\s*(?:Abstract|摘要)\s*\n+)(.*?)(?=\n#{1,3}|\Z)", flags=re.S)
 NUMBER_RE = re.compile(r"\d+(?:\.\d+)?")
+# A number immediately followed by % / ％ denotes a percentage in the text.
+PERCENT_RE = re.compile(r"(\d+(?:\.\d+)?)\s*[%％]")
 
 # Chinese numerals used in section headings such as 问题一 / 问题十二.
 _CN_DIGITS = {"一": 1, "二": 2, "两": 2, "三": 3, "四": 4, "五": 5,
@@ -149,12 +151,31 @@ def extract_abstract_region(sections_text: str) -> str | None:
     return None
 
 
+def _round_candidates(v: float) -> list[float]:
+    """Values a paper may legitimately write for frozen value v by rounding it
+    to 0..6 decimal places (0.1234 -> 0.123, 2.4 -> 2.4)."""
+    return [round(v, d) for d in range(7)]
+
+
 def _abstract_states_frozen_number(abstract: str, values: list[float]) -> bool:
-    """True when a number token in the abstract equals any frozen value."""
-    tokens = [float(t) for t in NUMBER_RE.findall(abstract)]
-    return any(
-        abs(t - v) <= max(1e-9, 1e-6 * abs(v))
-        for v in values for t in tokens)
+    """True when the abstract restates at least one frozen value.
+
+    Accepts exact matches, values rounded to a plausible number of decimals
+    (abstracts routinely write 0.123 for a frozen 0.1234), and percentage
+    restatements (a frozen proportion 0.05 written as "低于5%"). A plain
+    *different* number (9.99 for 2.4) still fails.
+    """
+    plain = [float(t) for t in NUMBER_RE.findall(abstract)]
+    percent = [float(t) / 100.0 for t in PERCENT_RE.findall(abstract)]
+    for v in values:
+        if any(abs(t - v) <= max(1e-9, 1e-6 * abs(v)) for t in plain):
+            return True
+        candidates = _round_candidates(v)
+        if any(abs(t - c) <= 1e-9 for c in candidates for t in plain):
+            return True
+        if any(abs(t - v) <= max(1e-9, 1e-6 * abs(v)) for t in percent):
+            return True
+    return False
 
 
 def coverage(root: Path) -> dict:

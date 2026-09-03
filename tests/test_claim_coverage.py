@@ -6,7 +6,7 @@ from pathlib import Path
 import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-from claim_coverage import load_subquestions, section_qids, frozen_per_qid, coverage, cn_num_to_arabic
+from claim_coverage import load_subquestions, section_qids, frozen_per_qid, coverage, cn_num_to_arabic, _abstract_states_frozen_number
 
 
 def make_workspace(with_sections=True, with_frozen=True, with_abstract=True,
@@ -124,6 +124,16 @@ class ClaimCoverageTests(unittest.TestCase):
         self.assertEqual(c["status"], "PARTIAL")
         self.assertTrue(any("problem_parse.json missing" in m for m in c["missing"]))
         td.cleanup()
+
+    def test_abstract_rounded_and_percent_restatements_match(self):
+        # Regression: abstracts legitimately restate frozen values rounded
+        # (0.1234 -> 约0.123) or as percentages (0.05 -> 低于5%); the exact
+        # decimal matcher reported these as "states none of its frozen numbers".
+        self.assertTrue(_abstract_states_frozen_number("误差约为 0.123。", [0.1234]))
+        self.assertTrue(_abstract_states_frozen_number("失败率低于 5%。", [0.05]))
+        self.assertTrue(_abstract_states_frozen_number("识别准确率达 88%。", [0.88]))
+        # a genuinely different number still fails
+        self.assertFalse(_abstract_states_frozen_number("结果是 0.9。", [0.1234]))
 
 
 if __name__ == "__main__":

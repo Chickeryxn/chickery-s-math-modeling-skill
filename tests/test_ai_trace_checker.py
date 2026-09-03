@@ -83,6 +83,17 @@ class AiTraceCheckerTests(unittest.TestCase):
         r2 = analyze("well-known result state-of-the-art")
         self.assertEqual(hit(r2, "em-dash")["count"], 0)
 
+    def test_cjk_double_dash_counts_once(self):
+        # Regression: each — of a CJK —— double dash was counted separately,
+        # so two normal —— pairs already broke the limit of 2. One typographic
+        # —— is a single em-dash usage.
+        r = analyze("结果显著——误差很小——结论一致。")
+        self.assertEqual(hit(r, "em-dash")["count"], 2)
+        self.assertEqual(r["verdict"], "PASS")  # 2 usages == limit 2
+        r2 = analyze("第一——第二——第三——第四。")
+        self.assertEqual(hit(r2, "em-dash")["count"], 3)
+        self.assertEqual(r2["verdict"], "WARN")
+
     def test_config_overrides_limits(self):
         cfg = load_config(Path(__import__("tempfile").mkdtemp()) / "x")
         self.assertEqual(cfg, {})

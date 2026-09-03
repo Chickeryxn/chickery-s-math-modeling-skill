@@ -52,6 +52,28 @@ class LatexAssemblyTests(unittest.TestCase):
         self.assertEqual(sources, ["methods/Q1/q1_decisions.jsonl"])
         td.cleanup()
 
+    def test_missing_ai_declaration_is_reported_and_blocks_strict(self):
+        # Regression: with neither a submission_authorization record nor
+        # paper/ai_use_disclosure.md the AI-use declaration used to vanish
+        # silently from the assembled paper. It is now reported and, under
+        # --check-only --strict (preflight), a missing declaration fails.
+        import subprocess, sys as _sys
+        td, root = make_workspace()
+        (root / "methods" / "Q1" / "q1_decisions.jsonl").unlink()
+        py = _sys.executable
+        p = subprocess.run([py, str(ROOT / "scripts" / "latex_assembly.py"), str(root),
+                            "--check-only", "--strict"], capture_output=True,
+                           text=True, encoding="utf-8")
+        self.assertEqual(p.returncode, 2, p.stderr)
+        self.assertIn("ai_declaration_missing", p.stdout)
+        # without --strict the check still reports but does not fail
+        p2 = subprocess.run([py, str(ROOT / "scripts" / "latex_assembly.py"), str(root),
+                             "--check-only"], capture_output=True,
+                            text=True, encoding="utf-8")
+        self.assertEqual(p2.returncode, 0, p2.stderr)
+        self.assertIn('no AI-use declaration will be emitted', p2.stderr)
+        td.cleanup()
+
     def test_render_main_substitutes_placeholders(self):
         td, root = make_workspace()
         frozen = load_frozen_numbers(root)

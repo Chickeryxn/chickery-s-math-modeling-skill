@@ -85,6 +85,27 @@ class ModelQualityGateTests(unittest.TestCase):
         self.assertTrue(has_uncertainty({"metrics": {"a": {"ci": [1, 2]}}}))
         self.assertFalse(has_uncertainty({"metrics": {"a": 1}}))
 
+    def test_placeholder_uncertainty_strings_are_not_evidence(self):
+        # Regression: any non-empty string under an uncertainty-shaped key
+        # ('ci': 'n/a') satisfied the uncertainty requirement, so placeholder
+        # text passed the pre-G4 gate while the declared-N/A path (which needs
+        # a note) was unreachable.
+        self.assertFalse(has_uncertainty({"ci": "n/a"}))
+        self.assertFalse(has_uncertainty({"ci": "待定"}))
+        self.assertTrue(has_uncertainty({"ci": "±0.02"}))
+        self.assertTrue(has_uncertainty({"ci": "95% CI 1.2-2.4"}))
+
+    def test_junk_uncertainty_fails_with_explicit_finding(self):
+        td, root = make_workspace(uncertainty=False)
+        p = root / "results" / "Q1" / "experiments" / "round1" / "run_summary.json"
+        data = json.loads(p.read_text(encoding="utf-8-sig"))
+        data["uncertainty"] = {"ci": "n/a"}
+        p.write_text(json.dumps(data), encoding="utf-8")
+        g = gate(root, "Q1")
+        self.assertEqual(g["status"], "FAIL")
+        self.assertTrue(any("placeholder text" in f for f in g["findings"]), g["findings"])
+        td.cleanup()
+
     def test_flatten_metrics(self):
         self.assertEqual(len(flatten_metrics({"a": 1, "b": {"c": 2.0}, "d": [3, "x"]})), 3)
 

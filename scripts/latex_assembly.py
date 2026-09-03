@@ -15,7 +15,9 @@ Pure standard library. Behavior:
   clean-room baseline under `templates/paper/main.tex` (no upstream template
   code is vendored — see docs/paper-build.md).
 
-Exit codes: 0 ok, 2 usage/environment error (missing LaTeX template guidance).
+Exit codes: 0 ok, 2 usage/environment error (missing LaTeX template guidance),
+or under `--check-only --strict` also when frozen-reference/bare-number findings
+exist or no AI-use declaration source exists.
 """
 from __future__ import annotations
 import argparse, json, re, sys
@@ -436,11 +438,20 @@ def main():
                 "or supply --template (e.g. your own CUMCMThesis-based main.tex fetched per docs/paper-build.md)."
             )
         report = build_report(root, sections, frozen, ai_sources)
+        report["ai_declaration_missing"] = not ai_blocks
+        if not ai_blocks:
+            # Do not let a missing disclosure vanish silently: contest AI-use
+            # rules require the declaration (AGENTS.md: submission_authorization
+            # is consumed here for the AI-use declaration).
+            print("warning: no AI-use declaration will be emitted — add "
+                  "paper/ai_use_disclosure.md or a DECIDED 'submission_authorization' "
+                  "record in methods/*/q*_decisions.jsonl", file=sys.stderr)
         bibitems = parse_bib_to_bibitems(root / "paper" / "refs.bib")
         if a.dry_run or a.check_only:
             print(json.dumps(report, ensure_ascii=False, indent=2))
             if a.check_only and a.strict and (report["frozen_reference_warnings"]
-                                              or report["bare_number_scan"]["count"] > 0):
+                                              or report["bare_number_scan"]["count"] > 0
+                                              or report["ai_declaration_missing"]):
                 return 2
             return 0
         main_tex = root / "paper" / "main.tex"

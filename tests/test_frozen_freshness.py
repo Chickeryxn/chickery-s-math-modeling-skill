@@ -107,17 +107,21 @@ class FrozenFreshnessTests(unittest.TestCase):
             out = audit(root)
             self.assertEqual(out['status'], 'PASS', out)
 
-    def test_naive_frozen_at_warns_but_passes(self):
-        # A tz-less frozen_at is interpreted as UTC (advisory warning only).
+    def test_naive_frozen_at_fails_closed(self):
+        # Regression: a tz-less frozen_at used to be interpreted as UTC with
+        # only an advisory warning, so a local-time value could hide a stale
+        # claim (false FRESH). Naive timestamps now fail closed: re-freeze with
+        # an explicit offset (Z or ±hh:mm).
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
             write(root / 'results/Q1/experiments/final/metrics/main.json', '1')
             frozen_file(root, [claim('q1_rmse', 'results/Q1/experiments/final/metrics/main.json',
                                      '2099-01-01T00:00:00')])
             out = audit(root)
-            self.assertEqual(out['status'], 'PASS')
-            self.assertEqual(len(out['warnings']), 1)
-            self.assertIn('no timezone', out['warnings'][0]['reason'])
+            self.assertEqual(out['status'], 'FAIL')
+            self.assertEqual(len(out['stale']), 1)
+            self.assertIn('no explicit timezone', out['stale'][0]['reason'])
+            self.assertEqual(out['warnings'], [])
 
 
 if __name__ == '__main__':
