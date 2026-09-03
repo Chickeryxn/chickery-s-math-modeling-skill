@@ -50,14 +50,14 @@ run snapshot or work log, and restore the defaults before `submission`.
   the other three copies are refreshed from it with `python scripts/sync_plugin.py .`
   (never edit `.claude/skills/`, `.agents/skills/`, or
   `plugins/mathmodeling-skills/skills/` directly).
-- `.codex/skills/` and `.claude/skills/` are two complete, independently usable skill trees; `.agents/skills/` is the third standalone copy, auto-discovered by DeepSeek Harness (DSH) 0.7.0 when the repo is opened as the workspace (project-level root, no installation needed).
+- `.codex/skills/` and `.claude/skills/` are two complete, independently usable skill trees; `.agents/skills/` is the third standalone copy, auto-discovered by DeepSeek Harness (DSH) 0.7.1 (verified; core `@deepseek-ai/dsh` 0.1.2-alpha.1) when the repo is opened as the workspace (project-level root, no installation needed).
 - Every skill and referenced local resource required at runtime must exist in every tree; no tree may depend on a wrapper, symlink, or path into another tree.
 - When a shared skill contract changes, update and validate all copies in the same change.
 - Runtime-specific wording may differ only when necessary, but each copy must remain standalone and behaviorally consistent with this policy.
 - `plugins/mathmodeling-skills/skills/` is the generated distribution copy used by the native Codex and Claude plugin manifests. After the standalone trees agree, refresh the distribution copy with `python scripts/sync_plugin.py .` (portable, works on Windows) or the POSIX wrapper `scripts/sync-plugin.sh`, and verify with `python scripts/sync_plugin.py . --check` / `scripts/sync-plugin.sh --check`. Run `--dry-run` first to review what would change without writing. `scripts/validate_skill_trees.py` is the standalone consistency gate used by `validate_repo.py`; `sync_plugin.py --check` additionally verifies the AGENTS.md/LICENSE distribution copies.
 - Keep both plugin manifests and the marketplace catalog aligned for every release. Bump the version in both plugin manifests and keep the marketplace catalog aligned.
 
-# Runtime Notes (DeepSeek Harness desktop 0.7.0)
+# Runtime Notes (DeepSeek Harness desktop 0.7.1)
 
 DSH runs the same workspace and scripts; the workflow contract is unchanged. Operational notes:
 

@@ -1,11 +1,13 @@
-# DeepSeek Harness（DSH）0.7.0 适配报告与使用指南
+# DeepSeek Harness（DSH）0.7.1 适配报告与使用指南
 
-> 本文档基于对 DSH 桌面版 0.7.0 内核源码的只读审计（包：`@deepseek-ai/dsh` 0.1.2-alpha.1 及 `dsh-skill`、`dsh-skill-filesystem`、`dsh-agent-instructions`、`dsh-hooks-*`、`dsh-sandbox-*` 等），结合本仓库全量文件审计，给出逐项适配性判定与使用方法。
-> 结论先行：**核心工作流天然适配 DSH 0.7.0，无需改任何契约；本仓库已通过 `.agents/skills/` 第四副本实现"打开即用"。**
+> 本文档基于对 DSH 桌面版 0.7.1 内核源码的只读审计（包：`@deepseek-ai/dsh` 0.1.2-alpha.1 及 `dsh-skill`、`dsh-skill-filesystem`、`dsh-agent-instructions`、`dsh-hooks-*`、`dsh-sandbox-*` 等），结合本仓库全量文件审计，给出逐项适配性判定与使用方法。
+> 结论先行：**核心工作流天然适配 DSH 0.7.1，无需改任何契约；本仓库已通过 `.agents/skills/` 第四副本实现"打开即用"。**
+>
+> 复核记录（0.7.1 · 2026-09-02）：对照 dsh-desktop **0.7.1** 重新只读审计，本页全部判定不变（核心 `@deepseek-ai/dsh` 仍为 0.1.2-alpha.1）。补充两点：① 0.7.1 设置页新增的"插件清单"管理属于 DSH 内置（cordis）插件层，**仍不读取**本仓库的 `.claude-plugin/`、`.codex-plugin/`、`.agents/plugins/marketplace.json`；② hooks 桥除 `pluginRoot` 外可选 `projectDir`，命令占位符在 `${CLAUDE_PLUGIN_ROOT}` 之外新增 `${CLAUDE_PROJECT_DIR}`（本仓库无需启用）。运行时实测 `$env:DSH_SESSION_ID`、`DSH_SESSION_JSONL`、`DSH_HOME` 均存在。
 
 ## 一、判定总表
 
-| 区域 | 判定 | 依据（DSH 0.7.0 行为） | 本仓库处理 |
+| 区域 | 判定 | 依据（DSH 0.7.1 行为） | 本仓库处理 |
 |---|---|---|---|
 | 技能发现 | ✅ 天然适配 | 项目级根 `<仓库>/.agents/skills/<name>/SKILL.md`（rank 200）与 `<仓库>/.dsh/skills/`（rank 100）自动发现；frontmatter 仅要求 kebab-case `name` + `description` | 技能树新增 `.agents/skills/` 第四副本（`sync_plugin.py` 同步，`validate_skill_trees.py` 校验） |
 | 仓库指令注入 | ✅ 天然适配 | 从项目根（`.git` 标记）向下逐目录加载 `AGENTS.md`/`CLAUDE.md`（+`.local` 覆盖），每文件 ≤1 MiB；README 不使用 | AGENTS.md 增补 DSH 运行环境小节；CLAUDE.md 一句话 |
@@ -17,7 +19,7 @@
 | 控制台编码 | ✅ 已加固 | 脚本强制 UTF-8；`validate_repo.py` 以 UTF-8/errors=replace 捕获子进程 | 保持 |
 | 外部工具链 | ⚠️ 使用时需具备 | matplotlib+numpy（图技能）、xelatex（论文构建）、Node≥18（archify 再生成）、MATLAB/北太天元（可选） | 与 Codex/Claude 一致，"不入核心" |
 
-## 二、DSH 技能发现机制（0.7.0 事实）
+## 二、DSH 技能发现机制（0.7.1 事实）
 
 - 目录优先级（rank 越小越优先）：`<仓库>/.dsh/skills`（100）→ `<仓库>/.agents/skills`（200）→ `customSkillDirs`（300）→ `<DSH_HOME>/skills`（400，桌面版 `DSH_HOME` = `<userData>\harness`）→ `~/.agents/skills`（500，受 `$DSH_AGENTS_HOME` 影响）→ `$DSH_BUNDLED_SKILL_DIR`（600）。
 - 技能文件形式：`<name>/SKILL.md`（资源基目录 = 技能目录）或扁平 `<name>.md`。
@@ -30,7 +32,7 @@
 
 1. `scripts/sync_plugin.py`：同步目标 `[.claude/skills, plugins/.../skills, .agents/skills]`（`.codex` 为源）。
 2. `scripts/validate_skill_trees.py`：4 树哈希一致性校验。
-3. `AGENTS.md`："Repository Skill Copies" 更新为三独立副本 + 插件分发；新增 "Runtime Notes (DeepSeek Harness desktop 0.7.0)"：PROJECT_ROOT=工作区根、`dsh:<session_id>:<seq>` 消息 ID 约定、沙箱说明、python/git 前置、hooks 默认不生效、UTF-8 编码。
+3. `AGENTS.md`："Repository Skill Copies" 更新为三独立副本 + 插件分发；新增 "Runtime Notes (DeepSeek Harness desktop 0.7.1)"：PROJECT_ROOT=工作区根、`dsh:<session_id>:<seq>` 消息 ID 约定、沙箱说明、python/git 前置、hooks 默认不生效、UTF-8 编码。
 4. `CLAUDE.md`：指出 DSH 读取 `.agents/skills/`，运行细则见 AGENTS.md 与本文档。
 5. `.codex/skills/workflow-orchestrator/SKILL.md`：AGENTS.md 引用改为位置无关（项目根优先；裸安装时回退同树打包副本或询问用户）。
 6. `.codex/skills/modeler-decision-logger/SKILL.md`：明确 DSH 下 `user_message_id` 约定。
@@ -50,7 +52,7 @@
 
 ## 五、可选：启用 hooks（守护横幅 + 冻结/原始数据守卫）
 
-DSH 0.7.0 默认不挂载任何钩子。本仓库的 `plugins/mathmodeling-skills/hooks/hooks.json` 现在携带两类钩子：
+DSH 0.7.1 默认不挂载任何钩子。本仓库的 `plugins/mathmodeling-skills/hooks/hooks.json` 现在携带两类钩子：
 
 1. **SessionStart 横幅**（提醒，exit 0）：输出一行守护横幅。
 2. **PreToolUse 守卫**（拦截，exit 2）：`guard_frozen.py` 在写工具命中 `frozen_numbers.json` 或 `workspace/data_raw/` 时阻断并给出理由（冻结数字与原始数据不可改，见 AGENTS.md）。
