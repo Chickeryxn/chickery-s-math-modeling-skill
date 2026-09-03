@@ -2,7 +2,7 @@
 """Create, execute, and validate hash-addressed experiment run snapshots."""
 from __future__ import annotations
 import sys
-import argparse, hashlib, json, platform, subprocess, sys, time
+import argparse, hashlib, json, platform, shlex, subprocess, sys, time
 from pathlib import Path
 
 
@@ -70,33 +70,123 @@ def finish(root,run_dir,status,result_ref,validation_ref,return_code,executed):
  data.update({'status':status,'return_code':return_code,'result_ref':result_ref,'validation_ref':validation_ref,'result_hash':sha256(rp) if rp.is_file() else None,'validation_hash':sha256(vp) if vp.is_file() else None,'executed_by_runner':executed,'finished_at':time.strftime('%Y-%m-%dT%H:%M:%S%z')})
  data['vcs']=vcs_snapshot(root)  # post-run state: outputs appear as untracked/dirty
  write_json(p,data);return data
-def run(root,run_dir,args):
- data=begin(root,run_dir,args)
- result_path=safe(root,args.result_ref); validation_path=safe(root,args.validation_ref)
- before={str(p):sha256(p) if p.is_file() else None for p in (result_path,validation_path)}
- started=time.time()
- try:
-  proc=subprocess.run(args.command,cwd=root,shell=True,text=True,capture_output=True,encoding='utf-8',errors='replace')
- except BaseException:
-  # KeyboardInterrupt / spawn failure: leave a terminal snapshot instead of one
-  # that stays RUNNING forever and can never be finalized.
-  (run_dir/'stderr.log').write_text('runner interrupted before completion\n',encoding='utf-8')
-  try:
-   finish(root,run_dir,'INTERRUPTED',args.result_ref,args.validation_ref,None,True)
-  except Exception:
-   pass  # best-effort terminal state; keep the original exception primary
-  raise
- (run_dir/'stdout.log').write_text(proc.stdout,encoding='utf-8',newline='\n')
- (run_dir/'stderr.log').write_text(proc.stderr,encoding='utf-8',newline='\n')
- data=json.loads((run_dir/'run_metadata.json').read_text(encoding='utf-8-sig'));data['elapsed_seconds']=time.time()-started;data['process_return_code']=proc.returncode;write_json(run_dir/'run_metadata.json',data)
- if proc.returncode==0:
-  for p in (result_path,validation_path):
-   if not p.is_file(): raise RuntimeError(f'successful run did not create required output: {p}')
-  after={str(p):sha256(p) for p in (result_path,validation_path)}
-  if all(before[str(p)]==after[str(p)] for p in (result_path,validation_path)):
-   raise RuntimeError('successful run did not create or change result/validation outputs')
- status=('DEGRADED_SUCCESS' if data['degraded'] else 'SUCCESS') if proc.returncode==0 else 'FAILED'
- return finish(root,run_dir,status,args.result_ref,args.validation_ref,proc.returncode,True)
+def _split_windows_cmdline(s: str) -> list[str]:
+    """Split a command line the way cmd/CreateProcess sees it (no shell).
+
+    Double quotes group and are stripped; backslashes stay literal (Windows
+    paths must not be mangled like POSIX shlex would). Shell operators (`|`,
+    `&`, `>`, `&&`, `%VAR%`, ...) are NOT interpreted: they stay literal
+    arguments, so a command cannot inject through the platform shell. If a
+    command genuinely needs redirection/pipes, wrap it in an explicit
+    `cmd /c ...` or `sh -c ...` argument, which makes the shell use explicit
+    and visible instead of implicit.
+    """
+    args: list[str] = []
+    cur: list[str] = []
+    in_dq = False
+    i, n = 0, len(s)
+    while i < n:
+        c = s[i]
+        if c == '"':
+            in_dq = not in_dq
+            i += 1
+            continue
+        if c in ' \t' and not in_dq:
+            if cur:
+                args.append(''.join(cur))
+                cur = []
+            i += 1
+            continue
+        cur.append(c)
+        i += 1
+    if cur:
+        args.append(''.join(cur))
+    if in_dq:
+        raise ValueError('unbalanced double quote in command')
+    return args
+
+
+def _split_command(command: str) -> list[str]:
+    """Split a command string into an argv list without invoking a shell.
+
+    On POSIX this is shlex with POSIX quoting rules; on Windows a cmd-style
+    splitter keeps backslash paths intact. The resulting argv runs directly,
+    so quoting behavior is deterministic and identical across platforms for
+    simple `program arg arg` commands.
+    """
+    if not command or not command.strip():
+        raise ValueError('empty command')
+    if sys.platform.startswith('win'):
+        return _split_windows_cmdline(command)
+    return shlex.split(command, posix=True)
+
+
+def run(root, run_dir, args):
+    data = begin(root, run_dir, args)
+    result_path = safe(root, args.result_ref)
+    validation_path = safe(root, args.validation_ref)
+    before = {str(p): sha256(p) if p.is_file() else None
+              for p in (result_path, validation_path)}
+    try:
+        argv = _split_command(args.command)
+    except ValueError as exc:
+        # Unparsable command: never leave a RUNNING snapshot behind.
+        (run_dir / 'stderr.log').write_text(f'command parse error: {exc}\n',
+                                            encoding='utf-8', newline='\n')
+        try:
+            finish(root, run_dir, 'FAILED', args.result_ref, args.validation_ref,
+                   None, False)
+        except Exception:
+            pass
+        raise RuntimeError(f'cannot split command without a shell: {exc}')
+    started = time.time()
+    try:
+        proc = subprocess.run(argv, cwd=root, shell=False, text=True,
+                              capture_output=True, encoding='utf-8',
+                              errors='replace')
+    except BaseException:
+        # KeyboardInterrupt / spawn failure: leave a terminal snapshot instead
+        # of one that stays RUNNING forever and can never be finalized.
+        (run_dir / 'stderr.log').write_text(
+            'runner interrupted before completion\n', encoding='utf-8',
+            newline='\n')
+        try:
+            finish(root, run_dir, 'INTERRUPTED', args.result_ref,
+                   args.validation_ref, None, True)
+        except Exception:
+            pass  # best-effort terminal state; keep the original exception primary
+        raise
+    (run_dir / 'stdout.log').write_text(proc.stdout, encoding='utf-8', newline='\n')
+    (run_dir / 'stderr.log').write_text(proc.stderr, encoding='utf-8', newline='\n')
+    data = json.loads((run_dir / 'run_metadata.json').read_text(encoding='utf-8-sig'))
+    data['elapsed_seconds'] = time.time() - started
+    data['process_return_code'] = proc.returncode
+    write_json(run_dir / 'run_metadata.json', data)
+    if proc.returncode == 0:
+        missing = [str(p) for p in (result_path, validation_path)
+                   if not p.is_file()]
+        if missing:
+            # Process exited 0 but produced no required output: record a
+            # terminal FAILED snapshot (a raise here would leave RUNNING).
+            (run_dir / 'stderr.log').write_text(
+                'successful process did not create required output(s): '
+                + ', '.join(missing) + '\n', encoding='utf-8', newline='\n')
+            return finish(root, run_dir, 'FAILED', args.result_ref,
+                          args.validation_ref, 0, True)
+        after = {str(p): sha256(p) for p in (result_path, validation_path)}
+        unchanged = all(before[str(p)] == after[str(p)]
+                        for p in (result_path, validation_path))
+        status = ('DEGRADED_SUCCESS' if data['degraded'] else 'SUCCESS')
+        out = finish(root, run_dir, status, args.result_ref,
+                     args.validation_ref, proc.returncode, True)
+        if unchanged:
+            # A byte-identical rerun is a legitimate deterministic reproduction
+            # (the case this tool exists to certify), not a no-op failure.
+            out['outputs_unchanged'] = True
+            write_json(run_dir / 'run_metadata.json', out)
+        return out
+    return finish(root, run_dir, 'FAILED', args.result_ref,
+                  args.validation_ref, proc.returncode, True)
 def validate(root,run_dir):
  p=run_dir/'run_metadata.json'
  if not p.is_file():return {'status':'FAIL','errors':['missing run_metadata.json']}

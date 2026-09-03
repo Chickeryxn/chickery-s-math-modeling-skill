@@ -43,4 +43,46 @@ class RunSnapshotTests(unittest.TestCase):
             md=json.loads((run_dir/'run_metadata.json').read_text(encoding='utf-8-sig'))
             self.assertEqual(md['status'],'INTERRUPTED')
             self.assertEqual(validate(root,run_dir)['status'],'PASS')
+
+    def test_deterministic_rerun_with_identical_outputs_succeeds(self):
+        # Regression: a byte-identical reproduction run (the case this tool
+        # exists to certify) used to raise "did not create or change outputs"
+        # and leave a permanently RUNNING snapshot. Identical outputs are a
+        # legitimate deterministic rerun, recorded as an advisory flag.
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td)
+            (root/'input.txt').write_text('i');(root/'code.py').write_text('c');(root/'config.json').write_text('{}')
+            (root/'result.json').write_text('r');(root/'validation.json').write_text('v')
+            args=self.make_args(root)
+            args.actual_budget = args.planned_budget  # identical budgets: not degraded
+            args.command=("python -c \"from pathlib import Path; "
+                          "Path('result.json').write_text('r'); "
+                          "Path('validation.json').write_text('v')\"")
+            args.result_ref='result.json';args.validation_ref='validation.json'
+            run_dir=root/'runs/r1'
+            out=run(root,run_dir,args)
+            self.assertEqual(out['status'],'SUCCESS')
+            self.assertTrue(out.get('outputs_unchanged'))
+            self.assertEqual(validate(root,run_dir)['status'],'PASS')
+            md=json.loads((run_dir/'run_metadata.json').read_text(encoding='utf-8-sig'))
+            self.assertEqual(md['status'],'SUCCESS')
+            self.assertTrue(md.get('outputs_unchanged'))
+
+    def test_missing_output_after_success_is_terminal_failed(self):
+        # Regression: a raise between the process and finish() used to leave a
+        # RUNNING snapshot that could never be finalized. A process that exits 0
+        # without producing the required outputs now records a terminal FAILED
+        # snapshot (executed by the runner, return code 0) instead.
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td)
+            (root/'input.txt').write_text('i');(root/'code.py').write_text('c');(root/'config.json').write_text('{}')
+            args=self.make_args(root)
+            args.command='python -c "import sys; sys.stdout.write(\'no output files\')"'
+            args.result_ref='result.json';args.validation_ref='validation.json'
+            run_dir=root/'runs/r1'
+            out=run(root,run_dir,args)
+            self.assertEqual(out['status'],'FAILED')
+            self.assertEqual(validate(root,run_dir)['status'],'PASS')
+            self.assertIn('did not create required output',
+                          (run_dir/'stderr.log').read_text())
 if __name__=='__main__':unittest.main()
