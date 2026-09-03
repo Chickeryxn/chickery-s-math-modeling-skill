@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "全部使用流程总览 · 主线 G1–G6 + 复盘/训练/维护环（00）",
+    "locale": "zh-CN",
+    "quality_profile": "standard"
+  },
+  "lanes": [
+    { "id": "user", "label": "入口（使用者/宿主）", "variant": "exception" },
+    { "id": "main", "label": "竞赛主线（F1→F2→F3）" },
+    { "id": "orche", "label": "调度与机器校验" },
+    { "id": "ev", "label": "证据链产物" },
+    { "id": "side", "label": "旁路（F5/F4/F6）" }
+  ],
+  "phases": [
+    { "id": "p0", "label": "入口与目标", "fromCol": 0, "toCol": 0 },
+    { "id": "p1", "label": "启动与读题 F1", "fromCol": 1, "toCol": 1 },
+    { "id": "p2", "label": "六门禁主干 F2", "fromCol": 2, "toCol": 2, "variant": "emphasis" },
+    { "id": "p3", "label": "论文装配 F3", "fromCol": 3, "toCol": 3 },
+    { "id": "p4", "label": "复盘沉淀 F5", "fromCol": 4, "toCol": 4 },
+    { "id": "p5", "label": "训练/维护长期环", "fromCol": 5, "toCol": 5, "variant": "dashed" }
+  ],
+  "mainPath": ["u0", "u1", "m1", "m2", "m3", "p0"],
+  "nodes": [
+    { "id": "u0", "lane": "user", "col": 0, "type": "frontend", "label": "打开与选目标", "sublabel": "Codex/Claude/DSH · 自检 · 文档地图", "width": 200 },
+    { "id": "u1", "lane": "user", "col": 1, "type": "security", "label": "配置+放题", "sublabel": "双开关 · problem.txt/data_raw/papers", "width": 195 },
+    { "id": "m1", "lane": "main", "col": 1, "type": "backend", "label": "读题链 F1", "sublabel": "parser→classifier→cleaner→框架裁决", "width": 215 },
+    { "id": "m2", "lane": "main", "col": 2, "type": "backend", "label": "单题六门禁 F2", "sublabel": "G1→G2→G2.5→G3→G4→(G5/G6)", "width": 225 },
+    { "id": "m3", "lane": "main", "col": 3, "type": "backend", "label": "论文装配 F3", "sublabel": "三件套→章节/图→三审→preflight→xelatex", "width": 320 },
+    { "id": "o1", "lane": "orche", "col": 1, "type": "messagebus", "label": "orchestrator", "sublabel": "manifest+derive+路由", "width": 195 },
+    { "id": "o2", "lane": "orche", "col": 2, "type": "messagebus", "label": "workflow_guard", "sublabel": "require/derive · lean/submission", "width": 215 },
+    { "id": "o3", "lane": "orche", "col": 3, "type": "messagebus", "label": "装配预检链", "sublabel": "latex_assembly · preflight · ai_trace", "width": 225 },
+    { "id": "v1", "lane": "ev", "col": 1, "type": "database", "label": "parse/classification", "sublabel": "planning 金样例工件", "width": 195 },
+    { "id": "v2", "lane": "ev", "col": 2, "type": "database", "label": "账本+冻结数", "sublabel": "决策账本 + frozen_numbers.json", "width": 185 },
+    { "id": "v3", "lane": "ev", "col": 3, "type": "database", "label": "论文与审计", "sublabel": "sections/figures/main.tex · audits", "width": 175 },
+    { "id": "p0", "lane": "user", "col": 4, "type": "security", "label": "复盘与沉淀 F5", "sublabel": "records/ 树 · 决策判定 · ideas 沉淀", "width": 215 },
+    { "id": "l0", "lane": "side", "col": 5, "type": "external", "label": "训练闭环 F4", "sublabel": "资源库→闭卷→对照→六维计分→下一轮", "width": 185 },
+    { "id": "k0", "lane": "side", "col": 4, "type": "cloud", "label": "维护与分发 F6", "sublabel": "四树同步 · CI 8 步 · 插件/hooks 分发", "width": 225 }
+  ],
+  "edges": [
+    { "id": "e1", "from": "u0", "to": "u1", "label": "进入竞赛" },
+    { "id": "e2", "from": "u0", "to": "l0", "label": "训练 agent", "variant": "dashed", "role": "branch" },
+    { "id": "e3", "from": "u0", "to": "k0", "label": "维护仓库", "variant": "dashed", "role": "branch" },
+    { "id": "e4", "from": "u1", "to": "m1", "label": "启动读题" },
+    { "id": "e5", "from": "o1", "to": "m1", "label": "调度", "variant": "dashed", "role": "branch" },
+    { "id": "e6", "from": "m1", "to": "v1", "label": "落盘", "variant": "dashed", "role": "branch" },
+    { "id": "e7", "from": "m1", "to": "m2", "label": "G1 齐" },
+    { "id": "e8", "from": "m2", "to": "o2", "label": "门禁推进", "variant": "dashed", "role": "branch" },
+    { "id": "e9", "from": "m2", "to": "v2", "label": "证据积累", "variant": "dashed", "role": "branch" },
+    { "id": "e10", "from": "m2", "to": "m3", "label": "submission" },
+    { "id": "e11", "from": "m3", "to": "o3", "label": "机械把关", "variant": "dashed", "role": "branch" },
+    { "id": "e12", "from": "m3", "to": "v3", "label": "成品工件", "variant": "dashed", "role": "branch" },
+    { "id": "e13", "from": "m3", "to": "p0", "label": "赛后", "variant": "emphasis" },
+    { "id": "e14", "from": "p0", "to": "l0", "label": "素材回流", "variant": "dashed", "role": "return" },
+    { "id": "e15", "from": "p0", "to": "k0", "label": "版本演进", "variant": "dashed", "role": "return" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "本图册怎么用", "items": ["01-launch.html 接入·配置·读题链（F1）→ 02-gates.html 单子问题六门禁（F2）→ 03-paper.html 论文装配提交（F3）", "04-training.html 训练闭环 · 05-records.html 记录复盘沉淀 · 06-maintenance.html 仓库维护与分发", "index.html 提供导航；每张 HTML 支持缩放/搜索/明暗/导出"] },
+    { "dot": "rose", "title": "主线核心语义", "items": ["AI 负责机械正确性，人类拥有建模判断（G2.5/G4/signoff/授权），一切数字与决定可追溯", "六门禁 G1–G6 + G2.5 人工选型点；lean 探索 → submission 交稿，deadline 提示仅 advisory"] },
+    { "dot": "emerald", "title": "旁路与边界", "items": ["训练模式与竞赛双向隔离（结果全在 results/training）；资源库只做素养标杆", "records/ 为 advisory 叙事层不参与门禁；guard hooks 为 advisory，权威在 validators；仓库零第三方运行时依赖"] }
+  ]
+}

@@ -30,3 +30,4 @@
 | schema 契约说明 | [schemas/README](../schemas/README.md) |
 | 上游来源与许可 | [references/README](../references/README.md)、[NOTICE](../NOTICE.md) |
 | 流程图（PNG/SVG/JSON 源） | [archify](../docs/diagrams/archify/README.md) |
+| 审阅报告与交互流程图册（1 总览 + 6 分图） | [review](review/README.md)（交互版见 `review/index.html`） |

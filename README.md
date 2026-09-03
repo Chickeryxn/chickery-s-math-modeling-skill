@@ -102,6 +102,25 @@ cd chickery-s-math-modeling-skill
 | 技能全表/命令速查/目录结构/术语表 | [参考手册](docs/reference.md) |
 | 0.9.0 审计修复对照（0.9.1 变更见 [CHANGELOG](CHANGELOG.md)） | [审计修复清单](docs/audit-fix-0.9.0.md) |
 
+## 🎨 交互体验：审阅报告与全流程流程图册
+
+本仓库附带一份「全量审阅报告 + 交互式流程图册」（[`docs/review/`](docs/review/)）：1 张总览 + 6 张超长分流程图，覆盖**接入与赛题启动 → 单子问题六门禁 G1–G6 → 论文装配与提交 → 赛后复盘沉淀 → 训练闭环 → 仓库维护分发**。
+
+<p align="center">
+  <a href="docs/review/00-overview.html" title="总览全景（交互）"><img src="docs/review/assets/00-overview.png" alt="全流程总览预览" width="720"/></a>
+</p>
+
+| 流程 | 交互图 | 静态预览 |
+|---|---|---|
+| F1 接入·配置·赛题启动 | [01-launch.html](docs/review/01-launch.html) | ![F1](docs/review/assets/01-launch.png) |
+| F2 单子问题六门禁（主力） | [02-gates.html](docs/review/02-gates.html) | ![F2](docs/review/assets/02-gates.png) |
+| F3 论文装配与提交 | [03-paper.html](docs/review/03-paper.html) | ![F3](docs/review/assets/03-paper.png) |
+| F4 训练模式闭环 | [04-training.html](docs/review/04-training.html) | ![F4](docs/review/assets/04-training.png) |
+| F5 记录·复盘·沉淀 | [05-records.html](docs/review/05-records.html) | ![F5](docs/review/assets/05-records.png) |
+| F6 维护·同步·分发 | [06-maintenance.html](docs/review/06-maintenance.html) | ![F6](docs/review/assets/06-maintenance.png) |
+
+交互 HTML 自包含（内嵌 SVG，离线可用），支持明/暗主题、缩放平移、搜索聚焦与导出；克隆仓库后双击 `docs/review/index.html` 即可浏览，或将 `docs/` 配置为 GitHub Pages 发布目录在线访问。图集说明见 [`docs/review/README.md`](docs/review/README.md)，完整文字审阅见 [`docs/review/00-审阅报告.md`](docs/review/00-审阅报告.md)。
+
 ## 常见问题
 
 **Q：它能直接替我做题、写论文吗？**

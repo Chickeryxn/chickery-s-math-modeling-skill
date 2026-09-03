@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "仓库维护 · 四树同步 · CI 与插件分发（F6）",
+    "locale": "zh-CN",
+    "quality_profile": "standard"
+  },
+  "lanes": [
+    { "id": "hum", "label": "维护者（人类）", "variant": "exception" },
+    { "id": "dev", "label": "编辑源与同步工具" },
+    { "id": "chk", "label": "校验工具" },
+    { "id": "ci", "label": "GitHub Actions" },
+    { "id": "out", "label": "用户宿主与收口" }
+  ],
+  "phases": [
+    { "id": "ph0", "label": "入口分级", "fromCol": 0, "toCol": 0 },
+    { "id": "ph1", "label": "本地编辑", "fromCol": 1, "toCol": 1 },
+    { "id": "ph2", "label": "四树同步", "fromCol": 2, "toCol": 2 },
+    { "id": "ph3", "label": "全量校验", "fromCol": 3, "toCol": 3 },
+    { "id": "ph4", "label": "CI / 版本对齐", "fromCol": 4, "toCol": 4, "variant": "emphasis" },
+    { "id": "ph5", "label": "发布与分发", "fromCol": 5, "toCol": 5, "variant": "dashed" }
+  ],
+  "mainPath": ["m0", "d0", "s0", "s1", "t0", "c0", "m3", "m4", "o0"],
+  "nodes": [
+    { "id": "m0", "lane": "hum", "col": 0, "type": "external", "label": "维护者变更请求", "sublabel": "技能/脚本/文档/上游/图", "width": 200 },
+    { "id": "d0", "lane": "dev", "col": 1, "type": "backend", "label": "本地编辑源", "sublabel": ".codex/skills/ · scripts/ · docs/ · 上游导入", "width": 240 },
+    { "id": "s0", "lane": "dev", "col": 2, "type": "messagebus", "label": "sync_plugin.py .", "sublabel": "--dry-run → 同步三副本 + 分发拷贝", "width": 240 },
+    { "id": "s1", "lane": "dev", "col": 3, "type": "messagebus", "label": "树一致性校验", "sublabel": "validate_skill_trees + --check", "width": 240 },
+    { "id": "t0", "lane": "chk", "col": 3, "type": "database", "label": "全量校验", "sublabel": "run_tests · validate_repo · 上游守卫", "width": 240 },
+    { "id": "c0", "lane": "ci", "col": 4, "type": "cloud", "label": "push/PR → CI", "sublabel": "8 步矩阵：LF→tests→repo→树→上游→CRLF", "width": 240 },
+    { "id": "m3", "lane": "hum", "col": 4, "type": "security", "label": "版本三处对齐", "sublabel": "manifest×2+marketplace", "width": 230 },
+    { "id": "m4", "lane": "hum", "col": 5, "type": "external", "label": "发布 tag/Release", "sublabel": "CHANGELOG + 徽章", "width": 210 },
+    { "id": "o0", "lane": "out", "col": 5, "type": "frontend", "label": "宿主落地与收口", "sublabel": "hooks/DSH 补丁/Codex/guard --check", "width": 240 }
+  ],
+  "edges": [
+    { "id": "e1", "from": "m0", "to": "d0", "label": "交办" },
+    { "id": "e2", "from": "d0", "to": "s0", "label": "契约就绪" },
+    { "id": "e3", "from": "s0", "to": "s1", "label": "同步完成" },
+    { "id": "e4", "from": "s1", "to": "t0", "label": "树一致" },
+    { "id": "e5", "from": "t0", "to": "c0", "label": "本地全绿" },
+    { "id": "e6", "from": "c0", "to": "m3", "label": "CI 全绿" },
+    { "id": "e7", "from": "m3", "to": "m4", "label": "发布" },
+    { "id": "e8", "from": "m4", "to": "o0", "label": "分发包", "variant": "emphasis" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "编辑与同步纪律", "items": ["契约只改 .codex/skills/ 编辑源；.claude/.agents/分发三副本由 sync_plugin.py 刷新，绝不手改", "LF 归一化 + 哈希锁定四树一致；上游导入受 SHA-256/NOTICE 守卫"] },
+    { "dot": "rose", "title": "CI 与发布", "items": ["push/PR 触发 8 步矩阵（ubuntu/windows × py3.10–3.13）", "版本三处对齐：两 plugin manifest + marketplace + CHANGELOG（当前 0.9.1）"] },
+    { "dot": "emerald", "title": "宿主差异", "items": ["Claude 读 hooks.json（横幅+冻结守卫）；DSH/Codex 默认 inert 需可选补丁", "guard 为 advisory，权威在 validators；hooks 变更需 guard_frozen.py --check"] }
+  ]
+}
+

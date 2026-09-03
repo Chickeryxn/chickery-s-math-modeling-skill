@@ -1,0 +1,287 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "工作记录 · 赛后复盘 · 学习沉淀（F5）",
+    "locale": "zh-CN",
+    "quality_profile": "standard"
+  },
+  "lanes": [
+    {
+      "id": "hum",
+      "label": "人类（判定/填写）",
+      "variant": "exception"
+    },
+    {
+      "id": "rec",
+      "label": "记录动作 work-logger + work_record.py"
+    },
+    {
+      "id": "ctr",
+      "label": "机器契约（只读事实源）"
+    },
+    {
+      "id": "out",
+      "label": "记录与学习产物"
+    }
+  ],
+  "phases": [
+    {
+      "id": "p0",
+      "label": "建树与触发",
+      "fromCol": 0,
+      "toCol": 0
+    },
+    {
+      "id": "p1",
+      "label": "过程同步（赛中）",
+      "fromCol": 1,
+      "toCol": 1
+    },
+    {
+      "id": "p2",
+      "label": "复盘启动",
+      "fromCol": 2,
+      "toCol": 2
+    },
+    {
+      "id": "p3",
+      "label": "决策回放判定",
+      "fromCol": 3,
+      "toCol": 3
+    },
+    {
+      "id": "p4",
+      "label": "失败复盘与沉淀",
+      "fromCol": 4,
+      "toCol": 4
+    },
+    {
+      "id": "p5",
+      "label": "学习摘要与归档",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "emphasis"
+    }
+  ],
+  "mainPath": [
+    "r0",
+    "r1",
+    "o0",
+    "r2",
+    "t0",
+    "f0",
+    "a0",
+    "r3",
+    "h2",
+    "o1"
+  ],
+  "nodes": [
+    {
+      "id": "r0",
+      "lane": "rec",
+      "col": 0,
+      "type": "backend",
+      "label": "建树与健康检查",
+      "sublabel": "init 幂等建树 · check · index 重建",
+      "width": 200
+    },
+    {
+      "id": "r1",
+      "lane": "rec",
+      "col": 1,
+      "type": "backend",
+      "label": "过程同步三命令",
+      "sublabel": "gate --evidence · decision 镜像卡 · log 会话",
+      "width": 270
+    },
+    {
+      "id": "ct1",
+      "lane": "ctr",
+      "col": 1,
+      "type": "database",
+      "label": "只读事实源",
+      "sublabel": "账本/run_summary/frozen 等只读镜像",
+      "width": 225
+    },
+    {
+      "id": "o0",
+      "lane": "out",
+      "col": 1,
+      "type": "database",
+      "label": "records/ 树",
+      "sublabel": "五子目录 + 链接不复制",
+      "width": 205
+    },
+    {
+      "id": "r2",
+      "lane": "rec",
+      "col": 2,
+      "type": "backend",
+      "label": "复盘原料",
+      "sublabel": "replay --write 草稿（replay:true）· retro 骨架",
+      "width": 240
+    },
+    {
+      "id": "t0",
+      "lane": "hum",
+      "col": 3,
+      "type": "security",
+      "label": "决策时间线判定",
+      "sublabel": "逐条 DECIDED 判定；AI 只草拟候选教训",
+      "width": 200
+    },
+    {
+      "id": "f0",
+      "lane": "hum",
+      "col": 4,
+      "type": "backend",
+      "label": "三类失败复盘",
+      "sublabel": "假设失效→补检验列 · 方法退化→黑名单 · 预算误判→更新直觉",
+      "width": 290
+    },
+    {
+      "id": "a0",
+      "lane": "out",
+      "col": 4,
+      "type": "database",
+      "label": "可复用资产沉淀",
+      "sublabel": "写 ideas/ 或 planning/lessons/；禁写 references 哈希区",
+      "width": 290
+    },
+    {
+      "id": "r3",
+      "lane": "rec",
+      "col": 5,
+      "type": "messagebus",
+      "label": "学习摘要骨架",
+      "sublabel": "学习摘要骨架(learning_summary.py)",
+      "width": 175
+    },
+    {
+      "id": "h2",
+      "lane": "hum",
+      "col": 5,
+      "type": "security",
+      "label": "教训列人工填写",
+      "sublabel": "AI 只摘录事实；复盘成文并保留",
+      "width": 180
+    },
+    {
+      "id": "o1",
+      "lane": "out",
+      "col": 5,
+      "type": "database",
+      "label": "归档闭环",
+      "sublabel": "学习摘要 + 归档；best 片段喂素材库",
+      "width": 235
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "from": "r0",
+      "to": "r1",
+      "label": "何时记"
+    },
+    {
+      "id": "e2",
+      "from": "ct1",
+      "to": "r1",
+      "label": "只读镜像",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "e3",
+      "from": "r1",
+      "to": "o0",
+      "label": "落树"
+    },
+    {
+      "id": "e4",
+      "from": "o0",
+      "to": "r2",
+      "label": "赛后 1–3 天",
+      "variant": "emphasis"
+    },
+    {
+      "id": "e5",
+      "from": "r2",
+      "to": "t0",
+      "label": "复盘启动"
+    },
+    {
+      "id": "e6",
+      "from": "t0",
+      "to": "f0",
+      "label": "判完成"
+    },
+    {
+      "id": "e7",
+      "from": "f0",
+      "to": "a0",
+      "label": "教训→资产"
+    },
+    {
+      "id": "e8",
+      "from": "a0",
+      "to": "r3",
+      "label": "沉淀同时"
+    },
+    {
+      "id": "e9",
+      "from": "r3",
+      "to": "h2",
+      "label": "骨架就绪",
+      "variant": "emphasis"
+    },
+    {
+      "id": "e10",
+      "from": "h2",
+      "to": "o1",
+      "label": "成文归档"
+    },
+    {
+      "id": "e11",
+      "from": "o1",
+      "to": "r0",
+      "label": "下题可复用",
+      "variant": "dashed",
+      "role": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "记录纪律（advisory）",
+      "items": [
+        "只记事实：做了什么/产出哪些工件/人类哪些决定；人类理由一律从账本镜像，AI 绝不代写 rationale；工作存在之前不记录",
+        "记录树不参与门禁判定、缺失不阻塞；链接不复制；check 失败只提示补 index"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "复盘判定规则",
+      "items": [
+        "对=结果与理由一致且换更好方法也无实质差别；错=结果推翻理由（假设失效/方法退化/基线更强）；不确定=证据不足或差异在误差内——记录下次要收集什么证据"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "命令速查",
+      "items": [
+        "init（建树）· log（会话条目，--subject/--artifacts/--tags/--runtime 自动探测）· gate Qx <G#> --evidence p1,p2（禁门禁回退、证据须在 root 内）· decision Qx <id>（找不到账本记录拒绝生成）",
+        "retro <标题> · replay [--date] [--write]（草稿 replay:true，不替代正式记录）· index · check；退出码 0/2"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "沉淀目标与禁区",
+      "items": [
+        "可复用资产写 resource-library/ideas/（按其 README 格式）或 planning/lessons/；绝不写 references/upstream/method-index（只读 + hashes.json 哈希保护，写入破坏 validate_upstream_assets）",
+        "最佳结果片段复制进作品集当模板；learning_summary.md 的“教训”列必须人填"
+      ]
+    }
+  ]
+}

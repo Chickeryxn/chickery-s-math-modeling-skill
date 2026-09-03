@@ -1,0 +1,300 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "接入、配置与赛题启动 · 读题链 → G1 起点（F1）",
+    "locale": "zh-CN",
+    "quality_profile": "standard"
+  },
+  "lanes": [
+    {
+      "id": "hum",
+      "label": "参赛者（人类）",
+      "variant": "exception"
+    },
+    {
+      "id": "host",
+      "label": "宿主运行时（Codex / Claude / DSH）"
+    },
+    {
+      "id": "ai",
+      "label": "AI 技能执行（读题链）"
+    },
+    {
+      "id": "aux",
+      "label": "支撑技能与工件"
+    },
+    {
+      "id": "chk",
+      "label": "机器校验 / 门禁引擎"
+    }
+  ],
+  "phases": [
+    {
+      "id": "p0",
+      "label": "打开与目标",
+      "fromCol": 0,
+      "toCol": 0
+    },
+    {
+      "id": "p1",
+      "label": "配置·隔离·自检",
+      "fromCol": 1,
+      "toCol": 1
+    },
+    {
+      "id": "p2",
+      "label": "赛题解析",
+      "fromCol": 2,
+      "toCol": 2
+    },
+    {
+      "id": "p3",
+      "label": "任务分类与文献",
+      "fromCol": 3,
+      "toCol": 3
+    },
+    {
+      "id": "p4",
+      "label": "数据清洗 + 框架裁决",
+      "fromCol": 4,
+      "toCol": 4
+    },
+    {
+      "id": "p5",
+      "label": "交接门控调度",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "emphasis"
+    }
+  ],
+  "mainPath": [
+    "h0",
+    "v0",
+    "h1",
+    "p0",
+    "p1",
+    "h2",
+    "cl",
+    "orc"
+  ],
+  "nodes": [
+    {
+      "id": "h0",
+      "lane": "hum",
+      "col": 0,
+      "type": "external",
+      "label": "选目标",
+      "sublabel": "参赛 / 学习 / 训练 / 维护",
+      "width": 175
+    },
+    {
+      "id": "v0",
+      "lane": "host",
+      "col": 0,
+      "type": "frontend",
+      "label": "三种宿主打开仓库",
+      "sublabel": "Codex/Claude/DSH 三宿主打开即用",
+      "width": 205
+    },
+    {
+      "id": "h1",
+      "lane": "hum",
+      "col": 1,
+      "type": "security",
+      "label": "配置并放题",
+      "sublabel": "session_config 双开关 · 放题/附件(只读)",
+      "width": 220
+    },
+    {
+      "id": "s0",
+      "lane": "chk",
+      "col": 1,
+      "type": "database",
+      "label": "自检与隔离",
+      "sublabel": "validate_repo · run_tests · 隔离/隐私",
+      "width": 205
+    },
+    {
+      "id": "p0",
+      "lane": "ai",
+      "col": 2,
+      "type": "backend",
+      "label": "problem-parser",
+      "sublabel": "→ planning/parse/problem_parse.json",
+      "width": 330
+    },
+    {
+      "id": "p1",
+      "lane": "ai",
+      "col": 3,
+      "type": "backend",
+      "label": "problem-classifier",
+      "sublabel": "→ planning/classification/problem_classification.json",
+      "width": 330
+    },
+    {
+      "id": "d0",
+      "lane": "aux",
+      "col": 3,
+      "type": "external",
+      "label": "related-paper-analyzer",
+      "sublabel": "可选：只读 workspace/papers 原文提取线索",
+      "width": 205
+    },
+    {
+      "id": "h2",
+      "lane": "hum",
+      "col": 4,
+      "type": "security",
+      "label": "人类框架裁决",
+      "sublabel": "答选择卡；原话入账本",
+      "width": 195
+    },
+    {
+      "id": "s1",
+      "lane": "aux",
+      "col": 4,
+      "type": "database",
+      "label": "符号/假设维护",
+      "sublabel": "symbol_table.md · model_assumptions.md（两遍制）",
+      "width": 280
+    },
+    {
+      "id": "cl",
+      "lane": "ai",
+      "col": 4,
+      "type": "backend",
+      "label": "data-auditor-cleaner",
+      "sublabel": "→ data_profile.json + data_clean/",
+      "width": 180
+    },
+    {
+      "id": "g1",
+      "lane": "chk",
+      "col": 5,
+      "type": "messagebus",
+      "label": "workflow_guard derive",
+      "sublabel": "G1 证据推导(parse/classify/data/framing)",
+      "width": 205
+    },
+    {
+      "id": "orc",
+      "lane": "ai",
+      "col": 5,
+      "type": "backend",
+      "label": "orchestrator 接手",
+      "sublabel": "更新 manifest · 路由下一步到 F2 六门禁",
+      "width": 205
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "from": "h0",
+      "to": "v0",
+      "label": "打开工作区"
+    },
+    {
+      "id": "e2",
+      "from": "v0",
+      "to": "h1",
+      "label": "技能就绪"
+    },
+    {
+      "id": "e3",
+      "from": "v0",
+      "to": "s0",
+      "label": "环境自检",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "e4",
+      "from": "h1",
+      "to": "p0",
+      "label": "启动读题链"
+    },
+    {
+      "id": "e5",
+      "from": "p0",
+      "to": "p1",
+      "label": "解析产物"
+    },
+    {
+      "id": "e6",
+      "from": "p1",
+      "to": "h2",
+      "label": "暴露歧义"
+    },
+    {
+      "id": "e7",
+      "from": "d0",
+      "to": "h2",
+      "label": "文献线索",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "e8",
+      "from": "h2",
+      "to": "cl",
+      "label": "框架已定"
+    },
+    {
+      "id": "e9",
+      "from": "s1",
+      "to": "cl",
+      "label": "符号就绪",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "e10",
+      "from": "cl",
+      "to": "orc",
+      "label": "G1 证据齐备"
+    },
+    {
+      "id": "e11",
+      "from": "orc",
+      "to": "g1",
+      "label": "derive 校验",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "e12",
+      "from": "g1",
+      "to": "orc",
+      "label": "门禁状态",
+      "role": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "配置开关（session_config）",
+      "items": [
+        "interaction_mode：learning/speed；rigor_profile：lean/submission（auto 读取）；兼容旧 mode",
+        "artifact_policy 四开关默认 ON · 可选 deadline → advisory deadline_hint"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "宿主速记",
+      "items": [
+        "Codex/Claude：.codex/.claude/skills 或插件；DSH 0.7.1：仓库为工作区 → .agents/skills 自动发现 32 技能",
+        "DSH/Codex 默认不执行 hooks；DSH 可选 cordis.patch.yml（须配 pluginRoot）；python/git 需在 PATH"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "首轮顺序与隐私",
+      "items": [
+        "problem-parser → problem-classifier → data-auditor-cleaner → workflow-orchestrator；产物落 planning/parse、classification、workspace/data",
+        "框架裁决原话入 framing_decisions.jsonl 或 Qx 账本；.gitignore 隐私守卫 + git worktree 隔离"
+      ]
+    }
+  ]
+}

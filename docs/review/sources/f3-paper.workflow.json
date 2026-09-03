@@ -1,0 +1,333 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "论文装配与提交 · submission 期（F3）",
+    "locale": "zh-CN",
+    "quality_profile": "standard"
+  },
+  "lanes": [
+    {
+      "id": "hum",
+      "label": "人类（签核/授权）",
+      "variant": "exception"
+    },
+    {
+      "id": "skill",
+      "label": "AI 技能链"
+    },
+    {
+      "id": "art",
+      "label": "证据与论文工件"
+    },
+    {
+      "id": "ext",
+      "label": "校验脚本 / TeX"
+    }
+  ],
+  "phases": [
+    {
+      "id": "p0",
+      "label": "提交三前置",
+      "fromCol": 0,
+      "toCol": 0
+    },
+    {
+      "id": "p1",
+      "label": "图表链",
+      "fromCol": 1,
+      "toCol": 1
+    },
+    {
+      "id": "p2",
+      "label": "章节写作（G5）",
+      "fromCol": 2,
+      "toCol": 2
+    },
+    {
+      "id": "p3",
+      "label": "G6 三审",
+      "fromCol": 3,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "p4",
+      "label": "装配 + 预检",
+      "fromCol": 4,
+      "toCol": 4
+    },
+    {
+      "id": "p5",
+      "label": "编译·授权·归档",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "dashed"
+    }
+  ],
+  "mainPath": [
+    "w0",
+    "t0",
+    "g1",
+    "figs",
+    "w2",
+    "sx",
+    "a3",
+    "aud",
+    "asm",
+    "mtx",
+    "xel",
+    "arc"
+  ],
+  "nodes": [
+    {
+      "id": "w0",
+      "lane": "skill",
+      "col": 0,
+      "type": "backend",
+      "label": "三件套产出技能",
+      "sublabel": "final/result/package 三前置产出",
+      "width": 145
+    },
+    {
+      "id": "t0",
+      "lane": "art",
+      "col": 0,
+      "type": "database",
+      "label": "writer 三件套",
+      "sublabel": "final explanation · result analysis · solution package + frozen_numbers",
+      "width": 300
+    },
+    {
+      "id": "sig",
+      "lane": "hum",
+      "col": 0,
+      "type": "security",
+      "label": "package_signoff",
+      "sublabel": "人签核后才允许冻结",
+      "width": 145
+    },
+    {
+      "id": "g1",
+      "lane": "skill",
+      "col": 1,
+      "type": "backend",
+      "label": "图表生成链",
+      "sublabel": "planner→generator→<图>.render.json",
+      "width": 205
+    },
+    {
+      "id": "figs",
+      "lane": "art",
+      "col": 1,
+      "type": "database",
+      "label": "paper/figures/",
+      "sublabel": "渲染证据 + figure 审计",
+      "width": 240
+    },
+    {
+      "id": "w2",
+      "lane": "skill",
+      "col": 2,
+      "type": "backend",
+      "label": "写作·润色·引用",
+      "sublabel": "writer→polisher→reference-manager",
+      "width": 200
+    },
+    {
+      "id": "sx",
+      "lane": "art",
+      "col": 2,
+      "type": "database",
+      "label": "paper/sections/qx.tex",
+      "sublabel": "冻结宏数字；cref 引用；解释人确认",
+      "width": 170
+    },
+    {
+      "id": "a3",
+      "lane": "skill",
+      "col": 3,
+      "type": "backend",
+      "label": "G6 三审链",
+      "sublabel": "consistency→completeness→QA",
+      "width": 145
+    },
+    {
+      "id": "aud",
+      "lane": "art",
+      "col": 3,
+      "type": "database",
+      "label": "三审报告工件",
+      "sublabel": "paper/audits/* + qa_report 七层状态；内容人终判",
+      "width": 255
+    },
+    {
+      "id": "asm",
+      "lane": "skill",
+      "col": 4,
+      "type": "messagebus",
+      "label": "latex_assembly + preflight",
+      "sublabel": "冻结宏+AI 声明+preflight(exit2)",
+      "width": 230
+    },
+    {
+      "id": "mtx",
+      "lane": "art",
+      "col": 4,
+      "type": "database",
+      "label": "paper/main.tex",
+      "sublabel": "clean-room / CUMCMThesis 模板",
+      "width": 145
+    },
+    {
+      "id": "xel",
+      "lane": "ext",
+      "col": 5,
+      "type": "external",
+      "label": "xelatex 两遍编译",
+      "sublabel": "页数≤30 · 摘要≤1 · PDF≤20MB（2026 红线）",
+      "width": 180
+    },
+    {
+      "id": "aif",
+      "lane": "skill",
+      "col": 5,
+      "type": "database",
+      "label": "AI 声明成文",
+      "sublabel": "ai_use_disclosure.md（submission_authorization 驱动）",
+      "width": 240
+    },
+    {
+      "id": "sig2",
+      "lane": "hum",
+      "col": 5,
+      "type": "security",
+      "label": "提交授权",
+      "sublabel": "人填 submission_authorization",
+      "width": 150
+    },
+    {
+      "id": "arc",
+      "lane": "art",
+      "col": 5,
+      "type": "database",
+      "label": "交付与归档",
+      "sublabel": "PDF + workspace/archived（复盘入口）",
+      "width": 170
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "from": "w0",
+      "to": "t0",
+      "label": "产出落盘"
+    },
+    {
+      "id": "e2",
+      "from": "sig",
+      "to": "t0",
+      "label": "签核",
+      "variant": "emphasis"
+    },
+    {
+      "id": "e3",
+      "from": "t0",
+      "to": "g1",
+      "label": "前置齐"
+    },
+    {
+      "id": "e4",
+      "from": "g1",
+      "to": "figs",
+      "label": "落图+证据"
+    },
+    {
+      "id": "e5",
+      "from": "figs",
+      "to": "w2",
+      "label": "引用图"
+    },
+    {
+      "id": "e6",
+      "from": "w2",
+      "to": "sx",
+      "label": "成稿"
+    },
+    {
+      "id": "e7",
+      "from": "sx",
+      "to": "a3",
+      "label": "G5 就绪"
+    },
+    {
+      "id": "e8",
+      "from": "a3",
+      "to": "aud",
+      "label": "三审落档"
+    },
+    {
+      "id": "e9",
+      "from": "aud",
+      "to": "asm",
+      "label": "装配"
+    },
+    {
+      "id": "e10",
+      "from": "asm",
+      "to": "mtx",
+      "label": "生成主文档"
+    },
+    {
+      "id": "e11",
+      "from": "mtx",
+      "to": "xel",
+      "label": "编译"
+    },
+    {
+      "id": "e12",
+      "from": "sig2",
+      "to": "aif",
+      "label": "授权"
+    },
+    {
+      "id": "e13",
+      "from": "xel",
+      "to": "arc",
+      "label": "成品",
+      "variant": "emphasis"
+    },
+    {
+      "id": "e14",
+      "from": "aif",
+      "to": "arc",
+      "label": "并入"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "writer 三前置与冻结",
+      "items": [
+        "① methods/Qx/qx_final_method_explanation.md ② results/Qx/reports/qx_final_result_analysis.md ③ results/Qx/reports/qx_solution_package_for_writer.md，每个数字 claim 源自现行 frozen_numbers.json",
+        "冻结前需 package_signoff；改数=解冻→改源→重跑→重冻结+freeze_change_log.md；check_frozen_freshness 前置"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "G6 与 QA 层",
+      "items": [
+        "consistency-auditor → completeness-auditor → quality-assurance-auditor；三份工件齐才可最终装配，内容由人终判",
+        "qa_report 状态词表：MECHANICAL_PASS/SEMANTIC_PASS/CONDITIONAL/HUMAN_JUDGMENT_PENDING/GATE_BLOCKED/NOT_RUN/CURRENT/STALE/MISSING"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "装配红线",
+      "items": [
+        "latex_assembly.py .（--dry-run / --check-only --strict / --template cumcmthesis）；模板：clean-room main.tex 或构建期外部 CUMCMThesis（固定 commit 38d1f21，不 vendor）",
+        "裸数字扫描（冻结宏引用）；preflight 任一执行步骤失败即 exit 2"
+      ]
+    }
+  ]
+}

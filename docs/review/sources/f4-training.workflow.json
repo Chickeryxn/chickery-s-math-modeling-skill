@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "训练模式闭环 · 资源库 → 闭卷解题 → 开卷对照 → 六维计分（F4）",
+    "locale": "zh-CN",
+    "quality_profile": "standard"
+  },
+  "lanes": [
+    { "id": "human", "label": "人类（监督与方向）", "variant": "exception" },
+    { "id": "lib", "label": "资源库与配置（存储）" },
+    { "id": "agent", "label": "AI 技能链（三件套 + 登记）" },
+    { "id": "art", "label": "轮次工件 results/training/roundN" },
+    { "id": "mech", "label": "机械检查脚本（C 阶段）" }
+  ],
+  "phases": [
+    { "id": "p0", "label": "准备", "fromCol": 0, "toCol": 0 },
+    { "id": "p1", "label": "A 闭卷", "fromCol": 1, "toCol": 1 },
+    { "id": "p2", "label": "B 开卷", "fromCol": 2, "toCol": 2 },
+    { "id": "p3", "label": "C 计分", "fromCol": 3, "toCol": 3, "variant": "emphasis" },
+    { "id": "p4", "label": "人类挑选", "fromCol": 4, "toCol": 4, "variant": "emphasis" },
+    { "id": "p5", "label": "下一轮", "fromCol": 5, "toCol": 5, "variant": "dashed" }
+  ],
+  "mainPath": ["cfg", "solver", "solution", "reflect", "reflection", "auditor", "scorecard", "summary", "pick", "next"],
+  "nodes": [
+    { "id": "cfg", "lane": "human", "col": 0, "type": "security", "label": "核对训练配置", "sublabel": "training_config.json", "width": 240 },
+    { "id": "lib", "lane": "lib", "col": 0, "type": "database", "label": "资源库", "sublabel": "6 类+index.json+赛题", "width": 240 },
+    { "id": "register", "lane": "agent", "col": 0, "type": "messagebus", "label": "素材登记", "sublabel": "resource_index.py", "width": 240 },
+    { "id": "solver", "lane": "agent", "col": 1, "type": "backend", "label": "training-solver", "sublabel": "A 闭卷·禁读资源库", "width": 260 },
+    { "id": "solution", "lane": "art", "col": 1, "type": "database", "label": "solution/", "sublabel": "中性布局完整解", "width": 240 },
+    { "id": "reflect", "lane": "agent", "col": 2, "type": "backend", "label": "training-reflector", "sublabel": "B 开卷对照", "width": 260 },
+    { "id": "reflection", "lane": "art", "col": 2, "type": "database", "label": "reflection.md", "sublabel": "差距+可迁移", "width": 240 },
+    { "id": "auditor", "lane": "agent", "col": 3, "type": "backend", "label": "training-auditor", "sublabel": "C 计分草稿", "width": 240 },
+    { "id": "scorecard", "lane": "art", "col": 3, "type": "database", "label": "scorecard.json", "sublabel": "六维自评", "width": 240 },
+    { "id": "mech", "lane": "mech", "col": 3, "type": "messagebus", "label": "机械检查七脚本", "sublabel": "状态入卡", "width": 240 },
+    { "id": "summary", "lane": "art", "col": 4, "type": "database", "label": "summary.json", "sublabel": "雷达+排名", "width": 240 },
+    { "id": "pick", "lane": "human", "col": 4, "type": "security", "label": "终评挑方向", "sublabel": "user_score 人填", "width": 240 },
+    { "id": "next", "lane": "human", "col": 5, "type": "security", "label": "进入下一轮", "sublabel": "变体/clean 隔离", "width": 240 },
+    { "id": "sediment", "lane": "lib", "col": 5, "type": "backend", "label": "沉淀 best 片段", "sublabel": "回资源库", "width": 240 }
+  ],
+  "edges": [
+    { "id": "e1", "from": "cfg", "to": "solver", "label": "读配置/题源" },
+    { "id": "e2", "from": "register", "to": "lib", "label": "重建索引", "variant": "dashed", "role": "branch" },
+    { "id": "e3", "from": "lib", "to": "solver", "label": "closed 禁读", "variant": "dashed", "role": "error", "width": 1.2 },
+    { "id": "e4", "from": "solver", "to": "solution", "label": "落盘" },
+    { "id": "e5", "from": "solution", "to": "reflect", "label": "交回路径", "variant": "emphasis" },
+    { "id": "e6", "from": "lib", "to": "reflect", "label": "开卷对照" },
+    { "id": "e7", "from": "reflect", "to": "reflection", "label": "写反思" },
+    { "id": "e8", "from": "reflection", "to": "auditor", "label": "齐备" },
+    { "id": "e9", "from": "auditor", "to": "scorecard", "label": "入卡" },
+    { "id": "e10", "from": "mech", "to": "scorecard", "label": "状态", "variant": "dashed", "role": "branch" },
+    { "id": "e11", "from": "scorecard", "to": "summary", "label": "聚合" },
+    { "id": "e12", "from": "summary", "to": "pick", "label": "请定稿" },
+    { "id": "e13", "from": "pick", "to": "next", "label": "更新侧重", "variant": "emphasis" },
+    { "id": "e14", "from": "next", "to": "solver", "label": "roundN+1", "variant": "dashed", "role": "return" },
+    { "id": "e15", "from": "next", "to": "sediment", "label": "沉淀", "variant": "dashed", "role": "branch" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "闭环", "items": ["A 闭卷 → B 开卷 → C 机械+六维计分；先独立思考后对照，不照抄只学素养"] },
+    { "dot": "emerald", "title": "计分", "items": ["六维：数学/创新/绘图/表达/证据/完整；agent 自评 1–5+证据 → 人类终评（不得代写）"] },
+    { "dot": "amber", "title": "隔离", "items": ["产物全在 results/training；不写竞赛路径；closed 双声明+人工监督；clean 轮禁读上一轮解"] }
+  ]
+}

@@ -102,6 +102,25 @@ Pick by goal (full index: [docs/](docs/README.md)):
 | Skills / commands / layout / glossary | [Reference](docs/reference.md) |
 | 0.9.0 audit-fix ledger (0.9.1 changes in the [CHANGELOG](CHANGELOG.md)) | [Audit-fix list](docs/audit-fix-0.9.0.md) |
 
+## 🎨 Interactive visual tour: audit report & full workflow diagrams
+
+This repository ships a full **audit report + an interactive diagram album** under [`docs/review/`](docs/review/): one overview plus six long-form workflow diagrams covering *setup & problem intake → per-subquestion gates G1–G6 → paper assembly & submission → post-contest review → training loop → repository maintenance & distribution*.
+
+<p align="center">
+  <a href="docs/review/00-overview.html" title="Overview (interactive)"><img src="docs/review/assets/00-overview.png" alt="Full workflow overview preview" width="720"/></a>
+</p>
+
+| Flow | Interactive | Static preview |
+|---|---|---|
+| F1 Setup, configuration & intake | [01-launch.html](docs/review/01-launch.html) | ![F1](docs/review/assets/01-launch.png) |
+| F2 Per-subquestion gates G1–G6 | [02-gates.html](docs/review/02-gates.html) | ![F2](docs/review/assets/02-gates.png) |
+| F3 Paper assembly & submission | [03-paper.html](docs/review/03-paper.html) | ![F3](docs/review/assets/03-paper.png) |
+| F4 Training loop | [04-training.html](docs/review/04-training.html) | ![F4](docs/review/assets/04-training.png) |
+| F5 Records · review · learning | [05-records.html](docs/review/05-records.html) | ![F5](docs/review/assets/05-records.png) |
+| F6 Maintenance · sync · distribution | [06-maintenance.html](docs/review/06-maintenance.html) | ![F6](docs/review/assets/06-maintenance.png) |
+
+The interactive HTML files are self-contained (embedded SVG, no external dependencies), support light/dark themes, pan/zoom, search/focus and export. Open `docs/review/index.html` in a browser after cloning, or publish `docs/` via GitHub Pages for online access. Album guide: [`docs/review/README.md`](docs/review/README.md); full written audit: [`docs/review/00-审阅报告.md`](docs/review/00-审阅报告.md).
+
 ## FAQ
 
 **Q: Can it solve problems or write the paper for me?**

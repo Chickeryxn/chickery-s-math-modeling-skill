@@ -1,0 +1,75 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "单子问题六门禁全流程 G1→G6（F2）",
+    "locale": "zh-CN",
+    "quality_profile": "standard"
+  },
+  "lanes": [
+    { "id": "hum", "label": "人类建模师（决策）", "variant": "exception" },
+    { "id": "qx", "label": "门禁推进（每子问题 Qx）" },
+    { "id": "ai", "label": "AI 技能与机器校验" }
+  ],
+  "phases": [
+    { "id": "p1", "label": "G1 框架化", "fromCol": 0, "toCol": 0 },
+    { "id": "p2", "label": "G2 筛选", "fromCol": 1, "toCol": 1 },
+    { "id": "p25", "label": "G2.5 定方法", "fromCol": 2, "toCol": 2, "variant": "emphasis" },
+    { "id": "p3", "label": "G3 代码实验", "fromCol": 3, "toCol": 3 },
+    { "id": "p4", "label": "G4 判定冻结", "fromCol": 4, "toCol": 4, "variant": "emphasis" },
+    { "id": "p5", "label": "G5/G6 终审", "fromCol": 5, "toCol": 5, "variant": "dashed" }
+  ],
+  "mainPath": ["g1", "g2", "g25", "g3", "g4", "g56"],
+  "nodes": [
+    { "id": "h0", "lane": "hum", "col": 0, "type": "security", "label": "框架裁决", "sublabel": "答 framing 卡；原话入账", "width": 185 },
+    { "id": "h1", "lane": "hum", "col": 1, "type": "security", "label": "CC1 四问", "sublabel": "输出/优先级/失败/预算", "width": 185 },
+    { "id": "h2", "lane": "hum", "col": 2, "type": "security", "label": "method_choice", "sublabel": "DECIDED 引探针证据", "width": 195 },
+    { "id": "h3", "lane": "hum", "col": 3, "type": "security", "label": "CC2 调整", "sublabel": "继续/调整/触发备选", "width": 185 },
+    { "id": "h4", "lane": "hum", "col": 4, "type": "security", "label": "G4 三判定", "sublabel": "结果/稳定/范围 + signoff", "width": 195 },
+    { "id": "h5", "lane": "hum", "col": 5, "type": "security", "label": "解释确认", "sublabel": "物理解释与贡献声明", "width": 185 },
+    { "id": "g1", "lane": "qx", "col": 0, "type": "backend", "label": "G1 通过", "sublabel": "parse+classify+data+framing", "width": 190 },
+    { "id": "g2", "lane": "qx", "col": 1, "type": "backend", "label": "G2 通过", "sublabel": "method card + 探针证据", "width": 190 },
+    { "id": "g25", "lane": "qx", "col": 2, "type": "backend", "label": "G2.5 通过", "sublabel": "账本 method_choice", "width": 180 },
+    { "id": "g3", "lane": "qx", "col": 3, "type": "backend", "label": "G3 通过", "sublabel": "run_summary+评审五态", "width": 190 },
+    { "id": "g4", "lane": "qx", "col": 4, "type": "backend", "label": "G4 通过", "sublabel": "判定+冻结(或 lean 止于此)", "width": 195 },
+    { "id": "g56", "lane": "qx", "col": 5, "type": "backend", "label": "G5/G6 通过", "sublabel": "论文就绪+三审落档", "width": 190 },
+    { "id": "a0", "lane": "ai", "col": 0, "type": "messagebus", "label": "derive 与 manifest", "sublabel": "读 canonical 证据算门禁", "width": 195 },
+    { "id": "a1", "lane": "ai", "col": 1, "type": "backend", "label": "method-selector", "sublabel": "风险探针+method card+CC1 落账", "width": 175 },
+    { "id": "a2", "lane": "ai", "col": 2, "type": "messagebus", "label": "require 放行", "sublabel": "derive G2.5 → code_plan 可产", "width": 200 },
+    { "id": "a3", "lane": "ai", "col": 3, "type": "backend", "label": "代码与实验", "sublabel": "analyzer→generator→评审+统一快照", "width": 215 },
+    { "id": "a4", "lane": "ai", "col": 4, "type": "backend", "label": "结果与稳健", "sublabel": "result report→robustness→质量门/冻结新鲜度", "width": 225 },
+    { "id": "a5", "lane": "ai", "col": 5, "type": "backend", "label": "论文与三审", "sublabel": "writer 三前置→section→一致性/完整/QA（详见 F3）", "width": 245 }
+  ],
+  "edges": [
+    { "id": "m1", "from": "g1", "to": "g2", "label": "证据过" },
+    { "id": "m2", "from": "g2", "to": "g25", "label": "待人选", "variant": "emphasis" },
+    { "id": "m3", "from": "g25", "to": "g3", "label": "放行代码", "variant": "emphasis" },
+    { "id": "m4", "from": "g3", "to": "g4", "label": "可判定" },
+    { "id": "m5", "from": "g4", "to": "g56", "label": "submission", "variant": "emphasis" },
+    { "id": "h1e", "from": "h0", "to": "h1", "label": "进入筛选" },
+    { "id": "h2e", "from": "h1", "to": "h2", "label": "选择" },
+    { "id": "h3e", "from": "h2", "to": "h3", "label": "实验后" },
+    { "id": "h4e", "from": "h3", "to": "h4", "label": "判定" },
+    { "id": "h5e", "from": "h4", "to": "h5", "label": "论文确认" },
+    { "id": "a1e", "from": "a0", "to": "a1", "label": "路由" },
+    { "id": "a2e", "from": "a1", "to": "a2", "label": "证据成卡" },
+    { "id": "a3e", "from": "a2", "to": "a3", "label": "批准后生成" },
+    { "id": "a4e", "from": "a3", "to": "a4", "label": "实验完成" },
+    { "id": "a5e", "from": "a4", "to": "a5", "label": "判定后写作" },
+    { "id": "x1", "from": "h0", "to": "g1", "label": "齐", "variant": "dashed", "role": "branch" },
+    { "id": "x2", "from": "a0", "to": "g1", "label": "推导", "variant": "dashed", "role": "branch" },
+    { "id": "x3", "from": "g2", "to": "a1", "label": "证据", "variant": "dashed", "role": "branch" },
+    { "id": "x4", "from": "h2", "to": "g25", "label": "人定", "variant": "emphasis" },
+    { "id": "x5", "from": "g3", "to": "a3", "label": "证据", "variant": "dashed", "role": "branch" },
+    { "id": "x6", "from": "h3", "to": "g3", "label": "继续", "variant": "dashed", "role": "branch" },
+    { "id": "x7", "from": "g4", "to": "a4", "label": "证据", "variant": "dashed", "role": "branch" },
+    { "id": "x8", "from": "h4", "to": "g4", "label": "判定", "variant": "dashed", "role": "branch" },
+    { "id": "x9", "from": "g56", "to": "a5", "label": "终审", "variant": "dashed", "role": "branch" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "过门证据（引擎查存在与结构深度）", "items": ["G1：parse（goal+required_outputs）+ classification（primary_type）+ data 清单 + framing（如声明需人裁）", "G2：method card 四锚点无占位 + probe verdict PASS/CONDITIONAL（含 output_degeneracy）", "G2.5：method_choice DECIDED+source；G3：最新轮 run_summary+评审五态 PASS/NOT_APPLICABLE；G4：三判定（+submission 附件）；G5/G6：三前置+冻结宏+三审"] },
+    { "dot": "rose", "title": "人类决策与双轨", "items": ["人判点：CC1 四问→method_choice→CC2→G4 三判定→package_signoff→解释确认；AI 只呈现证据并原话记录", "lean 停在 G4 结果判定子门（继续迭代不冻结）；submission 追加冻结/论文/G5/G6 与 deadline_hint"] },
+    { "dot": "emerald", "title": "机器强制红线", "items": ["require 敏感工件先 derive（code≥G2.5、freeze≥G4、paper≥G5、final≥G6）；manifest 不能自我提门禁", "DECIDED 缺 source 无效；快照须统一运行器执行；血缘 STALE/MISSING 阻断；冻结改数走 解冻→改源→重跑→重冻结"] },
+    { "dot": "amber", "title": "循环与回退", "items": ["CC2 选调整/回退 → 返回实验链（lean 内迭代）；备选仅在记录触发条件命中时激活", "稳健性双层：lean 探针 summary 与 submission 报告；结果判定基于计算证据而非口头声明"] }
+  ]
+}
