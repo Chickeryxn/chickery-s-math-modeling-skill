@@ -141,27 +141,9 @@ python scripts/work_record.py check .                    # 校验记录树
 命令与记录纪律详见 [工作记录树手册](docs/work-record.md)。
 ## 常见问题
 
-**Q：它能直接替我做题、写论文吗？**
-不能，也不该。AI 只承担机械正确性；方法、结果、物理解释与贡献必须由你拍板并留痕——这正是竞赛 AI 规则要求的分工。
+**面向使用者**：它能直接替我做题、写论文吗？不能，也不该——AI 只承担解析、代码、实验与草稿的机械正确性，方法选择、结果判定、物理解释与提交授权必须由你拍板并在 `methods/Qx/qx_decisions.jsonl` 留痕（这正是竞赛 AI 规则的分工）；需要安装什么？零第三方依赖，Python 3.10+ 即可，`python scripts/run_tests.py` 随时自检；第一次怎么跑？按「快速开始」四步放题并跑 `python scripts/validate_repo.py .`，默认 `learning + lean` 即可上手（熟练后可切 `speed`，交稿前切 `submission`）；赛题、附件和草稿会误提交吗？不会——`.gitignore` 已隔离全部竞赛内容，完全隔离可另用独立目录或 `git worktree`。
 
-**Q：需要安装什么？**
-零第三方依赖。所有脚本只用 Python 标准库（3.10+），`python scripts/run_tests.py` 即可自检。
-
-**Q：Codex、Claude、DSH 都能用吗？**
-能。`.codex/skills/`、`.claude/skills/`、`.agents/skills/` 三棵技能树各自完整、内容一致；改技能先改 `.codex/skills/`，再运行 `python scripts/sync_plugin.py .` 同步并校验。
-
-**Q：`frozen_numbers.json` 能直接手改吗？**
-不能。改数必须解冻 → 改源头 → 重跑 → 重冻结，并在 `freeze_change_log.md` 记录原因。
-
-**Q：第一次跑，从哪开始？**
-看 [学习路径](docs/learning-path.md)；或用默认 `learning + lean` 配置直接拿一道赛题练一轮，体会它在哪些节点停下来问你。
-
-**Q：赛题/数据/草稿会被 git 误提交吗？**
-不会（除非强制 `git add -f`）：`.gitignore` 已忽略 `workspace/` 数据与 `methods/results/robustness/paper/code/Q*/scratch` 及当次赛题规划产物（`planning/parse|classification|manifests` 与 `framing_decisions.jsonl`/`model_contract.json`）等竞赛内容（占位 `.gitkeep` 仍保留）。若要完全隔离，推荐在独立目录或 `git worktree` 中跑竞赛，赛后只把需要的复盘/记录拷回。
-
-**Q：与 XiaoMaColtAI 等上游库是什么关系？**
-本项目合并了 6 个上游项目并锁定 12 项决策（历史见 [references/README.md](references/README.md)）；现行可执行契约以 `AGENTS.md`、`schemas/`、`scripts/` 为准。
-
+**面向开发者/集成者**：三种宿主（Codex / Claude / DSH）的技能如何维护？契约只改 `.codex/skills/` 编辑源，然后运行 `python scripts/sync_plugin.py .` 同步 `.claude/.agents/插件分发` 三份副本并校验四树一致（DSH 通过 `.agents/skills/` 自动发现）；`frozen_numbers.json` 能直接手改吗？不能——改数必须“解冻 → 改源头 → 重跑 → 重冻结”并写入 `freeze_change_log.md`；上游内容受 SHA-256 哈希保护（`validate_upstream_assets.py`），`hooks` 为 advisory 且存在平台差异（见 `docs/dsh-compatibility.md`），发布前请让 CI 矩阵与 `python scripts/validate_repo.py .` 全部通过；若想改 README 里的计数与图表，注意同步 `docs/review/` 与 `test_doc_claims` 守卫。
 ## 许可与致谢
 
 [MIT License](LICENSE)。融合借鉴了 [XiaoMaColtAI/math-modeling-skill](https://github.com/XiaoMaColtAI/math-modeling-skill)、[latexstudio/CUMCMThesis](https://github.com/latexstudio/CUMCMThesis)、[Lupynow/math-modeling-skills](https://github.com/Lupynow/math-modeling-skills)、[Yuan1z0825/nature-skills](https://github.com/Yuan1z0825/nature-skills)、[jihe520/sci-box](https://github.com/jihe520/sci-box) 等上游项目；流程图由 [tt-a1i/archify](https://github.com/tt-a1i/archify) 生成。详细合并决策见 [references/README.md](references/README.md) 与 [NOTICE.md](NOTICE.md)。
