@@ -119,7 +119,18 @@ This repository ships a full **audit report + an interactive diagram album** und
 | F5 Records · review · learning | [05-records.html](docs/review/05-records.html) | ![F5](docs/review/assets/05-records.png) |
 | F6 Maintenance · sync · distribution | [06-maintenance.html](docs/review/06-maintenance.html) | ![F6](docs/review/assets/06-maintenance.png) |
 
-The interactive HTML files are self-contained (embedded SVG, no external dependencies), support light/dark themes, pan/zoom, search/focus and export. Open `docs/review/index.html` in a browser after cloning, or publish `docs/` via GitHub Pages for online access. Album guide: [`docs/review/README.md`](docs/review/README.md); full written audit: [`docs/review/00-审阅报告.md`](docs/review/00-审阅报告.md).
+The interactive HTML files are self-contained (embedded SVG, no external dependencies), support light/dark themes, pan/zoom, search/focus and export. Open `docs/review/index.html` in a browser after cloning.
+
+**Try it online (no clone needed):** the repo ships a GitHub Pages auto-deploy workflow ([`.github/workflows/pages.yml`](.github/workflows/pages.yml)) that publishes `docs/` as the site root. Enable once:
+
+1. Repository **Settings → Pages → Build and deployment → Source**: choose **GitHub Actions**;
+2. In **Actions**, run the “Deploy docs to GitHub Pages” workflow once (or simply push again);
+3. Once deployed, open in any browser:
+
+- Site root: <https://chickeryxn.github.io/chickery-s-math-modeling-skill/>
+- Interactive album: <https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/index.html>
+
+Album guide: [`docs/review/README.md`](docs/review/README.md); full written audit: [`docs/review/00-审阅报告.md`](docs/review/00-审阅报告.md).
 
 ## FAQ
 

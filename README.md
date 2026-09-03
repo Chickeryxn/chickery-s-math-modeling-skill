@@ -119,7 +119,18 @@ cd chickery-s-math-modeling-skill
 | F5 记录·复盘·沉淀 | [05-records.html](docs/review/05-records.html) | ![F5](docs/review/assets/05-records.png) |
 | F6 维护·同步·分发 | [06-maintenance.html](docs/review/06-maintenance.html) | ![F6](docs/review/assets/06-maintenance.png) |
 
-交互 HTML 自包含（内嵌 SVG，离线可用），支持明/暗主题、缩放平移、搜索聚焦与导出；克隆仓库后双击 `docs/review/index.html` 即可浏览，或将 `docs/` 配置为 GitHub Pages 发布目录在线访问。图集说明见 [`docs/review/README.md`](docs/review/README.md)，完整文字审阅见 [`docs/review/00-审阅报告.md`](docs/review/00-审阅报告.md)。
+交互 HTML 自包含（内嵌 SVG，离线可用），支持明/暗主题、缩放平移、搜索聚焦与导出；克隆仓库后双击 `docs/review/index.html` 即可浏览。
+
+**在线访问（无需克隆）**：仓库已内置 GitHub Pages 自动部署工作流（[`.github/workflows/pages.yml`](.github/workflows/pages.yml)，把 `docs/` 发布为站点根）。启用一次即可持续生效：
+
+1. 仓库 **Settings → Pages → Build and deployment → Source** 选择 **GitHub Actions**；
+2. 在 **Actions** 页运行一次 “Deploy docs to GitHub Pages”（或直接再次推送）；
+3. 部署完成后即可在任意浏览器直接体验：
+
+- 站点入口：<https://chickeryxn.github.io/chickery-s-math-modeling-skill/>
+- 交互图册入口：<https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/index.html>
+
+图集说明见 [`docs/review/README.md`](docs/review/README.md)，完整文字审阅见 [`docs/review/00-审阅报告.md`](docs/review/00-审阅报告.md)。
 
 ## 常见问题
 

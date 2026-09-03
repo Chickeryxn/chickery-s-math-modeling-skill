@@ -1,0 +1,39 @@
+name: Deploy docs to GitHub Pages
+
+# 把 docs/ 作为站点根发布，使 docs/review/ 下的交互流程图册可以在线访问
+# （无需克隆即可体验）。启用方式：仓库 Settings → Pages →
+# Build and deployment → Source 选 “GitHub Actions”，然后重新运行本工作流或再次推送。
+
+on:
+  push:
+    branches:
+      - mathmodeling-new-skeleton
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload docs as site root
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

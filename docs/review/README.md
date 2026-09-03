@@ -26,7 +26,9 @@
 
 - **GitHub 文件页**：优先看静态预览 PNG（HTML 需下载后在浏览器打开才能交互）。
 - **本地交互查看（推荐）**：克隆仓库后直接用浏览器打开本目录的 `index.html`（或任一 `0*.html`）。
-- **在线交互查看（可选）**：将仓库 `docs/` 目录配置为 GitHub Pages 发布目录，即可在线访问交互版（图自包含、无外部字体依赖）。
+- **在线交互查看（无需克隆）**：仓库内置自动部署工作流（`.github/workflows/pages.yml`）。启用一次：仓库 **Settings → Pages → Build and deployment → Source** 选 **GitHub Actions**，然后在 Actions 页运行一次 “Deploy docs to GitHub Pages”（或再次推送）。部署后：
+  - 站点入口：<https://chickeryxn.github.io/chickery-s-math-modeling-skill/>
+  - 本图册入口：<https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/index.html>
 - **二次编辑**：用 Archify 加载 `sources/*.workflow.json` 修改后重新导出 HTML / SVG / PNG（Node ≥ 18）：
 
 ```bash
