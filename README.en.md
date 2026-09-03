@@ -9,7 +9,7 @@
 | Version | [0.9.1](CHANGELOG.md) (plugin manifests in sync) |
 | Contents | 32 skills · 32 standard-library-only scripts · Python 3.10+ (zero third-party deps) |
 | Platforms | Windows / Linux / macOS |
-| CI | [![CI](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml) Ubuntu/Windows × Py 3.10–3.13, 271 test cases all green |
+| CI | [![CI](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml) Ubuntu/Windows × Py 3.10–3.13, 281 test cases all green |
 | License | [MIT](LICENSE) |
 
 ## What problem it solves

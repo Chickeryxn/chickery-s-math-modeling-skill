@@ -79,7 +79,7 @@ plugins:
 
 1. 用 DSH 打开仓库根目录 → 会话技能目录应出现 32 个技能（含 `work-logger`）。
 2. `python scripts/validate_repo.py .` → `status: PASS`。
-3. `python scripts/run_tests.py` → 247 用例全绿。
+3. `python scripts/run_tests.py` → 281 用例全绿。
 4. `python scripts/work_record.py init .`、`log "smoke" . --runtime dsh`、`check .` → 记录树可用；`log` 不带 `--runtime` 时应自动探测为 `dsh`。
 5. 打开一个决策点（或任意问答）后检查：若启用了 hooks 补丁，SessionStart 横幅与 PreToolUse 守卫按预期工作。
 6. 沙箱确认：默认 `workspace-write` 下可写仓库；尝试写仓库外路径应被拒绝并提示升级权限。
@@ -91,11 +91,11 @@ python scripts/validate_repo.py .                 # 仓库级总检（含 4 树�
 python scripts/sync_plugin.py . --check           # 4 树哈希一致性
 python scripts/validate_skill_trees.py .          # 4 树 + manifest 版本 + marketplace
 python scripts/work_record.py check .             # 记录树一致性
-python scripts/run_tests.py                       # 271 用例
+python scripts/run_tests.py                       # 281 用例
 ```
 
 ## 八、边界与保留项
 
 - DSH 不读取 `.codex-plugin`/`.claude-plugin`/`marketplace.json`/`hooks.json`——这些文件**保留**以服务 Codex/Claude，任何改动都必须过 `validate_skill_trees.py`。
 - DSH 无内置 Python 运行器；一律经 pwsh 调 `python`，沙箱只限制写权限不限制执行。
-- 限制性沙箱（read-only）下 pwsh 为 ConstrainedLanguage、受限进程派生 `stdio:'pipe'` 子进程会 EPERM——`create_run_snapshot.py` 的 `shell=True` 在 DSH 下经 cmd.exe 执行用户命令，属既有"命令字符串必须可信"契约（`scripts/README.md`）。
+- 限制性沙箱（read-only）下 pwsh 为 ConstrainedLanguage、受限进程派生 `stdio:'pipe'` 子进程会 EPERM——`create_run_snapshot.py` 的 `run` 模式不再经 shell 执行命令：`--command` 按平台规则拆分为 argv 后直接运行（shell 元字符不会被解释），跨平台引号语义一致；需要管道/重定向时显式包裹 `cmd /c ...` 或 `sh -c ...`（见 `scripts/README.md`）。
