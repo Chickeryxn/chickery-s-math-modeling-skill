@@ -104,6 +104,7 @@ cd chickery-s-math-modeling-skill
 | 构建论文（xelatex + CUMCMThesis） | [论文构建](docs/paper-build.md) |
 | 技能全表/命令速查/目录结构/术语表 | [参考手册](docs/reference.md) |
 | 0.9.0 审计修复对照（0.9.1 变更见 [CHANGELOG](CHANGELOG.md)） | [审计修复清单](docs/audit-fix-0.9.0.md) |
+| 记录每天的建模过程（`records/` 工作记录树，advisory） | [工作记录树](docs/work-record.md) |
 
 ## 🎨 交互体验：审阅报告与全流程流程图册
 
@@ -125,6 +126,19 @@ cd chickery-s-math-modeling-skill
 
 > 已由 GitHub Pages 自动部署（[`.github/workflows/pages.yml`](.github/workflows/pages.yml)），点击“交互版”链接即可在浏览器打开；克隆到本地也可双击 `docs/review/index.html`。图集说明见 [`docs/review/README.md`](docs/review/README.md)，完整文字审阅见 [`docs/review/00-审阅报告.md`](docs/review/00-审阅报告.md)。
 
+
+## 过程日志：工作记录树（可选）
+
+想让每次竞赛留下可回看的过程叙事？仓库提供 `records/` **工作记录树**：会话流水 `sessions/`、门禁迁移 `gates/`、决策卡镜像 `decisions/`、复盘 `retros/`、子问题叙事 `subjects/`，由 `work-logger` 技能配合 `scripts/work_record.py` 维护。它是 **advisory 叙事层**——不参与门禁判定，缺失也不阻塞流程；人类决定仍以 `methods/Qx/qx_decisions.jsonl` 账本为准。
+
+```bash
+python scripts/work_record.py init .                     # 首次建树
+python scripts/work_record.py log "完成 Q1 实验" --subject Q1   # 记一条会话
+python scripts/work_record.py gate Q1 G3 --evidence <工件路径>  # 记门禁迁移
+python scripts/work_record.py check .                    # 校验记录树
+```
+
+命令与记录纪律详见 [工作记录树手册](docs/work-record.md)。
 ## 常见问题
 
 **Q：它能直接替我做题、写论文吗？**

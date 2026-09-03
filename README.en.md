@@ -104,6 +104,7 @@ Pick by goal (full index: [docs/](docs/README.md)):
 | Build the paper (xelatex + CUMCMThesis) | [Paper build](docs/paper-build.md) |
 | Skills / commands / layout / glossary | [Reference](docs/reference.md) |
 | 0.9.0 audit-fix ledger (0.9.1 changes in the [CHANGELOG](CHANGELOG.md)) | [Audit-fix list](docs/audit-fix-0.9.0.md) |
+| Log your daily modeling process (`records/` work record tree, advisory) | [Work record tree](docs/work-record.md) |
 
 ## 🎨 Interactive visual tour: audit report & full workflow diagrams
 
@@ -125,6 +126,19 @@ This repository ships a full **audit report + an interactive diagram album** und
 
 > Auto-deployed via GitHub Pages ([`.github/workflows/pages.yml`](.github/workflows/pages.yml)): click an “Interactive” link to open it in the browser. After cloning you can also open `docs/review/index.html` locally. Album guide: [`docs/review/README.md`](docs/review/README.md); full written audit: [`docs/review/00-审阅报告.md`](docs/review/00-审阅报告.md).
 
+
+## Process log: the work record tree (optional)
+
+Want a reviewable narrative of each contest session? The repo ships the `records/` **work record tree** — session logs `sessions/`, gate transitions `gates/`, mirrored decision cards `decisions/`, retros `retros/`, per-subquestion narratives `subjects/` — maintained by the `work-logger` skill through `scripts/work_record.py`. It is an **advisory narrative layer**: it never gates the workflow, and missing entries never block anything; human decisions are still authoritative in `methods/Qx/qx_decisions.jsonl`.
+
+```bash
+python scripts/work_record.py init .                     # create the tree once
+python scripts/work_record.py log "finished Q1 experiment" --subject Q1
+python scripts/work_record.py gate Q1 G3 --evidence <artifact-path>
+python scripts/work_record.py check .                    # validate the tree
+```
+
+Commands and logging discipline: [work record tree guide](docs/work-record.md).
 ## FAQ
 
 **Q: Can it solve problems or write the paper for me?**
