@@ -12,7 +12,7 @@ derived gate; transitions must be monotonic.
 """
 from __future__ import annotations
 import sys
-import argparse, json, re, sys
+import argparse, hashlib, json, re, sys
 from pathlib import Path
 from datetime import datetime
 
@@ -83,6 +83,11 @@ def gate_value(x):
  if x not in GATES:raise ValueError(f'unknown gate: {x}')
  return GATES[x]
 def load_json(p):return json.loads(p.read_text(encoding='utf-8-sig'))
+def _sha256_file(path):
+    h=hashlib.sha256()
+    with open(path,'rb') as f:
+        for chunk in iter(lambda:f.read(1024*1024),b''): h.update(chunk)
+    return h.hexdigest()
 def decision_records(root,qid):
  p=root/'methods'/qid/f'{qid.lower()}_decisions.jsonl';out=[]
  if not p.is_file():return out
@@ -258,7 +263,33 @@ def derive_state(root: Path, qid: str, profile: str = 'submission'):
         try: snap=load_json(snapshot)
         except Exception: return False
         required=('run_id','status','return_code','result_ref','validation_ref','executed_by_runner')
-        return all(k in snap for k in required) and snap.get('status') in {'SUCCESS','DEGRADED_SUCCESS'} and snap.get('return_code')==0 and snap.get('executed_by_runner') is True
+        if not (all(k in snap for k in required) and snap.get('status') in {'SUCCESS','DEGRADED_SUCCESS'} and snap.get('return_code')==0 and snap.get('executed_by_runner') is True):
+            return False
+        # Re-verify the referenced outputs against the snapshot's recorded
+        # hashes when present (tool-produced snapshots always carry them), and
+        # require those outputs to still exist inside the project root. A
+        # hand-edited metadata claiming SUCCESS over stale/vanished outputs can
+        # no longer satisfy the G3 gate; full re-hashing mirrors
+        # validate_run_snapshot. Absent hash keys are tolerated for legacy and
+        # minimal contract-shaped snapshots, but the referenced files must
+        # exist so the run is not fictional.
+        for field, hfield in (('result_ref','result_hash'),('validation_ref','validation_hash')):
+            ref = snap.get(field); h = snap.get(hfield)
+            if not isinstance(ref, str): return False
+            try:
+                target = (root / ref).resolve()
+                target.relative_to(root.resolve())
+            except ValueError:
+                return False  # result/validation reference escapes the project root
+            if not target.is_file(): return False
+            if isinstance(h, str) and h:
+                try:
+                    actual = _sha256_file(target)
+                except OSError:
+                    return False
+                if actual != h:
+                    return False  # recorded hash no longer matches the output file
+        return True
     # Only the latest experiment round gates G3: earlier exploratory rounds may
     # predate the unified runner and are not required to carry snapshots.
     if runs:

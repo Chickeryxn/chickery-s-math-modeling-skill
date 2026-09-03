@@ -11,7 +11,7 @@ Covers:
    must pass validate_decisions.
 """
 from __future__ import annotations
-import json, tempfile, unittest
+import hashlib, json, tempfile, unittest
 from pathlib import Path
 import sys
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'scripts'))
@@ -55,7 +55,9 @@ def add_g3_evidence(root: Path):
         'config_hash':'x','command':'python main.py','environment':{},
         'status':'SUCCESS','return_code':0,'result_ref':'results/Q1/result.json',
         'validation_ref':'results/Q1/validation.json',
-        'result_hash':'0'*64,'validation_hash':'0'*64,'executed_by_runner':True}))
+        'result_hash':hashlib.sha256(b'x').hexdigest(),
+        'validation_hash':hashlib.sha256(b'x').hexdigest(),
+        'executed_by_runner':True}))
     write(runs/'run_summary.json',json.dumps({'run_snapshot':'results/Q1/experiments/round1/run_metadata.json'}))
     write(root/'results/Q1/result.json','x');write(root/'results/Q1/validation.json','x')
     write(root/'code/Q1/reviews/q1_python_review.json',json.dumps({
@@ -117,6 +119,20 @@ class GateProgressionTests(unittest.TestCase):
         write(root/'paper/qa_report.md','x')
         self.assertEqual(derive_state(root,'Q1')['gate'],'G6')
         self.assertEqual(require_gate(root,'Q1','final_assembly')['artifact_kind'],'final_assembly')
+        td.cleanup()
+
+    def test_tampered_snapshot_output_blocks_g3(self):
+        # Regression: derive_state trusted run_metadata fields without re-hashing
+        # the referenced outputs, so an edited/rewritten result file could still
+        # satisfy the G3 gate. A snapshot whose recorded hash no longer matches
+        # the output file must not pass the run-summary check.
+        td,root=base_workspace()
+        write(root/'methods/Q1/probes/risk_probe_summary.json',json.dumps({'methods':{'M1':{'verdict':'PASS','output_degeneracy':{'status':'PASS','metrics':{}}}}}))
+        add_g3_evidence(root)
+        self.assertEqual(derive_state(root,'Q1')['gate'],'G4')
+        # tamper with the output file the snapshot claims to have produced
+        write(root/'results/Q1/result.json','y')
+        self.assertEqual(derive_state(root,'Q1')['gate'],'G2.5')
         td.cleanup()
 
     def test_stage_hint_present(self):
