@@ -92,6 +92,15 @@ Grouped by function (full table in the [reference](docs/reference.md)):
 | Orchestration & auditing | gate routing, completeness/consistency/QA audits, work records |
 | Training mode | closed-book solving, literacy reflection, multi-dimensional audit |
 
+## Training mode: a three-step loop (optional)
+
+Want to train high-quality modeling skills without polluting a real contest? All training output stays isolated in `results/training/`:
+
+1. **Prepare**: drop the problem into `resource-library/assets/problems/` (or change `problem_source` in `planning/training_config.json`); after adding sample materials run `python scripts/resource_index.py .` to rebuild the index;
+2. **Run the loop (per round `roundN`)**: `training-solver` solves closed-book (reading `resource-library/` is forbidden) → `training-reflector` compares open-book and records gaps → `training-auditor` runs mechanical checks and drafts the 6-dimension scorecard (mathematical / innovation / figure / expression / evidence / completeness);
+3. **You steer**: give a final 1–5 score per dimension, pick the “next direction to approach”, update `training_config.json`, and start the next round; prefer switching problems/data between rounds, and clean rounds must not read the previous round’s solution.
+
+See the [training mode guide](docs/training.md).
 ## Documentation map
 
 Pick by goal (full index: [docs/](docs/README.md)):

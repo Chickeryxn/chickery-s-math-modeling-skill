@@ -92,6 +92,15 @@ cd chickery-s-math-modeling-skill
 | 编排与审计 | 门禁调度、完整性/一致性/QA 审计、工作记录 |
 | 训练模式 | 闭卷求解、素养复盘、多维审核 |
 
+## 训练模式：三步闭环（可选）
+
+想练出 Agent 的高品质建模能力，又不污染真实竞赛？训练产物全部隔离在 `results/training/`，流程三步：
+
+1. **准备**：把赛题放入 `resource-library/assets/problems/`（或改 `planning/training_config.json` 的 `problem_source`）；放入范例素材后运行 `python scripts/resource_index.py .` 重建索引；
+2. **三步闭环（每轮 `roundN`）**：`training-solver` 闭卷解题（禁读资源库）→ `training-reflector` 开卷对照、写出差距 → `training-auditor` 跑机械检查并起草六维计分卡（数学 / 创新 / 绘图 / 表达 / 证据 / 完整）；
+3. **人工定方向**：你给每维终评（1–5），挑选“下一轮逼近方向”→ 更新 `training_config.json` → 进入下一轮；多轮尽量换题/换数据，clean 轮禁读上一轮解法。
+
+详见 [训练模式手册](docs/training.md)。
 ## 文档地图
 
 按你的目标选（完整索引见 [docs/](docs/README.md)）：
