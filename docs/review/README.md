@@ -12,7 +12,7 @@
 
 交互 HTML 使用内嵌 SVG/CSS/脚本，**自包含、离线可用**；支持明/暗主题、缩放平移、搜索、节点聚焦、连线追踪与 PNG/SVG/WebM 导出。
 
-| 图 | 覆盖使用流程 | 静态预览 | 交互版（本地打开） | JSON 源 |
+| 图 | 覆盖使用流程 | 静态预览 | 交互版 | JSON 源 |
 |---|---|---|---|---|
 | 00 总览全景 | 全部流程一览与导航 | ![总览](assets/00-overview.png) | [00-overview.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/00-overview.html) | [sources](sources/f0-overview.workflow.json) |
 | F1 接入与赛题启动 | 三宿主打开 / 双配置开关 / 隔离自检 / 读题链四技能 / 框架裁决 | ![F1](assets/01-launch.png) | [01-launch.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/01-launch.html) | [sources](sources/f1-launch.workflow.json) |

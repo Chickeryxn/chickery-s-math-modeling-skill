@@ -56,7 +56,10 @@ cd chickery-s-math-modeling-skill
 
 ## 6 道门禁怎么运作
 
-![通用门控流水线](docs/diagrams/archify/assets/mm-generic-workflow.png)
+<p align="center">
+  <a href="https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/02-gates.html"><img src="docs/review/assets/02-gates.png" alt="单子问题六门禁 G1→G6 交互图预览" width="720"/></a><br/>
+  <sub>总览：[00-overview.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/00-overview.html) · 门禁交互图：[02-gates.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/02-gates.html)</sub>
+</p>
 
 每个子问题（Q1、Q2…）独立走同一套门禁。「谁放行」指该关的决定权在谁手上：
 
@@ -110,7 +113,7 @@ cd chickery-s-math-modeling-skill
   <a href="https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/00-overview.html" title="总览全景（交互）"><img src="docs/review/assets/00-overview.png" alt="全流程总览预览" width="720"/></a>
 </p>
 
-| 图 | 交互版（点击直达，无需克隆） | 静态预览 |
+| 图 | 交互版 | 静态预览 |
 |---|---|---|
 | 00 总览全景 | [00-overview.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/00-overview.html) | ![总览](docs/review/assets/00-overview.png) |
 | F1 接入·配置·赛题启动 | [01-launch.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/01-launch.html) | ![F1](docs/review/assets/01-launch.png) |
@@ -120,7 +123,7 @@ cd chickery-s-math-modeling-skill
 | F5 记录·复盘·沉淀 | [05-records.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/05-records.html) | ![F5](docs/review/assets/05-records.png) |
 | F6 维护·同步·分发 | [06-maintenance.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/06-maintenance.html) | ![F6](docs/review/assets/06-maintenance.png) |
 
-> 已由 GitHub Pages 自动部署（[`.github/workflows/pages.yml`](.github/workflows/pages.yml)），上面“交互版”链接即在线直达；克隆到本地也可双击 `docs/review/index.html`。图集说明见 [`docs/review/README.md`](docs/review/README.md)，完整文字审阅见 [`docs/review/00-审阅报告.md`](docs/review/00-审阅报告.md)。
+> 已由 GitHub Pages 自动部署（[`.github/workflows/pages.yml`](.github/workflows/pages.yml)），点击“交互版”链接即可在浏览器打开；克隆到本地也可双击 `docs/review/index.html`。图集说明见 [`docs/review/README.md`](docs/review/README.md)，完整文字审阅见 [`docs/review/00-审阅报告.md`](docs/review/00-审阅报告.md)。
 
 ## 常见问题
 

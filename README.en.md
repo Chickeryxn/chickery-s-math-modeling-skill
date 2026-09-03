@@ -56,7 +56,10 @@ Two configuration switches (`planning/session_config.json`):
 
 ## How the 6 gates work
 
-![Generic gate pipeline](docs/diagrams/archify/assets/mm-generic-workflow.png)
+<p align="center">
+  <a href="https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/02-gates.html"><img src="docs/review/assets/02-gates.png" alt="Per-subquestion gates G1-G6 interactive preview" width="720"/></a><br/>
+  <sub>Overview: [00-overview.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/00-overview.html) &middot; Gates diagram: [02-gates.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/02-gates.html)</sub>
+</p>
 
 Each subquestion (Q1, Q2, …) advances independently through the same gates. "Who opens" means who holds the decision at that stage:
 
@@ -110,7 +113,7 @@ This repository ships a full **audit report + an interactive diagram album** und
   <a href="https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/00-overview.html" title="Overview (interactive)"><img src="docs/review/assets/00-overview.png" alt="Full workflow overview preview" width="720"/></a>
 </p>
 
-| Diagram | Interactive (click to open, no clone) | Static preview |
+| Diagram | Interactive | Static preview |
 |---|---|---|
 | 00 Overview | [00-overview.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/00-overview.html) | ![Overview](docs/review/assets/00-overview.png) |
 | F1 Setup, configuration & intake | [01-launch.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/01-launch.html) | ![F1](docs/review/assets/01-launch.png) |
@@ -120,7 +123,7 @@ This repository ships a full **audit report + an interactive diagram album** und
 | F5 Records · review · learning | [05-records.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/05-records.html) | ![F5](docs/review/assets/05-records.png) |
 | F6 Maintenance · sync · distribution | [06-maintenance.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/06-maintenance.html) | ![F6](docs/review/assets/06-maintenance.png) |
 
-> Auto-deployed via GitHub Pages ([`.github/workflows/pages.yml`](.github/workflows/pages.yml)); the “Interactive” links above open directly in any browser. After cloning you can also open `docs/review/index.html` locally. Album guide: [`docs/review/README.md`](docs/review/README.md); full written audit: [`docs/review/00-审阅报告.md`](docs/review/00-审阅报告.md).
+> Auto-deployed via GitHub Pages ([`.github/workflows/pages.yml`](.github/workflows/pages.yml)): click an “Interactive” link to open it in the browser. After cloning you can also open `docs/review/index.html` locally. Album guide: [`docs/review/README.md`](docs/review/README.md); full written audit: [`docs/review/00-审阅报告.md`](docs/review/00-审阅报告.md).
 
 ## FAQ
 
