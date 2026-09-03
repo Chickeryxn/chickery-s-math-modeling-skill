@@ -20,7 +20,13 @@ Legacy method-pool files may be read during migration, but they do not override 
 2. Confirm scope:
    - one approved main method;
    - one usable baseline;
-   - fallback only when an activation decision or evidenced trigger exists.
+   - fallback only when an activation decision or evidenced trigger exists;
+   - the independent verifier when `model-code-analyzer`'s plan defines one
+     (`code/Qx/qx_verifier.py`): implement it from the plan, run it under the
+     unified runner in the same round, and record it under `verifier` in
+     `run_summary.json` — `validate_independence.py` requires the file to
+     exist, be distinct from main/baseline, and not read the main result as its
+     only numeric input.
 3. Generate clear runnable `.py` files under `code/Qx/`.
 4. Use project-root-safe paths, fixed seeds, explicit inputs, and minimal justified dependencies.
 5. Save:

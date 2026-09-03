@@ -51,7 +51,10 @@ Create `logs/` only for failures, warnings, or reproducibility needs.
    - a minimal independent verifier plan: `code/Qx/qx_verifier.py` for Python
      or `code/matlab/Qx/qx_verifier.m` for MATLAB. The verifier is a separate
      role: it must not read the main result as its only numeric input.
-9. Hand off to the matching language generator.
+9. Hand off to the matching language generator, which implements and runs the
+   approved main, baseline, and (when this plan defines one) the verifier
+   script; do not leave the verifier as a plan-only file, or the independence
+   checks fail at validation time.
 
 # Run Summary Contract
 

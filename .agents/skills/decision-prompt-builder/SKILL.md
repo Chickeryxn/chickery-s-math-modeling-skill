@@ -1,8 +1,8 @@
 ---
 name: decision-prompt-builder
-description: Build one compact choice card at a genuine mathematical-modeling judgment point. Use before method screening, after a meaningful experiment, or before final claim/freeze approval so the human chooses the trade-off while AI handles mechanical consequences.
+description: Build one compact choice card at a genuine mathematical-modeling judgment point. Use before method screening, at the G4 result-judgment round (result/stability/claim-scope verdicts in lean and submission), or at freeze approval so the human chooses the trade-off while AI handles mechanical consequences.
 license: MIT
-whenToUse: At a genuine modeling-judgment point (before screening, after the first meaningful experiment, before freeze) when the human must choose a trade-off.
+whenToUse: At a genuine modeling-judgment point (before screening, G4 result judgment after experiments and robustness checks, or freeze/package sign-off) when the human must choose a trade-off.
 ---
 
 # Purpose
@@ -64,30 +64,37 @@ Example:
 - D. 都不合适 / 补充约束。
 ```
 
-## After a meaningful experiment
+## G4 result judgment (after the meaningful experiments and the robustness checks)
 
-Use computed evidence to ask:
+Run this round in BOTH `lean` and `submission`: the gate engine requires the
+three verdicts below (recorded as `result_verdict`, `stability_verdict`,
+`claim_scope`) before the workspace can leave G3 — none is optional and none
+may be deferred to freeze. One card of up to three questions is enough (see
+workflow rule 4); ask only the verdicts whose records are missing from
+`methods/Qx/qx_decisions.jsonl`.
 
-- proceed with the current main method;
-- adjust a stated assumption or parameter and rerun;
-- activate the recorded fallback.
+- Result verdict (`decision_type: result_verdict`): proceed with the current
+  main method / adjust a stated assumption or parameter and rerun / activate
+  the recorded fallback.
+- Stability verdict (`decision_type: stability_verdict`): whether the
+  robustness evidence supports the result and the intended claims (stable
+  enough / not stable — adjust, rerun, or downgrade claims). Robustness
+  evidence may come from `robustness-checker` or, in lean, from the observed
+  run/seed behavior.
+- Claim scope (`decision_type: claim_scope`): which claims the results support
+  — keep / downgrade / drop.
 
-Name the consequence and evidence for each option. Do not silently convert an AI metric preference into the human verdict.
+Name the consequence and evidence for each option. Do not silently convert an
+AI metric preference into the human verdict.
 
-## Before final freeze
+## Freeze / package sign-off point (`submission` only)
 
-Use only when claim scope or confidence is genuinely judgment-bearing:
-
-- keep the claim;
-- downgrade it;
-- drop it.
-
-De-duplication: the claim-scope card (above, decision_type `claim_scope`) and
-the package sign-off card (decision_type `package_signoff`, produced by
-`solution-package-builder`) sit at the same freeze point but ask different
-questions. `workflow-orchestrator` routes only one of them per checkpoint
-unless the human explicitly asks to review both separately — do not emit both
-cards back to back on your own initiative.
+The package sign-off card (`decision_type: package_signoff`) and the AI-use
+submission authorization (`decision_type: submission_authorization`) belong to
+`solution-package-builder`'s package workflow (it asks for the sign-off and
+records both through `modeler-decision-logger`). If that skill routes the card
+through you, ask exactly the missing one — do not emit both back to back, and
+do not invent the package sign-off yourself.
 
 # Output
 

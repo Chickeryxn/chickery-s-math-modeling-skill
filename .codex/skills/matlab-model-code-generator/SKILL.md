@@ -17,7 +17,13 @@ Legacy artifacts may be read during migration but do not override the human deci
 # Workflow
 
 1. Read the code plan, decision ledger, method card, probe conditions, and data profile.
-2. Confirm scope: approved main plus usable baseline. Implement a fallback only after activation.
+2. Confirm scope: approved main plus usable baseline. Implement a fallback only
+   after activation. When `model-code-analyzer`'s plan defines an independent
+   verifier (`code/matlab/Qx/qx_verifier.m`), implement it from the plan, run
+   it under the unified runner in the same round, and record it under
+   `verifier` in `run_summary.json` — `validate_independence.py` requires the
+   file to exist, be distinct from main/baseline, and not read the main result
+   as its only numeric input.
 3. Generate conservative `.m` files under `code/matlab/Qx/`.
 4. Prefer basic matrix/table operations and avoid optional toolboxes unless the plan approves them.
 5. Save tables, metrics, useful figures, and `run_summary.json` under `results/Qx/experiments/roundN/`.

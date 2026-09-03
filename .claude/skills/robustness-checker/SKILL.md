@@ -41,7 +41,15 @@ Test the claims most likely to fail. Choose checks from the model's assumptions 
 
 `robustness/Qx/qx_robustness_report.md`
 
-7. If the stability verdict affects method continuation or claim scope, invoke one choice card; delegate recording the human answer to `modeler-decision-logger` with `decision_type: stability_verdict` (a verdict on stability evidence is a human judgment; the AI presents the evidence only).
+7. Ask the human for the stability verdict as part of the G4 result-judgment
+   round (in BOTH `lean` and `submission`; the gate engine requires a
+   `stability_verdict` record before the workspace can leave G3, so the verdict
+   is never conditional). Invoke one choice card presenting the robustness
+   evidence — the verdict may be "stable enough to continue/claim" or "not
+   stable — adjust, rerun, or downgrade claims". Delegate recording the human
+   answer to `modeler-decision-logger` with `decision_type: stability_verdict`
+   (a verdict on stability evidence is a human judgment; the AI presents the
+   evidence only).
 
 # Summary Contract
 

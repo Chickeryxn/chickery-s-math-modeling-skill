@@ -26,17 +26,27 @@ Create the writer's single source package and immutable numerical snapshot. Do n
    - robustness support;
    - decision ID for claim scope or rationale;
    - confidence/limitation.
-4. Invoke one final choice card when package sign-off is missing:
+4. When package sign-off is missing, invoke one final choice card:
    - keep;
    - downgrade;
    - drop.
-5. Route the human answer to `modeler-decision-logger` as `package_signoff`.
-6. Only after sign-off, generate `results/Qx/reports/frozen_numbers.json`.
+   Route the human answer to `modeler-decision-logger` as `package_signoff`.
+5. Unless the modeler already supplied `paper/ai_use_disclosure.md`, ask the
+   submission authorization at the same checkpoint: confirm that the AI-use
+   declaration wording/scope matches how AI was used (or request edits) and
+   record the answer with `modeler-decision-logger` as `decision_type:
+   submission_authorization`. `latex_assembly.py` consumes this record for the
+   "AI 工具使用声明" section and reports (failing under `--strict`) when no
+   declaration source exists.
+6. Only after package sign-off and either an AI-use authorization record or a
+   disclosure file, generate `results/Qx/reports/frozen_numbers.json`.
 7. Verify every numerical package claim resolves to the freeze and every judgment claim resolves to a human decision ID.
 8. Run `python scripts/check_frozen_freshness.py .` before handoff; treat any
-   stale claim (missing source, source newer than `frozen_at`, or invalid
-   `frozen_at`) as a blocker — thaw, rerun the affected source, and re-freeze
-   rather than shipping a stale freeze.
+   stale claim (missing source, source newer than `frozen_at`, naive
+   `frozen_at` without an explicit timezone, or invalid `frozen_at`) as a
+   blocker — thaw, rerun the affected source, and re-freeze rather than
+   shipping a stale freeze. Write `frozen_at` with an explicit offset (`Z` or
+   `±hh:mm`).
 
 # Frozen Number Contract
 
@@ -61,6 +71,8 @@ Use a source line only for stable text files; use a JSON path, table key, or row
 
 - Do not create `solution-package-builder_modeler_decision.md`.
 - Do not emit `results/Qx/reports/frozen_numbers.json` before human package sign-off.
+- Never claim an AI-use disclosure without either an authored
+  `paper/ai_use_disclosure.md` or a human `submission_authorization` record.
 - Never edit an existing freeze by hand.
 - Transcribe human rationales; do not re-compose them as stronger claims.
 - The package may cite the compact method-card history but must not depend on a separate iteration log.

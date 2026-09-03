@@ -103,14 +103,23 @@ Accept legacy Markdown review artifacts during migration, but prefer JSON for ne
 
 ## G4 — RESULTS_JUDGED_AND_FROZEN
 
-In `lean`, pass the result-judgment subgate when final-result and stability decisions cite computed evidence. Continue iterating without freezing when the human selects `adjust` or `fallback`.
+The result-judgment subgate is the same in `lean` and `submission`: the engine
+requires the human `result_verdict`, `stability_verdict`, and `claim_scope`
+records — all three — before the workspace can leave G3 (blocker "human result
+decisions incomplete" when any is missing). Route one compact
+`decision-prompt-builder` round that asks exactly the missing verdicts once the
+meaningful experiments and robustness evidence exist; each answer is recorded
+via `modeler-decision-logger`. Do not skip `claim_scope` in `lean` — the engine
+derives lean G4 only when all three verdicts are present. Continue iterating
+without freezing when the human selects `adjust` or `fallback`.
 
 In `submission`, additionally require:
 
 - final method explanation;
 - final result analysis;
 - robustness report;
-- package sign-off in the decision ledger;
+- package sign-off in the decision ledger (asked by `solution-package-builder`,
+  together with `submission_authorization` for the AI-use declaration);
 - solution package;
 - current `results/Qx/reports/frozen_numbers.json`.
 
@@ -138,7 +147,7 @@ Choose one primary next action:
 - missing human method choice → `decision-prompt-builder`;
 - approved method without implementation plan → `model-code-analyzer`;
 - code/review incomplete → language generator or reviewer;
-- meaningful experiment awaiting judgment → result choice card;
+- meaningful experiment + robustness evidence awaiting judgment → `decision-prompt-builder` G4 result-judgment round;
 - final results without robustness → `robustness-checker`;
 - submission package incomplete → final explainer, result report, or package builder;
 - paper ready but unaudited → the earliest missing final auditor.

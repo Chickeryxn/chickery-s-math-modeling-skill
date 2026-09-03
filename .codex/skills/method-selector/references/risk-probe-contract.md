@@ -4,7 +4,7 @@ Use only checks relevant to the method, but always cover executability, represen
 
 ## Canonical summary
 
-`methods` accepts either an array of method objects (each with an `id`) or an object keyed by method id; `scripts/workflow_guard.py` accepts both shapes. All listed methods must end with a `PASS` or justified `CONDITIONAL` verdict for screening to pass.
+`methods` accepts either an array of method objects (each with an `id`) or an object keyed by method id; `scripts/workflow_guard.py` accepts both shapes. Screening passes when every listed verdict is a legal value (`PASS`, justified `CONDITIONAL`, or an honest `FAIL`) and at least one usable candidate (main/baseline) ends with `PASS` or justified `CONDITIONAL`. A genuinely failed candidate (for example a rejected fallback probe) keeps its `FAIL` verdict — do not relabel or drop it; the human decision cites the probe record as it stands.
 
 Save `methods/Qx/probes/risk_probe_summary.json`:
 
