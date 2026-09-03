@@ -14,21 +14,19 @@
 
 | 图 | 覆盖使用流程 | 静态预览 | 交互版（本地打开） | JSON 源 |
 |---|---|---|---|---|
-| 00 总览全景 | 全部流程一览与导航 | ![总览](assets/00-overview.png) | [00-overview.html](00-overview.html) | [sources](sources/f0-overview.workflow.json) |
-| F1 接入与赛题启动 | 三宿主打开 / 双配置开关 / 隔离自检 / 读题链四技能 / 框架裁决 | ![F1](assets/01-launch.png) | [01-launch.html](01-launch.html) | [sources](sources/f1-launch.workflow.json) |
-| F2 单子问题六门禁 | G1→G2→G2.5→G3→G4→G5/G6 全部技能/证据/校验/人类裁决/双轨 | ![F2](assets/02-gates.png) | [02-gates.html](02-gates.html) | [sources](sources/f2-gates.workflow.json) |
-| F3 论文装配与提交 | writer 三前置 → 图链 → 写作润色 → G6 三审 → 装配预检 → 编译授权 | ![F3](assets/03-paper.png) | [03-paper.html](03-paper.html) | [sources](sources/f3-paper.workflow.json) |
-| F4 训练模式闭环 | 资源库 → 闭卷 → 开卷对照 → 六维计分 → 人类挑方向 → 下一轮 | ![F4](assets/04-training.png) | [04-training.html](04-training.html) | [sources](sources/f4-training.workflow.json) |
-| F5 记录·复盘·沉淀 | records 树与 work_record 命令 / 赛后判定 / learning_summary / 归档 | ![F5](assets/05-records.png) | [05-records.html](05-records.html) | [sources](sources/f5-records.workflow.json) |
-| F6 维护·同步·分发 | 契约编辑纪律 / 四树同步 / 全量校验 / CI 8 步 / 版本与宿主差异 | ![F6](assets/06-maintenance.png) | [06-maintenance.html](06-maintenance.html) | [sources](sources/f6-maintenance.workflow.json) |
+| 00 总览全景 | 全部流程一览与导航 | ![总览](assets/00-overview.png) | [00-overview.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/00-overview.html) | [sources](sources/f0-overview.workflow.json) |
+| F1 接入与赛题启动 | 三宿主打开 / 双配置开关 / 隔离自检 / 读题链四技能 / 框架裁决 | ![F1](assets/01-launch.png) | [01-launch.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/01-launch.html) | [sources](sources/f1-launch.workflow.json) |
+| F2 单子问题六门禁 | G1→G2→G2.5→G3→G4→G5/G6 全部技能/证据/校验/人类裁决/双轨 | ![F2](assets/02-gates.png) | [02-gates.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/02-gates.html) | [sources](sources/f2-gates.workflow.json) |
+| F3 论文装配与提交 | writer 三前置 → 图链 → 写作润色 → G6 三审 → 装配预检 → 编译授权 | ![F3](assets/03-paper.png) | [03-paper.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/03-paper.html) | [sources](sources/f3-paper.workflow.json) |
+| F4 训练模式闭环 | 资源库 → 闭卷 → 开卷对照 → 六维计分 → 人类挑方向 → 下一轮 | ![F4](assets/04-training.png) | [04-training.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/04-training.html) | [sources](sources/f4-training.workflow.json) |
+| F5 记录·复盘·沉淀 | records 树与 work_record 命令 / 赛后判定 / learning_summary / 归档 | ![F5](assets/05-records.png) | [05-records.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/05-records.html) | [sources](sources/f5-records.workflow.json) |
+| F6 维护·同步·分发 | 契约编辑纪律 / 四树同步 / 全量校验 / CI 8 步 / 版本与宿主差异 | ![F6](assets/06-maintenance.png) | [06-maintenance.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/06-maintenance.html) | [sources](sources/f6-maintenance.workflow.json) |
 
 ## 三、怎么查看
 
 - **GitHub 文件页**：优先看静态预览 PNG（HTML 需下载后在浏览器打开才能交互）。
 - **本地交互查看（推荐）**：克隆仓库后直接用浏览器打开本目录的 `index.html`（或任一 `0*.html`）。
-- **在线交互查看（无需克隆）**：仓库内置自动部署工作流（`.github/workflows/pages.yml`）。启用一次：仓库 **Settings → Pages → Build and deployment → Source** 选 **GitHub Actions**，然后在 Actions 页运行一次 “Deploy docs to GitHub Pages”（或再次推送）。部署后：
-  - 站点入口：<https://chickeryxn.github.io/chickery-s-math-modeling-skill/>
-  - 本图册入口：<https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/index.html>
+- **在线交互查看（无需克隆）**：已由 GitHub Pages 自动部署，直接打开 <https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/index.html> 即可；克隆到本地也可双击 `index.html`。
 - **二次编辑**：用 Archify 加载 `sources/*.workflow.json` 修改后重新导出 HTML / SVG / PNG（Node ≥ 18）：
 
 ```bash

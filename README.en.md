@@ -107,30 +107,20 @@ Pick by goal (full index: [docs/](docs/README.md)):
 This repository ships a full **audit report + an interactive diagram album** under [`docs/review/`](docs/review/): one overview plus six long-form workflow diagrams covering *setup & problem intake → per-subquestion gates G1–G6 → paper assembly & submission → post-contest review → training loop → repository maintenance & distribution*.
 
 <p align="center">
-  <a href="docs/review/00-overview.html" title="Overview (interactive)"><img src="docs/review/assets/00-overview.png" alt="Full workflow overview preview" width="720"/></a>
+  <a href="https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/00-overview.html" title="Overview (interactive)"><img src="docs/review/assets/00-overview.png" alt="Full workflow overview preview" width="720"/></a>
 </p>
 
-| Flow | Interactive | Static preview |
+| Diagram | Interactive (click to open, no clone) | Static preview |
 |---|---|---|
-| F1 Setup, configuration & intake | [01-launch.html](docs/review/01-launch.html) | ![F1](docs/review/assets/01-launch.png) |
-| F2 Per-subquestion gates G1–G6 | [02-gates.html](docs/review/02-gates.html) | ![F2](docs/review/assets/02-gates.png) |
-| F3 Paper assembly & submission | [03-paper.html](docs/review/03-paper.html) | ![F3](docs/review/assets/03-paper.png) |
-| F4 Training loop | [04-training.html](docs/review/04-training.html) | ![F4](docs/review/assets/04-training.png) |
-| F5 Records · review · learning | [05-records.html](docs/review/05-records.html) | ![F5](docs/review/assets/05-records.png) |
-| F6 Maintenance · sync · distribution | [06-maintenance.html](docs/review/06-maintenance.html) | ![F6](docs/review/assets/06-maintenance.png) |
+| 00 Overview | [00-overview.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/00-overview.html) | ![Overview](docs/review/assets/00-overview.png) |
+| F1 Setup, configuration & intake | [01-launch.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/01-launch.html) | ![F1](docs/review/assets/01-launch.png) |
+| F2 Per-subquestion gates G1–G6 | [02-gates.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/02-gates.html) | ![F2](docs/review/assets/02-gates.png) |
+| F3 Paper assembly & submission | [03-paper.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/03-paper.html) | ![F3](docs/review/assets/03-paper.png) |
+| F4 Training loop | [04-training.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/04-training.html) | ![F4](docs/review/assets/04-training.png) |
+| F5 Records · review · learning | [05-records.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/05-records.html) | ![F5](docs/review/assets/05-records.png) |
+| F6 Maintenance · sync · distribution | [06-maintenance.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/06-maintenance.html) | ![F6](docs/review/assets/06-maintenance.png) |
 
-The interactive HTML files are self-contained (embedded SVG, no external dependencies), support light/dark themes, pan/zoom, search/focus and export. Open `docs/review/index.html` in a browser after cloning.
-
-**Try it online (no clone needed):** the repo ships a GitHub Pages auto-deploy workflow ([`.github/workflows/pages.yml`](.github/workflows/pages.yml)) that publishes `docs/` as the site root. Enable once:
-
-1. Repository **Settings → Pages → Build and deployment → Source**: choose **GitHub Actions**;
-2. In **Actions**, run the “Deploy docs to GitHub Pages” workflow once (or simply push again);
-3. Once deployed, open in any browser:
-
-- Site root: <https://chickeryxn.github.io/chickery-s-math-modeling-skill/>
-- Interactive album: <https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/index.html>
-
-Album guide: [`docs/review/README.md`](docs/review/README.md); full written audit: [`docs/review/00-审阅报告.md`](docs/review/00-审阅报告.md).
+> Auto-deployed via GitHub Pages ([`.github/workflows/pages.yml`](.github/workflows/pages.yml)); the “Interactive” links above open directly in any browser. After cloning you can also open `docs/review/index.html` locally. Album guide: [`docs/review/README.md`](docs/review/README.md); full written audit: [`docs/review/00-审阅报告.md`](docs/review/00-审阅报告.md).
 
 ## FAQ
 
