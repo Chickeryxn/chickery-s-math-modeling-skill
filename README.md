@@ -33,27 +33,6 @@
 
 这正是各竞赛 AI 使用规则要求的分工：AI 是工具，建模判断与成果负责仍是参赛者本人。
 
-## 快速开始
-
-```bash
-git clone https://github.com/Chickeryxn/chickery-s-math-modeling-skill.git
-cd chickery-s-math-modeling-skill
-```
-
-克隆后即位于开发分支 `mathmodeling-new-skeleton`（仓库默认分支），无需切换。
-
-1. 用 **Codex / Claude / DeepSeek Harness（DSH）桌面版**打开仓库根目录。
-2. 赛题放入 `workspace/problem.txt`，附件放入 `workspace/data_raw/`（原始附件只读；清洗副本由工作流写入 `workspace/data_clean/`）。
-3. 环境自检：`python scripts/validate_repo.py .`
-4. 让 Agent 按顺序开始：`problem-parser → problem-classifier → data-auditor-cleaner → workflow-orchestrator`。它会一关一关推进，并在该你拍板的地方停下来问你。
-
-两个配置开关（`planning/session_config.json`）：
-
-| 开关 | 取值 | 作用 | 什么时候用 |
-|---|---|---|---|
-| `interaction_mode` | `learning` / `speed` | 提问密度与建议展示时机 | 新手用 `learning`；熟练后切 `speed` |
-| `rigor_profile` | `lean` / `submission` | 工件与审计密度（不改变「人做判断」的边界） | 探索迭代用 `lean`；交稿前切 `submission` |
-
 ## 6 道门禁怎么运作
 
 <p align="center">
@@ -148,6 +127,28 @@ python scripts/work_record.py check .                    # 校验记录树
 ```
 
 命令与记录纪律详见 [工作记录树手册](docs/work-record.md)。
+
+## 快速开始
+
+```bash
+git clone https://github.com/Chickeryxn/chickery-s-math-modeling-skill.git
+cd chickery-s-math-modeling-skill
+```
+
+克隆后即位于开发分支 `mathmodeling-new-skeleton`（仓库默认分支），无需切换。
+
+1. 用 **Codex / Claude / DeepSeek Harness（DSH）桌面版**打开仓库根目录。
+2. 赛题放入 `workspace/problem.txt`，附件放入 `workspace/data_raw/`（原始附件只读；清洗副本由工作流写入 `workspace/data_clean/`）。
+3. 环境自检：`python scripts/validate_repo.py .`
+4. 让 Agent 按顺序开始：`problem-parser → problem-classifier → data-auditor-cleaner → workflow-orchestrator`。它会一关一关推进，并在该你拍板的地方停下来问你。
+
+两个配置开关（`planning/session_config.json`）：
+
+| 开关 | 取值 | 作用 | 什么时候用 |
+|---|---|---|---|
+| `interaction_mode` | `learning` / `speed` | 提问密度与建议展示时机 | 新手用 `learning`；熟练后切 `speed` |
+| `rigor_profile` | `lean` / `submission` | 工件与审计密度（不改变「人做判断」的边界） | 探索迭代用 `lean`；交稿前切 `submission` |
+
 ## 常见问题
 
 - **它能直接替我做题、写论文吗？** 不能，也不该——AI 只承担解析、代码、实验与草稿的机械正确性；方法选择、结果判定、物理解释与提交授权由你拍板并在 `methods/Qx/qx_decisions.jsonl` 留痕（这正是竞赛 AI 规则要求的分工）。
