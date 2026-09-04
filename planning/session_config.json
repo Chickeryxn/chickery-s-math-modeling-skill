@@ -7,5 +7,6 @@
     "require_run_snapshot": true,
     "require_human_decision_source": true,
     "allow_downstream_on_blocked_gate": false
-  }
+  },
+  "run_mode": "unknown"
 }

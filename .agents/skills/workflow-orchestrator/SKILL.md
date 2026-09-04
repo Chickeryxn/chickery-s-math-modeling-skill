@@ -18,7 +18,9 @@ Before orchestration in a new workspace:
 - show `git status --short`;
 - check the chosen runtime and required core packages;
 - verify the workspace skeleton needed for the current request;
-- read `planning/session_config.json`, accepting legacy `mode`.
+- read `planning/session_config.json`, accepting legacy `mode`;
+- resolve the Problem-Start Mode for the active problem: `planning/framing_decisions.jsonl` `mode_choice` (else `session_config.run_mode`); if none exists, route to the problem-parser mode gate and do not proceed to parse;
+- enforce the library policy by mode: `training` -> never open `resource-library/`; `modeling` -> treat `resource-library/` as an important reference and allow consented contributions (AGENTS.md Problem-Start Mode Gate).
 
 Report warnings concisely. Do not create the full project skeleton unless the user is initializing a project.
 

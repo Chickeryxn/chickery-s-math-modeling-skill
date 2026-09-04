@@ -18,6 +18,7 @@ Produce a model-neutral problem contract. Do not start from favorite algorithms 
 
 # Workflow
 
+0. **Mode gate first**: ask the modeler whether this problem is 训练(training) — closed-book, resource-library MUST NOT be read — or 非训练/正式建模(modeling) — resource-library is an important reference (advisory only, never copied; human owns judgments). Do not parse before the mode is answered; while unanswered treat as closed-book. Hand the verbatim answer to modeler-decision-logger into planning/framing_decisions.jsonl with decision_type: mode_choice; never record it yourself. (Policy: AGENTS.md Problem-Start Mode Gate.)
 1. Record source files and missing referenced material.
 2. Extract the global objective and each Qx verbatim enough to preserve intent.
 3. For each Qx identify:

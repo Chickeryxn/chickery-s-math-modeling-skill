@@ -47,3 +47,8 @@ docs/diagrams/archify/generated/
 !/planning/manifests/.gitkeep
 /planning/framing_decisions.jsonl
 /planning/model_contract.json
+
+# ---- Local-only aesthetic work (OUR OWN USE; never push to remote) ----
+/chickery-figure-style/
+/resource-library/figures/exemplar-*/
+/resource-library/figures/topjournal-style/
