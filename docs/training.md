@@ -55,7 +55,7 @@
 ## 五、规则与边界
 
 - **closed 隔离**：`training-solver` 技能规则与 `training_config.json` 的 `closed_phase_forbidden_paths` 双声明禁读；执行时人工监督。
-- **不污染竞赛流程**：训练产物全部在 `results/training/`；正常竞赛（G1–G6）不读取资源库与训练结果。
+- **不污染竞赛流程**：训练产物全部在 `results/training/`。是否读取资源库按 AGENTS.md「Problem-Start Mode Gate」执行：训练(闭卷)不读；非训练/正式建模把资源库当作重要参考（不读取训练结果）。
 - **不预设"标准答案"**：资源库是素养标杆，不是答案库；解题不要求与范例一致。
 - **版权**：只放有权使用的素材并标注来源。
 
