@@ -8,9 +8,6 @@
 
 `content/`、`code/`、`data/`、`figures/`（若再嵌套）为**支持目录**，由 `scripts/resource_index.py` 归入各分类的 `supporting`，不会作为训练"条目"。
 
-
-> **附属项目接入**：本库的"顶刊审美"风格已由附属项目 [chickery-figure-style](https://github.com/Chickeryxn/chickery-figure-style) 打包为**可选配置**分发（预设 + 风格技能 + tjstyle + 示范图库 + 插件清单）。主项目已内置：`topjournal-style/`（审美规则 + `scripts/tjstyle.py` + `scripts/figure_style_config.json`）与三组 `exemplar-*` 成图模范。要**把附属项目直接配置进主项目**，见 [docs/figure-style.md](../../docs/figure-style.md)（子模块 / 独立插件 / 拷贝三选一，一行命令）。
-
 ## 说明模板（条目 `README.md` 或扁平 `<name>.md` 按此填，字段分必填/选填）
 
 ```markdown

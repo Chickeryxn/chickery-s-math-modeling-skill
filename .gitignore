@@ -47,6 +47,3 @@ docs/diagrams/archify/generated/
 !/planning/manifests/.gitkeep
 /planning/framing_decisions.jsonl
 /planning/model_contract.json
-
-# ---- subsidiary figure-style repo (managed separately; keep out of this repo) ----
-/chickery-figure-style/
