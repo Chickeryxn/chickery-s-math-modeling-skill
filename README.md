@@ -91,7 +91,7 @@
 | 训练 Agent 的高品质建模能力 | [训练模式](docs/training.md) |
 | 构建论文（xelatex + CUMCMThesis） | [论文构建](docs/paper-build.md) |
 | 技能全表/命令速查/目录结构/术语表 | [参考手册](docs/reference.md) |
-| 0.9.0 审计修复对照（0.9.1 变更见 [CHANGELOG](CHANGELOG.md)） | [审计修复清单](docs/audit-fix-0.9.0.md) |
+| 0.9.0 审计修复对照（后续变更见 [CHANGELOG](CHANGELOG.md)） | [审计修复清单](docs/audit-fix-0.9.0.md) |
 | 记录每天的建模过程（`records/` 工作记录树，advisory） | [工作记录树](docs/work-record.md) |
 
 ## 🎨 交互体验：审阅报告与全流程流程图册

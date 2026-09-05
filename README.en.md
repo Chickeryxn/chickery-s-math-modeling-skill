@@ -112,7 +112,7 @@ Pick by goal (full index: [docs/](docs/README.md)):
 | Train high-quality modeling answers | [Training mode](docs/training.md) |
 | Build the paper (xelatex + CUMCMThesis) | [Paper build](docs/paper-build.md) |
 | Skills / commands / layout / glossary | [Reference](docs/reference.md) |
-| 0.9.0 audit-fix ledger (0.9.1 changes in the [CHANGELOG](CHANGELOG.md)) | [Audit-fix list](docs/audit-fix-0.9.0.md) |
+| 0.9.0 audit-fix ledger (subsequent changes in the [CHANGELOG](CHANGELOG.md)) | [Audit-fix list](docs/audit-fix-0.9.0.md) |
 | Log your daily modeling process (`records/` work record tree, advisory) | [Work record tree](docs/work-record.md) |
 
 ## 🎨 Interactive visual tour: audit report & full workflow diagrams
