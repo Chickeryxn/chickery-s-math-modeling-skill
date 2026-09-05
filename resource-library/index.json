@@ -107,7 +107,44 @@
       "docs": [
         "README.md"
       ],
-      "supporting": []
+      "supporting": [
+        "2019A_formula_control_opt/content/2019A_formula_control_opt.tex",
+        "2019A_formula_pressure_ode/content/2019A_formula_pressure_ode.tex",
+        "2019B_formula_drum_dynamics/content/2019B_formula_drum_dynamics.tex",
+        "2019B_formula_team_strategy/content/2019B_formula_team_strategy.tex",
+        "2019C_formula_boarding_efficiency/content/2019C_formula_boarding_efficiency.tex",
+        "2019C_formula_taxi_decision/content/2019C_formula_taxi_decision.tex",
+        "2020A_formula_heat_ode/content/2020A_formula_heat_ode.tex",
+        "2020A_formula_process_opt/content/2020A_formula_process_opt.tex",
+        "2020B_formula_dp_transition/content/2020B_formula_dp_transition.tex",
+        "2020B_formula_weather_game/content/2020B_formula_weather_game.tex",
+        "2020C_formula_credit_score/content/2020C_formula_credit_score.tex",
+        "2020C_formula_portfolio_opt/content/2020C_formula_portfolio_opt.tex",
+        "2021A_formula_adjustment_opt/content/2021A_formula_adjustment_opt.tex",
+        "2021A_formula_paraboloid_fit/content/2021A_formula_paraboloid_fit.tex",
+        "2021B_formula_response_surface/content/2021B_formula_response_surface.tex",
+        "2021B_formula_yield_opt/content/2021B_formula_yield_opt.tex",
+        "2021C_formula_evaluation/content/2021C_formula_evaluation.tex",
+        "2021C_formula_ordering_transport/content/2021C_formula_ordering_transport.tex",
+        "2022A_formula_coupled_ode/content/2022A_formula_coupled_ode.tex",
+        "2022A_formula_nested_opt/content/2022A_formula_nested_opt.tex",
+        "2022B_formula_adjustment/content/2022B_formula_adjustment.tex",
+        "2022B_formula_bearing_localization/content/2022B_formula_bearing_localization.tex",
+        "2022C_formula_classify_correlate/content/2022C_formula_classify_correlate.tex",
+        "2022C_formula_clr/content/2022C_formula_clr.tex",
+        "2023A_formula_design_opt/content/2023A_formula_design_opt.tex",
+        "2023A_formula_optics_efficiency/content/2023A_formula_optics_efficiency.tex",
+        "2023B_formula_coverage_width/content/2023B_formula_coverage_width.tex",
+        "2023B_formula_line_layout/content/2023B_formula_line_layout.tex",
+        "2023C_formula_pricing_elasticity/content/2023C_formula_pricing_elasticity.tex",
+        "2023C_formula_replenish_opt/content/2023C_formula_replenish_opt.tex",
+        "2024A_formula_curve_kinematics/content/2024A_formula_curve_kinematics.tex",
+        "2024A_formula_geometry_decision/content/2024A_formula_geometry_decision.tex",
+        "2024B_formula_expected_flow/content/2024B_formula_expected_flow.tex",
+        "2024B_formula_sampling_min_n/content/2024B_formula_sampling_min_n.tex",
+        "2024C_formula_assign_model/content/2024C_formula_assign_model.tex",
+        "2024C_formula_uncertainty_cvar/content/2024C_formula_uncertainty_cvar.tex"
+      ]
     },
     "ideas": {
       "entries": [
@@ -224,7 +261,26 @@
       "docs": [
         "README.md"
       ],
-      "supporting": []
+      "supporting": [
+        "2019A_table_result_pressure/content/2019A_table_result_pressure.tex",
+        "2019B_table_result_drum/content/2019B_table_result_drum.tex",
+        "2019C_table_result_taxi/content/2019C_table_result_taxi.tex",
+        "2020A_table_result_reflow/content/2020A_table_result_reflow.tex",
+        "2020B_table_result_desert/content/2020B_table_result_desert.tex",
+        "2020C_table_result_credit/content/2020C_table_result_credit.tex",
+        "2021A_table_result_fast/content/2021A_table_result_fast.tex",
+        "2021B_table_result_yield/content/2021B_table_result_yield.tex",
+        "2021C_table_result_ordering/content/2021C_table_result_ordering.tex",
+        "2022A_table_result_power/content/2022A_table_result_power.tex",
+        "2022B_table_result_localization/content/2022B_table_result_localization.tex",
+        "2022C_table_result_classify/content/2022C_table_result_classify.tex",
+        "2023A_table_result_compare/content/2023A_table_result_compare.tex",
+        "2023B_table_result_coverage/content/2023B_table_result_coverage.tex",
+        "2023C_table_replenish_result/content/2023C_table_replenish_result.tex",
+        "2024A_table_evidence/content/2024A_table_evidence.tex",
+        "2024B_table_decision_result/content/2024B_table_decision_result.tex",
+        "2024C_table_solution_compare/content/2024C_table_solution_compare.tex"
+      ]
     }
   }
 }
