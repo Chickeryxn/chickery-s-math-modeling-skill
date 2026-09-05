@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "mathmodeling-skills",
-      "version": "0.9.1",
+      "version": "0.10.0",
       "source": {
         "source": "local",
         "path": "./plugins/mathmodeling-skills"

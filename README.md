@@ -6,7 +6,7 @@
 
 | 徽章 | 值 |
 |---|---|
-| 版本 | [0.9.1](CHANGELOG.md)（插件 manifest 同步） |
+| 版本 | [0.10.0](CHANGELOG.md)（插件 manifest 同步） |
 | 组成 | 32 个技能 · 32 个纯标准库脚本 · Python 3.10+（零第三方依赖） |
 | 平台 | Windows / Linux / macOS |
 | CI | [![CI](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml) Ubuntu/Windows × Py 3.10–3.13，281 个用例全绿 |

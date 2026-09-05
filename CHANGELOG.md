@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.10.0 — 2026-09-05
+
+Resource-library 素养库大扩容：新增 2019–2024 六届 CUMCM（A/B/C 全 18 个赛题、64 篇获奖论文）的提炼条目，共 **126 条**（papers/ideas/formulas/tables；不含 figure），全部按各分类模板、以"抽象核心为主 + 具体示例为辅 + papers 双条目（多论文素养共识 + 论文结构反思）+ 可迁移拓宽（同法同类题 / 同思想异解法）"写入，并重整 `resource-library/index.json`（schema_version 2）。
+
+- **papers/**：每赛题 2 条 `20XX{A,B,C}_paper_{note,structure}` —— ①多论文素养共识（亮点/建模决策链/结果呈现/素养对照/局限反例）、②论文结构（整体+局部）反思，含反例（口径/单位/符号不一、公式-代码-正文冲突、约束未满足却称满足、结果多解矛盾、无交叉验证/敏感性、随机无种子等）。
+- **ideas/**：每赛题 2 条（思路卡：对象→变量→关系→约束/目标 + 可量化风险 + 教训 + 可迁移）。
+- **formulas/**：每赛题 2 条（关键公式 + 符号/前提 + 推导链 + 数值算例 + 陷阱 + 可迁移）。
+- **tables/**：每赛题 1 条（结果/对比/参数敏感性三线表骨架 + 可迁移做表规则）。
+- 覆盖的抽象素养：坐标系变换/几何对称降维、廉价代理→精确验证、尺度折减（量级证明 PDE→0D）、机理+数据辨识、先反演再控制、把硬约束封装成可行性筛子、先证不变量/齐次性再寻优、规模定范式（枚举→DP→启发式）、成分数据对数比变换、形态→方法→算法链式映射、先剥离混淆再估效应、客观定权+人因校准、量纲归一（单位时间净收益）、期望 vs 风险度量（期望/CVaR/三准则/鲁棒）选型、统一换算量纲、多目标优先级/Pareto、评分-决策解耦、外部冲击乘数化、系统模拟+分状态+单点扰动检验。
+- 源材料：`https://github.com/Chickeryxn/paper`（用户自有仓库）；本库仅存提炼笔记、不复制赛题/论文全文，source/rights 逐条标注。
+- 版本对齐：两 plugin manifest + marketplace + CHANGELOG + README 徽章（0.10.0）。
+- 说明：`resource-library/index.json` 为机器生成（`python scripts/resource_index.py .`），本提交含保持一致的重生成结果；本地 figure 示范（`figures/exemplar-*`、`figures/topjournal-style/`）仍按 `.gitignore` 作为"本地自用、不入库"，未纳入本提交。
+
 ## 0.9.1 — 2026-09-02
 
 Audit-fix follow-up implementing the full P0–P2 finding list (see
