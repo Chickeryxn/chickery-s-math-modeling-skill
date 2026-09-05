@@ -13,7 +13,11 @@
     "figures": {
       "entries": [
         "example-rank-bar/README.md",
-        "example.md"
+        "example.md",
+        "exemplar-nipt-multipanel-2025c/README.md",
+        "exemplar-occlusion-3d-2025a/README.md",
+        "exemplar-thickness-spectra-2025b/README.md",
+        "topjournal-style/README.md"
       ],
       "docs": [
         "README.md"
@@ -21,7 +25,43 @@
       "supporting": [
         "example-rank-bar/code/plot_rank_bar.py",
         "example-rank-bar/content/rank_bar.png",
-        "example-rank-bar/data/rank_scores.csv"
+        "example-rank-bar/data/rank_scores.csv",
+        "exemplar-nipt-multipanel-2025c/code/make_nipt_final.py",
+        "exemplar-nipt-multipanel-2025c/code/tjstyle.py",
+        "exemplar-nipt-multipanel-2025c/content/fig_C1_y_conc_vs_week_bmi.pdf",
+        "exemplar-nipt-multipanel-2025c/content/fig_C1_y_conc_vs_week_bmi.png",
+        "exemplar-nipt-multipanel-2025c/content/fig_C1_y_conc_vs_week_bmi.render.json",
+        "exemplar-nipt-multipanel-2025c/content/fig_C2_expected_risk_optimum.pdf",
+        "exemplar-nipt-multipanel-2025c/content/fig_C2_expected_risk_optimum.png",
+        "exemplar-nipt-multipanel-2025c/content/fig_C2_expected_risk_optimum.render.json",
+        "exemplar-nipt-multipanel-2025c/content/fig_C3_female_aneuploidy_roc.pdf",
+        "exemplar-nipt-multipanel-2025c/content/fig_C3_female_aneuploidy_roc.png",
+        "exemplar-nipt-multipanel-2025c/content/fig_C3_female_aneuploidy_roc.render.json",
+        "exemplar-occlusion-3d-2025a/code/make_2025A_figs_fixed.py",
+        "exemplar-occlusion-3d-2025a/code/tjstyle.py",
+        "exemplar-occlusion-3d-2025a/content/2025A_F1_geometry3d.pdf",
+        "exemplar-occlusion-3d-2025a/content/2025A_F1_geometry3d.png",
+        "exemplar-occlusion-3d-2025a/content/2025A_F1_geometry3d.render.json",
+        "exemplar-occlusion-3d-2025a/content/2025A_F1_view_2d.pdf",
+        "exemplar-occlusion-3d-2025a/content/2025A_F1_view_2d.png",
+        "exemplar-occlusion-3d-2025a/content/2025A_F1_view_2d.render.json",
+        "exemplar-occlusion-3d-2025a/content/2025A_F2_burstdelay_decision.pdf",
+        "exemplar-occlusion-3d-2025a/content/2025A_F2_burstdelay_decision.png",
+        "exemplar-occlusion-3d-2025a/content/2025A_F2_burstdelay_decision.render.json",
+        "exemplar-occlusion-3d-2025a/content/2025A_F3_speed_offset_sensitivity.pdf",
+        "exemplar-occlusion-3d-2025a/content/2025A_F3_speed_offset_sensitivity.png",
+        "exemplar-occlusion-3d-2025a/content/2025A_F3_speed_offset_sensitivity.render.json",
+        "exemplar-thickness-spectra-2025b/code/render_figures_2025B.py",
+        "exemplar-thickness-spectra-2025b/code/tjstyle.py",
+        "exemplar-thickness-spectra-2025b/content/fig1_spectrum_fringes_SiC_two_angle.pdf",
+        "exemplar-thickness-spectra-2025b/content/fig1_spectrum_fringes_SiC_two_angle.png",
+        "exemplar-thickness-spectra-2025b/content/fig1_spectrum_fringes_SiC_two_angle.render.json",
+        "exemplar-thickness-spectra-2025b/content/fig2_thickness_two_angles_SiC.pdf",
+        "exemplar-thickness-spectra-2025b/content/fig2_thickness_two_angles_SiC.png",
+        "exemplar-thickness-spectra-2025b/content/fig2_thickness_two_angles_SiC.render.json",
+        "exemplar-thickness-spectra-2025b/content/fig3_multibeam_Si_vs_SiC.pdf",
+        "exemplar-thickness-spectra-2025b/content/fig3_multibeam_Si_vs_SiC.png",
+        "exemplar-thickness-spectra-2025b/content/fig3_multibeam_Si_vs_SiC.render.json"
       ]
     },
     "formulas": {

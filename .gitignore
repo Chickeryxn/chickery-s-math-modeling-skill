@@ -48,7 +48,5 @@ docs/diagrams/archify/generated/
 /planning/framing_decisions.jsonl
 /planning/model_contract.json
 
-# ---- Local-only aesthetic work (OUR OWN USE; never push to remote) ----
+# ---- Local-only (OUR OWN USE) ----
 /chickery-figure-style/
-/resource-library/figures/exemplar-*/
-/resource-library/figures/topjournal-style/
