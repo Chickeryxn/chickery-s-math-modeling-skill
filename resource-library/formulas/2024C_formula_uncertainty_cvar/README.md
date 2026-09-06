@@ -9,8 +9,10 @@
 1) 期望目标：$max mathbb E[mathrm{Profit}]$；区间演算 $Y'=Y(1pm r)$、$C'=C,1.05^{,t-2023}$、麦玉销量 $D(1+alpha)^{t-2023}$。
 2) 风险度量（CVaR）：$$mathrm{CVaR}_alpha=rac{1}{1-alpha}sum_imaxig(L_i-mathrm{VaR}_alpha,0ig),qquad max mathbb E[	ext{收益}]-lambda,mathrm{CVaR}_alpha$$
 3) 决策准则：悲观 $max_imin_s a_{is}$、乐观 $max_imax_s a_{is}$、期望 $max_imathbb E_s a_{is}$。
-4) 替代/互补/相关：$Q'_{k,l}=Q_{k,l}ig(1-	frac{Delta p}{p}ig)$、$X_Cgeeta,X_D$、$Y=eta_0+eta_1X_1+eta_2X_2+eta_3X_3+arepsilon$；Spearman $ho=dfrac{sum_i(r_{A_i}-ar r_A)(r_{B_i}-ar r_B)}{sqrt{sum_i(cdots)^2sum_i(cdots)^2}}$。
-（符号：$L_i$=情景损失，$mathrm{VaR}_alpha$=α 分位损失，$lambda$=风险权重，$a_{is}$=方案 i 情景 s 收益，$Q$=销量，$p$=售价，$X_C,X_D$=互补作物面积，$eta$=互补比例/回归系数，$ho$=秩相关。）
+4) 替代/互补/相关：$Q'_{k,l}=Q_{k,l}ig(1-	frac{Delta p}{p}ig)$、$X_Cgeeta,X_D$、$Y=eta_0+eta_1X_1+eta_2X_2+eta_3X_3+arepsilon$；Spearman $
+ho=dfrac{sum_i(r_{A_i}-ar r_A)(r_{B_i}-ar r_B)}{sqrt{sum_i(cdots)^2sum_i(cdots)^2}}$。
+（符号：$L_i$=情景损失，$mathrm{VaR}_alpha$=α 分位损失，$lambda$=风险权重，$a_{is}$=方案 i 情景 s 收益，$Q$=销量，$p$=售价，$X_C,X_D$=互补作物面积，$eta$=互补比例/回归系数，$
+ho$=秩相关。）
 
 ## 符号与前提
 - **符号**：见上式；单位：收益/损失元。
@@ -36,7 +38,7 @@
 - **数学素养**：风险度量定义与适用、系数与回归前提、方向自洽、敏感性。
 - **证据素养**：数值算例可复核；对不确定性/系数来源诚实。
 
-## 训练对照锚点（training-reflector 用时）
+## 参考对照锚点（建模流程 用时）
 > 拿你的不确定性模型与这条对比：风险度量/期望是否区分？λ/系数/情景是否有来源与敏感性、方向是否自洽？是否说明了采样与两阶段最优的差别？把最弱一条写进 reflection.md。
 
 ## 完整性自检清单

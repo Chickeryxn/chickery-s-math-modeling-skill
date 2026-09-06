@@ -11,11 +11,8 @@
 | 用 DeepSeek Harness 桌面版 | [DSH 适配报告](dsh-compatibility.md)（技能发现/沙箱/冒烟清单/可选 hooks） |
 | 构建论文（xelatex + CUMCMThesis） | [论文构建](paper-build.md) |
 
-## 能力训练
-
 | 目标 | 文档 |
 |---|---|
-| 训练 agent 的高品质建模能力（闭卷解题→素养复盘→多维审核） | [训练模式](training.md) |
 | 记录每天的工作过程（`records/` 记录树） | [工作记录树](work-record.md) |
 | 赛前自评建模方案（G2–G4） | [建模自评](modeling-self-review.md) |
 | 赛后复盘（决策账本回看） | [赛后复盘](post-contest-review.md) |

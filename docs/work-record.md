@@ -20,7 +20,7 @@ records/
 - `gates/`：每子问题一篇表格（时间 | 门禁 | 证据 | 备注），`gate` 命令拒绝门禁回退与缺失证据。
 - `decisions/`：每张决策卡从 `methods/Qx/qx_decisions.jsonl` **镜像**（选择/理由/证据/来源原话原样引用），找不到账本记录时拒绝生成——AI 不得编造。
 - `subjects/`：每子问题一篇叙事，供人工/agent 按 G1→G6 汇总（可手工整理，不强制）。
-- `retros/`：复盘骨架（背景/关键决策回顾/被验证或被推翻的判断/可迁移要点/下一步），可与 `python scripts/learning_summary.py .` 对接。
+- retros/：复盘骨架（背景/关键决策回顾/被验证或被推翻的判断/可迁移要点/下一步）。
 
 ## 二、命令
 
@@ -55,4 +55,4 @@ python scripts/work_record.py check [root]                       # 校验：索�
 |---|---|---|
 | 机器可读契约 | manifests、`qx_decisions.jsonl`、run_summary、lineage、frozen_numbers | 校验器强制 |
 | 过程叙事（本树） | `records/` | agent 按 `work-logger` 纪律写，人工可改 |
-| 复盘 | `learning_summary.py` + `records/retros/` | 从账本/冻结数生成骨架，教训人工填 |
+| 复盘 | @records/retros/` | 从账本/冻结数生成骨架，教训人工填 |

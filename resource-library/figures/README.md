@@ -1,6 +1,6 @@
 # figures/ —— 优秀图
 
-放**优秀图**（PNG/SVG/PDF），训练对照"绘图素养"。每条目二选一：
+放**优秀图**（PNG/SVG/PDF），参考对照"绘图素养"。每条目二选一：
 
 - **条目目录**（推荐，自包含）：`figures/<entry_id>/{README.md, content/(成品图), code/(生成脚本), data/(输入数据可选)}`
   - 参阅示范：`figures/example-rank-bar/`（`content/rank_bar.png` + `code/plot_rank_bar.py` + `data/rank_scores.csv` + 详细 `README.md`）。
@@ -40,7 +40,7 @@
 - **表达素养**：<图注讲清结论>
 （可选其它维：数学/创新/完整）
 
-## 训练对照锚点（training-reflector 用时）
+## 参考对照锚点（建模流程 用时）
 > <拿你的解与这条对比时，检查哪几条、把最弱一条写进 reflection.md>
 
 ## 完整性自检清单

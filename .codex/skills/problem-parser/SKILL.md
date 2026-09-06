@@ -6,9 +6,9 @@ whenToUse: When starting a new problem parse: extract goals, objects, constraint
 ---
 ## 参考来源（Reference Sources）
 
-`modeling`（非训练/正式建模）模式下，本次生成前**必须先查阅**以下参考来源（总清单：`references/reference-sources.md`；政策：AGENTS.md "Reference Consultation"）。`training`（闭卷）模式为禁用项。
+正式建模（modeling）模式下，本次生成前**必须先查阅**以下参考来源（总清单：`references/reference-sources.md`；政策：AGENTS.md "Reference Consultation"）。`training`（闭卷）模式为禁用项。
 
-1. **resource-library 全部条目**：先读 `resource-library/index.json`，再在当前子问题相关分类（papers/ideas/figures/formulas/tables/assets）各对照至少一个条目 README。建模模式下解析前可先查阅 resource-library 的 ideas/ 与 award-papers 赛题理解作参考，但不得照抄；训练模式除外。
+1. **resource-library 全部条目**：先读 `resource-library/index.json`，再在当前子问题相关分类（papers/ideas/figures/formulas/tables/assets）各对照至少一个条目 README。建模模式下解析前可先查阅 resource-library 的 ideas/ 与 award-papers 赛题理解作参考，但不得照抄。
 2. **历届国赛获奖论文**：`references/award-papers/`（2019–2024 获奖论文 .md + 原始 .pdf + 2019–2025 赛题）。对照其**内容安排、论文格式、论文容量**（每节篇幅、配图/表数量、摘要与正文页数）。award-papers 附带的历年赛题可核对题意。
 3. **已配置上游链接**：`references/upstream/nature-figure/`、`nature-writing/`（Yuan1z0825/nature-skills，Apache-2.0）、jihe520/sci-box（仅 URL 理念参考，不复制）、`references/upstream/lupynow-*`（MIT）、`references/upstream/method-index/`。**nature-skills 与 sci-box 是必点两个**。
 
@@ -27,7 +27,7 @@ Produce a model-neutral problem contract. Do not start from favorite algorithms 
 
 # Workflow
 
-0. **Mode gate first**: ask the modeler whether this problem is 训练(training) — closed-book, resource-library MUST NOT be read — or 非训练/正式建模(modeling) — resource-library is an important reference (advisory only, never copied; human owns judgments). Do not parse before the mode is answered; while unanswered treat as closed-book. Hand the verbatim answer to modeler-decision-logger into planning/framing_decisions.jsonl with decision_type: mode_choice; never record it yourself. (Policy: AGENTS.md Problem-Start Mode Gate.)
+0. **正式建模（modeling）**：本流程已删除训练/闭卷分支；resource-library/ 与 references/award-papers/ 始终是重要参考（只作参考/咨询，不照抄；判断归建模者）。不再询问运行模式，也不写 mode_choice 记录。
 1. Record source files and missing referenced material.
 2. Extract the global objective and each Qx verbatim enough to preserve intent.
 3. For each Qx identify:

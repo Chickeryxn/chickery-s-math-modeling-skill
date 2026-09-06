@@ -35,14 +35,12 @@
 ## 四、学习摘要（自动生成 + 人工补充）
 
 ```powershell
-python scripts/learning_summary.py . --out results/learning_summary.md
 ```
 
 脚本从决策账本与冻结数字生成骨架（决策时间线 + 各 Qx 判定 + 冻结值清单）；**"教训"列需要你人工填写**——AI 只摘录事实，不替你总结判断。
 
 ## 五、提交复盘成果
 
-- 将 `results/learning_summary.md` 与本题的 `workspace/archived/` 归档保留。
 - 若用 `submission` 模式重跑，`frozen_numbers.json` 与三审报告会留下完整证据链，复盘时可追溯每一步。
 
 ## 自检清单
@@ -50,4 +48,3 @@ python scripts/learning_summary.py . --out results/learning_summary.md
 - [ ] 每个 Qx 的 method_choice 都回看了，且有事后判定
 - [ ] 至少写出 1 条"假设失败"教训
 - [ ] 至少沉淀 1 条可复用资产（模板/红线/方法教训）
-- [ ] learning_summary.md 已生成且"教训"列有人工内容

@@ -24,7 +24,7 @@ python resource-library/figures/exemplar-nipt-multipanel-2025c/code/make_nipt_fi
 ## 素养对照
 绘图(分组/阈值/最优点/ROC，类不平衡用 step 轮廓) · 证据(真实附件+GroupKFold+AUC+67/605 如实) · 表达(结论由图) · 数学(power 拟合、pooled logistic、期望风险 R=(1-P)+λL、ROC) · 创新(风险最小化时点 + 组合 vs 单指标 ROC 对照) · 完整(关系/决策/分类覆盖)。
 
-## 训练对照锚点
+## 参考对照锚点
 > ①分组着色并标阈值/最优点/ROC？②结论由图表达？③类不平衡/不确定性如实？④符号加粗？⑤无网格/入框？
 
 ## 完整性自检

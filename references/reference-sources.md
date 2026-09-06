@@ -42,11 +42,6 @@
 
 > nature-figure / nature-writing 为 **逐字引入**（保留声明）；sci-box 无许可证，**只读理念不复制代码/模板**；本项目图引擎统一为 `math-figure-generator`（matplotlib）。
 
-## 训练模式对照
-
-- 训练(training)：**禁用本清单第 1、2 类**（闭卷、禁读 resource-library/ 与 award-papers/，直到建模者明确同意开卷对照）。
-- 开卷对照（training-reflector）：可按第 6 维评分卡重新打开第 1、2 类做差距对比。
-
 ## 与上游冲突时的裁决
 
 一律以 AGENTS.md / schemas / scripts 的自有规则为准；上游文件之间冲突按 `references/upstream/README.md` 的「已知规则冲突的裁决顺序」处理。

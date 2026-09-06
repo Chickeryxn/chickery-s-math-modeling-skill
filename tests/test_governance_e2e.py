@@ -212,15 +212,5 @@ class EvidenceEscapeTests(unittest.TestCase):
                                             "evidence": [str(outside)], "note": None})())
             self.assertEqual(rc, 2)
 
-    def test_training_scorecard_rejects_escape(self):
-        import training_scorecard as ts
-        with tempfile.TemporaryDirectory() as td:
-            root = Path(td)
-            rd = root / "results" / "training" / "round1"
-            rd.mkdir(parents=True)
-            self.assertIsNone(ts.resolve_evidence(rd, str(root.parent / "outside.md")))
-            self.assertIsNone(ts.resolve_evidence(rd, "../../../../etc/passwd"))
-
-
 if __name__ == "__main__":
     unittest.main()

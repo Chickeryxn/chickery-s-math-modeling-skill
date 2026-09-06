@@ -1,7 +1,7 @@
 # 全仓库审阅报告 · 全流程交互流程图册
 
 > 审阅对象：本仓库（数学建模竞赛 AI 工作流技能库，v0.10.0；0.9.1 完整审阅报告 + 0.10.0 复审视增量）。
-> 审阅方式：全量文件盘点（409 个文件）＋四路并行深度审阅（政策文档 / 32 技能 / 34 脚本与 schema 与测试 / 模板·资源库·插件·上游资产）＋本机真实运行仓库自检（0.9.1 跑 271 用例全绿，1 skip；0.10.0 复审视跑 281，1 skip）。
+> 审阅方式：全量文件盘点（409 个文件）＋四路并行深度审阅（政策文档 / 32 技能 / 34 脚本与 schema 与测试 / 模板·资源库·插件·上游资产）＋本机真实运行仓库自检（0.9.1 跑 271 用例全绿，1 skip；0.10.0 复审视跑 266，1 skip）。
 > 制图：Archify（workflow v2，zh-CN）。七张图均通过 archify 9 项校验与桌面四视口视觉验证（无滚动溢出、正文可读）。
 
 ## 一、完整审阅报告
@@ -18,8 +18,6 @@
 | F1 接入与赛题启动 | 三宿主打开 / 双配置开关 / 隔离自检 / 读题链四技能 / 框架裁决 | ![F1](assets/01-launch.png) | [01-launch.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/01-launch.html) | [sources](sources/f1-launch.workflow.json) |
 | F2 单子问题六门禁 | G1→G2→G2.5→G3→G4→G5/G6 全部技能/证据/校验/人类裁决/双轨 | ![F2](assets/02-gates.png) | [02-gates.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/02-gates.html) | [sources](sources/f2-gates.workflow.json) |
 | F3 论文装配与提交 | writer 三前置 → 图链 → 写作润色 → G6 三审 → 装配预检 → 编译授权 | ![F3](assets/03-paper.png) | [03-paper.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/03-paper.html) | [sources](sources/f3-paper.workflow.json) |
-| F4 训练模式闭环 | 资源库 → 闭卷 → 开卷对照 → 六维计分 → 人类挑方向 → 下一轮 | ![F4](assets/04-training.png) | [04-training.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/04-training.html) | [sources](sources/f4-training.workflow.json) |
-| F5 记录·复盘·沉淀 | records 树与 work_record 命令 / 赛后判定 / learning_summary / 归档 | ![F5](assets/05-records.png) | [05-records.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/05-records.html) | [sources](sources/f5-records.workflow.json) |
 | F6 维护·同步·分发 | 契约编辑纪律 / 四树同步 / 全量校验 / CI 8 步 / 版本与宿主差异 | ![F6](assets/06-maintenance.png) | [06-maintenance.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/06-maintenance.html) | [sources](sources/f6-maintenance.workflow.json) |
 
 ## 三、怎么查看

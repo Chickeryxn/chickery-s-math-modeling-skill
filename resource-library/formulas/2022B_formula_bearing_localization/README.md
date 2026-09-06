@@ -7,10 +7,17 @@
 
 ## 公式
 1) 接收机极坐标（两发射 i,j、两个接收夹角 $alpha_i,alpha_j$）：
-$$ho_k=ho_jrac{sin(	heta_j+alpha_j-	heta_k)}{sinalpha_j}=ho_irac{sin(	heta_i+alpha_i-	heta_k)}{sinalpha_i}$$
+$$
+ho_k=
+ho_jrac{sin(	heta_j+alpha_j-	heta_k)}{sinalpha_j}=
+ho_irac{sin(	heta_i+alpha_i-	heta_k)}{sinalpha_i}$$
 2) 相位/角关系（圆/正多边形）：圆周角 $=m	imes	heta_0$、圆心角 $=n	imesPhi_0$（如 $	heta_0=10^circ,Phi_0=40^circ$）。
-3) 调整量（径向/切向）：$Deltaho_kapprox r_k,Deltaalpha_k/sinalpha_k^*$（一阶）；预处理后 $Deltaho_k'=r_k-R=O(Deltaho_k^2)$（降阶）。
-（符号：$ho_k,	heta_k$=接收机极径/极角；$alpha_i$=接收机与两发射机连线夹角（观测量）；$	heta_0,Phi_0$=角量化步长；$R$=理想半径。）
+3) 调整量（径向/切向）：$Delta
+ho_kapprox r_k,Deltaalpha_k/sinalpha_k^*$（一阶）；预处理后 $Delta
+ho_k'=r_k-R=O(Delta
+ho_k^2)$（降阶）。
+（符号：$
+ho_k,	heta_k$=接收机极径/极角；$alpha_i$=接收机与两发射机连线夹角（观测量）；$	heta_0,Phi_0$=角量化步长；$R$=理想半径。）
 
 ## 符号与前提
 - **符号**：见上式；角度 ° 或 rad、长度 m。
@@ -35,7 +42,7 @@ $$ho_k=ho_jrac{sin(	heta_j+alpha_j-	heta_k)}{sinalpha_j}=ho_irac{sin(	heta_
 - **数学素养**：正弦定理/角关系、退化处理、误差阶估计。
 - **证据素养**：数值算例可复核、误差与唯一性给范围。
 
-## 训练对照锚点（training-reflector 用时）
+## 参考对照锚点（建模流程 用时）
 > 拿你的定位公式与这条对比：角约定/方向是否一致？是否处理共面退化与 ε 临界、给误差阶？把最弱一条写进 reflection.md。
 
 ## 完整性自检清单

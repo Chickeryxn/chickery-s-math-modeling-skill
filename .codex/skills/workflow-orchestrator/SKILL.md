@@ -19,8 +19,8 @@ Before orchestration in a new workspace:
 - check the chosen runtime and required core packages;
 - verify the workspace skeleton needed for the current request;
 - read `planning/session_config.json`, accepting legacy `mode`;
-- resolve the Problem-Start Mode for the active problem: `planning/framing_decisions.jsonl` `mode_choice` (else `session_config.run_mode`); if none exists, route to the problem-parser mode gate and do not proceed to parse;
-- enforce the library policy by mode: `training` -> never open `resource-library/`; `modeling` -> treat `resource-library/` as an important reference and allow consented contributions (AGENTS.md Problem-Start Mode Gate).
+- 训练/闭卷分支已删除，无需解析 Problem-Start Mode；直接按正式建模（modeling）处理。
+- 库策略：`resource-library/` 与 `references/award-papers/` 始终作为重要参考；仅在建模者逐条同意后允许贡献回库（AGENTS.md Problem-Start / Reference Consultation）。
 
   - in `modeling`, before routing a generation skill, confirm the full reference set is available: `resource-library/` (all categories via its index.json), `references/award-papers/`, and the configured upstream links (Yuan1z0825/nature-skills, jihe520/sci-box); see `references/reference-sources.md`.
 

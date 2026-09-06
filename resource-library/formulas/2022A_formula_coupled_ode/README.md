@@ -6,12 +6,14 @@
 - **tags**：耦合 ODE、垂荡/纵摇、平均功率、力电比拟
 
 ## 公式
-1) 垂荡二自由度（线性）：$(m_f+mu)ddot x_f + lambda_f dot x_f + k(x_f-x_z)+ho gpi R_f^2 x_f = fcosomega t$，$m_zddot x_z + k(x_z-x_f)+eta(dot x_z-dot x_f)=0$。
+1) 垂荡二自由度（线性）：$(m_f+mu)ddot x_f + lambda_f dot x_f + k(x_f-x_z)+
+ho gpi R_f^2 x_f = fcosomega t$，$m_zddot x_z + k(x_z-x_f)+eta(dot x_z-dot x_f)=0$。
 2) 非线性（幂律）阻尼：$eta|dot x_z-dot x_f|^{alpha},mathrm{sgn}(dot x_z-dot x_f)$。
 3) 平均输出功率（时均）：$P=dfrac{1}{T}int_{T_0}^{T_0+T}eta,(|dot x_z-dot x_f|^2),dt$（/或 $(1/2)etaomega^2|x_z-x_f|^2$，需统一口径）。
 4) 力电比拟（阻抗匹配）：把 m→L、k→1/C、$eta$→R，$P_2=	frac{A^2}{2}dfrac{Z_{2R}}{(Z_{1R}+Z_{2R})^2+(Z_{1X}+Z_{2X})^2}$。
 5) 纵摇/转动：引入转动惯量 $I$（平行轴/垂直轴定理）、静水恢复力矩 $C_w	heta$、扭转弹簧 $K	heta$、旋转阻尼 $C_pdot	heta$。
-（符号：$m_f,m_z$=浮子/振子质量；$mu$=附加质量；$lambda_f$=兴波阻尼；$k$=弹簧刚度；$eta$=直线阻尼；$alpha$=幂指数；$ho gpi R_f^2$=静水恢复刚度；$f$=激励力振幅；$	heta$=转角；$I$=转动惯量；$C_w$=恢复力矩系数；$C_p$=旋转阻尼。）
+（符号：$m_f,m_z$=浮子/振子质量；$mu$=附加质量；$lambda_f$=兴波阻尼；$k$=弹簧刚度；$eta$=直线阻尼；$alpha$=幂指数；$
+ho gpi R_f^2$=静水恢复刚度；$f$=激励力振幅；$	heta$=转角；$I$=转动惯量；$C_w$=恢复力矩系数；$C_p$=旋转阻尼。）
 
 ## 符号与前提
 - **符号**：见上式；位移 m、速度 m/s、角 rad、角速度 rad/s、功率 W、系数 N·s/m、N·m·s/rad。
@@ -37,7 +39,7 @@
 - **数学素养**：物理→ODE 建模、力电类比、口径一致。
 - **证据素养**：数值算例可复核、解析-数值交叉验证。
 
-## 训练对照锚点（training-reflector 用时）
+## 参考对照锚点（建模流程 用时）
 > 拿你的运动方程与这条对比：是否受力→ODE→解→功率、口径（功率/单位/频率/符号）一致？是否做假设回验与交叉验证？把最弱一条写进 reflection.md。
 
 ## 完整性自检清单

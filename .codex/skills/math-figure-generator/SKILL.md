@@ -6,7 +6,7 @@ whenToUse: When approved figures must be generated at publication quality and re
 ---
 ## 参考来源（Reference Sources）
 
-`modeling`（非训练/正式建模）模式下，本次生成前**必须先查阅**以下参考来源（总清单：`references/reference-sources.md`；政策：AGENTS.md "Reference Consultation"）。`training`（闭卷）模式为禁用项。
+正式建模（modeling）模式下，本次生成前**必须先查阅**以下参考来源（总清单：`references/reference-sources.md`；政策：AGENTS.md "Reference Consultation"）。`training`（闭卷）模式为禁用项。
 
 1. **resource-library 全部条目**：先读 `resource-library/index.json`，再在当前子问题相关分类（papers/ideas/figures/formulas/tables/assets）各对照至少一个条目 README。绘图可参考 resource-library 的 figures/ 与 award-papers 的画风/配色/多面板；上游 nature-figure 图契约与 sci-box 的示意图理念都要参考（sci-box 只读理念不复制）。
 2. **历届国赛获奖论文**：`references/award-papers/`（2019–2024 获奖论文 .md + 原始 .pdf + 2019–2025 赛题）。对照其**内容安排、论文格式、论文容量**（每节篇幅、配图/表数量、摘要与正文页数）。award-papers 的实际成品图可核对图注长度与排版。

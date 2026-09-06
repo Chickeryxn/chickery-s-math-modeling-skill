@@ -7,9 +7,9 @@
 | Badge | Value |
 |---|---|
 | Version | [0.10.0](CHANGELOG.md) (plugin manifests in sync) |
-| Contents | 32 skills · 32 standard-library-only scripts · Python 3.10+ (zero third-party deps) |
+| Contents | 29 skills · 30 standard-library-only scripts · Python 3.10+ (zero third-party deps) |
 | Platforms | Windows / Linux / macOS |
-| CI | [![CI](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml) Ubuntu/Windows × Py 3.10–3.13, 281 test cases all green |
+| CI | [![CI](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml) Ubuntu/Windows × Py 3.10–3.13, 266 test cases all green |
 | License | [MIT](LICENSE) |
 
 ## What problem it solves
@@ -79,7 +79,7 @@ Each subquestion (Q1, Q2, …) advances independently through the same gates. "W
 - **Figures are typed**: Type 1 is internal debugging only and never enters the paper; Type 2–4 may enter the paper, and any figure that does must pass render verification in `submission` mode.
 - **G5/G6 run only in `submission` mode**; in `lean` mode the workflow stops at the G4 judgment.
 
-## The 32 skills at a glance
+## The 29 skills at a glance
 
 Grouped by function (full table in the [reference](docs/reference.md)):
 
@@ -90,17 +90,7 @@ Grouped by function (full table in the [reference](docs/reference.md)):
 | Code & experiments | code generation/review (Python, MATLAB/Beita Tianyuan), robustness |
 | Results & paper | result reports, figures, method explanations, freeze, writing/polishing/citations |
 | Orchestration & auditing | gate routing, completeness/consistency/QA audits, work records |
-| Training mode | closed-book solving, literacy reflection, multi-dimensional audit |
 
-## Training mode: a three-step loop (optional)
-
-Want to train high-quality modeling skills without polluting a real contest? All training output stays isolated in `results/training/`:
-
-1. **Prepare**: drop the problem into `resource-library/assets/problems/` (or change `problem_source` in `planning/training_config.json`); after adding sample materials run `python scripts/resource_index.py .` to rebuild the index;
-2. **Run the loop (per round `roundN`)**: `training-solver` solves closed-book (reading `resource-library/` is forbidden) → `training-reflector` compares open-book and records gaps → `training-auditor` runs mechanical checks and drafts the 6-dimension scorecard (mathematical / innovation / figure / expression / evidence / completeness);
-3. **You steer**: give a final 1–5 score per dimension, pick the “next direction to approach”, update `training_config.json`, and start the next round; prefer switching problems/data between rounds, and clean rounds must not read the previous round’s solution.
-
-See the [training mode guide](docs/training.md).
 ## Documentation map
 
 Pick by goal (full index: [docs/](docs/README.md)):
@@ -109,7 +99,6 @@ Pick by goal (full index: [docs/](docs/README.md)):
 |---|---|
 | First time here — understand why the gates exist | [Learning path](docs/learning-path.md) |
 | Run this workflow on DSH desktop | [DSH adaptation](docs/dsh-compatibility.md) |
-| Train high-quality modeling answers | [Training mode](docs/training.md) |
 | Build the paper (xelatex + CUMCMThesis) | [Paper build](docs/paper-build.md) |
 | Skills / commands / layout / glossary | [Reference](docs/reference.md) |
 | 0.9.0 audit-fix ledger (subsequent changes in the [CHANGELOG](CHANGELOG.md)) | [Audit-fix list](docs/audit-fix-0.9.0.md) |
@@ -129,12 +118,10 @@ This repository ships a full **audit report + an interactive diagram album** und
 | F1 Setup, configuration & intake | [01-launch.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/01-launch.html) | ![F1](docs/review/assets/01-launch.png) |
 | F2 Per-subquestion gates G1–G6 | [02-gates.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/02-gates.html) | ![F2](docs/review/assets/02-gates.png) |
 | F3 Paper assembly & submission | [03-paper.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/03-paper.html) | ![F3](docs/review/assets/03-paper.png) |
-| F4 Training loop | [04-training.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/04-training.html) | ![F4](docs/review/assets/04-training.png) |
 | F5 Records · review · learning | [05-records.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/05-records.html) | ![F5](docs/review/assets/05-records.png) |
 | F6 Maintenance · sync · distribution | [06-maintenance.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/06-maintenance.html) | ![F6](docs/review/assets/06-maintenance.png) |
 
 > Auto-deployed via GitHub Pages ([`.github/workflows/pages.yml`](.github/workflows/pages.yml)): click an “Interactive” link to open it in the browser. After cloning you can also open `docs/review/index.html` locally. Album guide: [`docs/review/README.md`](docs/review/README.md); full written audit: [`docs/review/00-审阅报告.md`](docs/review/00-审阅报告.md).
-
 
 ## Process log: the work record tree (optional)
 

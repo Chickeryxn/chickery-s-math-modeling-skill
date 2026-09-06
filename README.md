@@ -2,14 +2,14 @@
 
 [简体中文](README.md) | [English](README.en.md)
 
-**让 AI 参与建模，但不替你拍板。** AI 负责解析赛题、写代码、跑实验、整理证据、起草论文；你负责选方法、判结果、定置信度、解释物理意义。这个仓库把这套分工固化成 **6 道「证据门禁」（G1–G6）**、32 个技能与 32 个纯标准库脚本，把「AI 写代码、人类做决策、一切可复现可审计」变成机器能强制检查的流程。
+**让 AI 参与建模，但不替你拍板。** AI 负责解析赛题、写代码、跑实验、整理证据、起草论文；你负责选方法、判结果、定置信度、解释物理意义。这个仓库把这套分工固化成 **6 道「证据门禁」（G1–G6）**、29 个技能与 30 个纯标准库脚本，把「AI 写代码、人类做决策、一切可复现可审计」变成机器能强制检查的流程。
 
 | 徽章 | 值 |
 |---|---|
 | 版本 | [0.10.0](CHANGELOG.md)（插件 manifest 同步） |
-| 组成 | 32 个技能 · 32 个纯标准库脚本 · Python 3.10+（零第三方依赖） |
+| 组成 | 29 个技能 · 30 个纯标准库脚本 · Python 3.10+（零第三方依赖） |
 | 平台 | Windows / Linux / macOS |
-| CI | [![CI](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml) Ubuntu/Windows × Py 3.10–3.13，281 个用例全绿 |
+| CI | [![CI](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/Chickeryxn/chickery-s-math-modeling-skill/actions/workflows/ci.yml) Ubuntu/Windows × Py 3.10–3.13，266 个用例全绿 |
 | 许可 | [MIT](LICENSE) |
 
 ## 它解决什么问题
@@ -58,9 +58,9 @@
 - **图分四型**：Type 1 只做内部调试，永不进论文；Type 2–4 可进论文，凡进论文的图在 `submission` 模式都须通过渲染校验。
 - **G5/G6 只在 `submission` 模式启用**；`lean` 模式下推进到 G4 判定即可。
 
-## 32 个技能一览
+## 29 个技能一览
 
-按职能分 6 组（完整技能表见 [参考手册](docs/reference.md#技能清单-32-个)）：
+按职能分 6 组（完整技能表见 [参考手册](docs/reference.md#技能清单-29-个)）：
 
 | 分组 | 覆盖 |
 |---|---|
@@ -69,17 +69,7 @@
 | 代码与实验 | 代码生成/评审（Python、MATLAB/北太天元）、稳健性 |
 | 结果与论文 | 结果报告、图表、方法说明、冻结、论文写作/润色/引用 |
 | 编排与审计 | 门禁调度、完整性/一致性/QA 审计、工作记录 |
-| 训练模式 | 闭卷求解、素养复盘、多维审核 |
 
-## 训练模式：三步闭环（可选）
-
-想练出 Agent 的高品质建模能力，又不污染真实竞赛？训练产物全部隔离在 `results/training/`，流程三步：
-
-1. **准备**：把赛题放入 `resource-library/assets/problems/`（或改 `planning/training_config.json` 的 `problem_source`）；放入范例素材后运行 `python scripts/resource_index.py .` 重建索引；
-2. **三步闭环（每轮 `roundN`）**：`training-solver` 闭卷解题（禁读资源库）→ `training-reflector` 开卷对照、写出差距 → `training-auditor` 跑机械检查并起草六维计分卡（数学 / 创新 / 绘图 / 表达 / 证据 / 完整）；
-3. **人工定方向**：你给每维终评（1–5），挑选“下一轮逼近方向”→ 更新 `training_config.json` → 进入下一轮；多轮尽量换题/换数据，clean 轮禁读上一轮解法。
-
-详见 [训练模式手册](docs/training.md)。
 ## 文档地图
 
 按你的目标选（完整索引见 [docs/](docs/README.md)）：
@@ -88,7 +78,6 @@
 |---|---|
 | 第一次接触，理解「门禁为什么存在」 | [学习路径](docs/learning-path.md) |
 | 用 DSH 桌面版跑这套工作流 | [DSH 适配](docs/dsh-compatibility.md) |
-| 训练 Agent 的高品质建模能力 | [训练模式](docs/training.md) |
 | 构建论文（xelatex + CUMCMThesis） | [论文构建](docs/paper-build.md) |
 | 技能全表/命令速查/目录结构/术语表 | [参考手册](docs/reference.md) |
 | 0.9.0 审计修复对照（后续变更见 [CHANGELOG](CHANGELOG.md)） | [审计修复清单](docs/audit-fix-0.9.0.md) |
@@ -96,7 +85,7 @@
 
 ## 🎨 交互体验：审阅报告与全流程流程图册
 
-本仓库附带「全量审阅报告 + 交互式流程图册」（[`docs/review/`](docs/review/)）：1 张总览 + 6 张超长分流程图，覆盖**接入与赛题启动 → 单子问题六门禁 G1–G6 → 论文装配与提交 → 赛后复盘沉淀 → 训练闭环 → 仓库维护分发**。
+本仓库附带「全量审阅报告 + 交互式流程图册」（[`docs/review/`](docs/review/)）：1 张总览 + 5 张超长分流程图，覆盖**接入与赛题启动 → 单子问题六门禁 G1–G6 → 论文装配与提交 → 赛后复盘沉淀 → 仓库维护分发**。
 
 <p align="center">
   <a href="https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/00-overview.html" title="总览全景（交互）"><img src="docs/review/assets/00-overview.png" alt="全流程总览预览" width="720"/></a>
@@ -108,12 +97,10 @@
 | F1 接入·配置·赛题启动 | [01-launch.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/01-launch.html) | ![F1](docs/review/assets/01-launch.png) |
 | F2 单子问题六门禁（主力） | [02-gates.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/02-gates.html) | ![F2](docs/review/assets/02-gates.png) |
 | F3 论文装配与提交 | [03-paper.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/03-paper.html) | ![F3](docs/review/assets/03-paper.png) |
-| F4 训练模式闭环 | [04-training.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/04-training.html) | ![F4](docs/review/assets/04-training.png) |
 | F5 记录·复盘·沉淀 | [05-records.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/05-records.html) | ![F5](docs/review/assets/05-records.png) |
 | F6 维护·同步·分发 | [06-maintenance.html](https://chickeryxn.github.io/chickery-s-math-modeling-skill/review/06-maintenance.html) | ![F6](docs/review/assets/06-maintenance.png) |
 
 > 已由 GitHub Pages 自动部署（[`.github/workflows/pages.yml`](.github/workflows/pages.yml)），点击“交互版”链接即可在浏览器打开；克隆到本地也可双击 `docs/review/index.html`。图集说明见 [`docs/review/README.md`](docs/review/README.md)，完整文字审阅见 [`docs/review/00-审阅报告.md`](docs/review/00-审阅报告.md)。
-
 
 ## 过程日志：工作记录树（可选）
 
@@ -167,7 +154,7 @@ cd chickery-s-math-modeling-skill
 2. **历届国赛获奖论文**——`references/award-papers/`（源自 https://github.com/Chickeryxn/paper ，2019–2024 获奖论文 + 2019–2025 赛题），写论文前对照其**内容安排、论文格式、论文容量**，并保证论文含比赛要求的**图、表等全部内容**且产出**由 LaTeX 编译的 PDF**；
 3. **已配置上游链接**——[Yuan1z0825/nature-skills](https://github.com/Yuan1z0825/nature-skills)、[jihe520/sci-box](https://github.com/jihe520/sci-box)（及 Lupynow/CUMCMThesis/XiaoMaColtAI），nature-skills 与 sci-box 必点。
 
-`training`（闭卷）模式全程禁读第 1、2 类，直到建模者明确同意开卷对照。详见 `references/reference-sources.md` 与 `references/award-papers/README.md`。
+详见 `references/reference-sources.md` 与 `references/award-papers/README.md`。
 ## 许可与致谢
 
 [MIT License](LICENSE)。融合借鉴了 [XiaoMaColtAI/math-modeling-skill](https://github.com/XiaoMaColtAI/math-modeling-skill)、[latexstudio/CUMCMThesis](https://github.com/latexstudio/CUMCMThesis)、[Lupynow/math-modeling-skills](https://github.com/Lupynow/math-modeling-skills)、[Yuan1z0825/nature-skills](https://github.com/Yuan1z0825/nature-skills)、[jihe520/sci-box](https://github.com/jihe520/sci-box) 等上游项目；流程图由 [tt-a1i/archify](https://github.com/tt-a1i/archify) 生成。详细合并决策见 [references/README.md](references/README.md) 与 [NOTICE.md](NOTICE.md)。

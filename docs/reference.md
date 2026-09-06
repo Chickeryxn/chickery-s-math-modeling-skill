@@ -4,7 +4,7 @@
 
 ## 技能清单 32 个
 
-技能树在 `.codex/skills/`、`.claude/skills/`、`.agents/skills/`（DSH 自动发现）各有一份完整独立副本（`plugins/mathmodeling-skills/skills/` 为分发副本）。按流水线分五组，另加一组训练模式技能：
+技能树在 `.codex/skills/`、`.claude/skills/`、`.agents/skills/`（DSH 自动发现）各有一份完整独立副本（`plugins/mathmodeling-skills/skills/` 为分发副本）。按流水线分五组，另加一组正式建模技能：
 
 ### 问题理解
 
@@ -60,13 +60,10 @@
 | `quality-assurance-auditor` | 最终提交级五维审计（流程/证据/方法/论文/呈现） | `paper/qa_report.md` |
 | `work-logger` | 维护 `records/` 工作记录树：会话日志、门禁迁移、决策卡镜像 | `records/`（`scripts/work_record.py`） |
 
-### 训练模式
+### 正式建模
 
 | 技能 | 一句话职责 | 主要产物 |
 |---|---|---|
-| `training-solver` | 闭卷求解训练题：全程不得读取 `resource-library/` | `results/training/roundN/solution/` |
-| `training-reflector` | 开卷对照资源库逐维复盘，产出可迁移的素养差距 | `results/training/roundN/reflection.md` |
-| `training-auditor` | 跑机械检查、起草六维素养记分卡、汇总供人类定方向 | `results/training/roundN/scorecard.json`、`summary.json` |
 
 ## 契约体系
 
@@ -120,23 +117,23 @@
 ├── methods/Qx/                    # 方法卡、决策账本、风险探针、最终方法说明
 ├── code/                          # 模型代码与评审（code/Qx/、code/matlab/Qx/）
 ├── results/Qx/                    # 实验轮次、报告、solution package、frozen_numbers.json
-├── results/training/              # 训练模式产物（roundN/ 与 summary.json）
+├── results/              # 正式建模产物（roundN/ 与 summary.json）
 ├── robustness/Qx/                 # 稳健性证据
 ├── paper/                         # 论文章节、图、引用与三审报告
 ├── workspace/                     # problem.txt、data_raw/（只读）、data_clean/、papers/
-├── resource-library/              # 训练模式示范资源库（papers/ideas/figures/formulas/tables/assets）
+├── resource-library/              # 正式建模示范资源库（papers/ideas/figures/formulas/tables/assets）
 ├── records/                       # 工作记录树（sessions/subjects/gates/decisions/retros，advisory）
 ├── references/                    # 上游知识库（历史决策，advisory）+ award-papers/（历届国赛获奖论文）+ reference-sources.md（建模模式参考总清单）+ framing-caliber.md（G1 口径正交化确认）
 ├── schemas/                       # 领域无关契约（4 个 schema + 说明）
-├── scripts/                       # 32 个纯标准库脚本（含 1 个 bash 兼容包装）
-├── docs/                          # 手册（索引/学习/训练/记录/复盘/DSH/论文/参考）
+├── scripts/                       # 30 个纯标准库脚本（含 1 个 bash 兼容包装）
+├── docs/                          # 手册（索引/学习/记录/复盘/DSH/论文/参考）
 ├── docs/diagrams/archify/         # 通用流程图（PNG/SVG/交互 HTML/JSON 源）
-└── tests/                         # 281 个测试用例
+└── tests/                         # 266 个测试用例
 ```
 
 ## 测试覆盖
 
-`python scripts/run_tests.py`（281 个用例，全标准库）覆盖：
+`python scripts/run_tests.py`（266 个用例，全标准库）覆盖：
 
 - 门禁证据推导与单调迁移（含完整 G1→G6 推进链到 `final_assembly`）
 - 人类决策溯源（伪造人类、未注册证据、路径逃逸均被拒绝）
@@ -149,10 +146,10 @@
 - 论文装配（`latex_assembly`：装配/冻结宏转义/choice 转义/宏名唯一/AI 声明/裸数字扫描）
 - 上游资产校验（`validate_upstream_assets`，含 SHA-256 漂移与 NOTICE 交叉）
 - AI 痕迹扫描（`ai_trace_checker`，含 `--config` 自定义阈值）
-- 摘要质量检查（`abstract_checker`）与学习摘要生成（`learning_summary`）
+- 摘要质量检查（`abstract_checker`）
 - 模型质量门（`model_quality_gate`）、泄漏启发式（`leakage_check`）与题目覆盖校验（`claim_coverage`）
 - 图表一致性（`figure_consistency_check`）与论文章节结构检查（`section_structure_check`）
-- 资源库索引（`resource_index`，含嵌套目录）与训练记分卡（`training_scorecard`）
+- 资源库索引（`resource_index`，含嵌套目录）
 - 工作记录树（`work_record`）与 hooks 守卫（`guard_frozen`，含 DSH 小写工具）
 - 文档计数守卫（`doc_claims`）与治理层 e2e（`governance_e2e`）
 - 门禁 profile 双轨（lean 子门 / submission 全链 / auto 读配置）、结构深度检查（parse/classification/probe 退化块）与 framing 决策阻塞
@@ -182,7 +179,7 @@
 
 ## 上游融合
 
-本项目在**不改变治理核心**（AGENTS.md / schemas / scripts、G1–G6 门禁、28 技能骨架 + 3 训练技能 + 1 记录技能、零第三方运行时依赖、单一 matplotlib 引擎）的前提下，融合了 6 个上游项目的知识规则层与纯标准库工具层：
+本项目在**不改变治理核心**（AGENTS.md / schemas / scripts、G1–G6 门禁、29 个技能、零第三方运行时依赖、单一 matplotlib 引擎）的前提下，融合了 6 个上游项目的知识规则层与纯标准库工具层：
 
 | 上游 | 引入内容 | 方式 |
 |---|---|---|
@@ -197,12 +194,12 @@
 
 ### 建模模式参考来源（重要）
 
-`modeling`（非训练/正式建模）模式下，生成内容（解析/分类/方法筛选/图表/论文写作）**必须**把下列三组来源当作重要参考（总清单：`references/reference-sources.md`）：
+正式建模（modeling）模式下，生成内容（解析/分类/方法筛选/图表/论文写作）**必须**把下列三组来源当作重要参考（总清单：`references/reference-sources.md`）：
 1. **resource-library 全部条目**——先读 `resource-library/index.json`，并在相关分类各对照至少一个条目；
 2. **历届国赛获奖论文**——`references/award-papers/`（源自 https://github.com/Chickeryxn/paper ），写作前对照其内容安排/论文格式/论文容量；
 3. **已配置上游链接**——Yuan1z0825/nature-skills 与 jihe520/sci-box（必点），及其余 Lupynow/CUMCMThesis/XiaoMaColtAI。
 
-`training`（闭卷）模式禁读前两类，直到建模者同意开卷对照。详见 AGENTS.md「Reference Consultation」。
+详见 AGENTS.md「Reference Consultation」。
 
 ## 限制与边界
 

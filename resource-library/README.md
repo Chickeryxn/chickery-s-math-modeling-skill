@@ -1,7 +1,7 @@
 # 数学建模素养资源库（resource-library/）
 
-> 用途：**训练模式的"模范素材库"**。用户拉取项目后，把优秀的论文、解题思路、图、公式、表格等放入对应子目录；agent 在"闭卷解题→开卷对照学习"训练闭环中把这些素材当作**审美与素养标杆**（不照抄，只学素养）。
-> 使用前提（依 AGENTS.md「Problem-Start Mode Gate」）：**先问清运行模式**——训练(training) = 闭卷、**禁止查看本库**；非训练/正式建模(modeling) = **把本库当作重要参考**（借鉴方法/图/思路/表格，不照抄、判断归你），并可在你**逐条同意**（library_contribution_consent）后把优秀成果贡献回本库（条目模板 + resource_index.py . 登记）。
+> 用途：**正式建模的"模范素材库"**。用户拉取项目后，把优秀的论文、解题思路、图、公式、表格等放入对应子目录；agent 在"独立建模→参考对照学习"训练闭环中把这些素材当作**审美与素养标杆**（不照抄，只学素养）。
+> 使用前提（依 AGENTS.md「Problem-Start」）：本库在**正式建模（modeling）**下作为**重要参考**（借鉴方法/图/思路/表格，不照抄、判断归你），并可在你**逐条同意**（library_contribution_consent）后把优秀成果贡献回本库（条目模板 + resource_index.py . 登记）。
 
 ## 目录结构（条目目录 + 支持目录）
 
@@ -23,7 +23,7 @@ resource-library/
 
 ## 条目说明（详细模板）
 
-每类 README 内嵌一份**详细模板**（分必填/选填，含：公共元数据 `category/entry_id/source/year/contest/rights/tags`、类别专属字段、**素养对照**（对齐训练 6 维评分卡）、**训练对照锚点**、**完整性自检清单**）。条目 `README.md` 按模板填写，`example*.md` 为填好值的演示范本。
+每类 README 内嵌一份**详细模板**（分必填/选填，含：公共元数据 `category/entry_id/source/year/contest/rights/tags`、类别专属字段、**素养对照**（对齐素养 6 维评分卡）、**参考对照锚点**、**完整性自检清单**）。条目 `README.md` 按模板填写，`example*.md` 为填好值的演示范本。
 
 放入素材的规则：
 
@@ -32,15 +32,6 @@ resource-library/
 3. 版权：只放你有权使用的素材并标注来源。
 4. 登记：放入后用 `python scripts/resource_index.py .` 重建 `index.json`（`--check` 校验一致性；`index.json` 为机器生成，勿手改，`schema_version 2`）。
 
-## 训练模式如何使用本库
-
-1. `training-solver`（闭卷）：**解题阶段禁止读取本库**——独立思考在先。
-2. `training-reflector`（开卷）：解完后按目标素养打开对应类别，逐项对比（用各条目"训练对照锚点"作检查清单），产出"素养学习报告"（差距 + 可迁移要点，自写不抄）。
-3. `training-auditor`：6 维素养评分卡（数学/创新/绘图/表达/证据/完整）初评，由你终评。
-4. 多轮结果汇总后由你挑选"逼近方向"，反馈下一轮侧重。
-
-详见 [`docs/training.md`](../docs/training.md)。
-
 ## 非训练（正式建模）如何使用本库
 
 依 AGENTS.md「Problem-Start Mode Gate」，正式建模（非训练）时：
@@ -48,7 +39,6 @@ resource-library/
 1. **查阅**：解析/方法筛选/绘图前，可按需查阅对应类别（ideas/ 思路卡、figures/ 优秀图、formulas/、papers/、tables/），把库内容当作**参考与审美标杆**；不照抄、不把库内容冒充为建模者自己的判断，判断权仍归你。
 2. **贡献（需你逐条同意）**：某轮成果若达到优秀标准且你认可，可按条目模板把它**贡献回本库**；每一条目都需你的**显式同意**（记录 library_contribution_consent，原话入账本），再运行 python scripts/resource_index.py . 登记；不得自动/未经同意写入。
 3. 只收录你有权使用并标注来源的素材。
-
 
 ## 示例模板说明
 

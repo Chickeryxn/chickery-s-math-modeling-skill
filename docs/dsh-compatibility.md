@@ -26,7 +26,7 @@
 - frontmatter：必填 `name`（`/^[a-z0-9]+(?:-[a-z0-9]+)*$/`）+ `description`；可选 `whenToUse`、`metadata`、`disable-model-invocation`、`user-invocable`。缺 frontmatter/name/description 的文件被静默忽略。
 - 会话目录只会在 agent preset 挂载了 `skill-filesystem`/`tool-skill` 时出现（`standard` preset 默认挂载）。
 
-**结论**：把仓库克隆/打开为 DSH 工作区，`.agents/skills/` 下的 32 个技能即被自动发现，无需安装、无需配置。
+**结论**：把仓库克隆/打开为 DSH 工作区，`.agents/skills/` 下的 29 个技能即被自动发现，无需安装、无需配置。
 
 ## 三、仓库内已完成的适配
 
@@ -41,7 +41,7 @@
 
 ## 四、使用指南（在 DSH 桌面版中使用本仓库）
 
-1. 用 DSH 打开仓库根目录（`D:\...\chickery-s-math-modeling-skill`）；会话技能目录会自动出现 32 个技能。
+1. 用 DSH 打开仓库根目录（`D:\...\chickery-s-math-modeling-skill`）；会话技能目录会自动出现 29 个技能。
 2. 前置：确保 `python`（≥3.10）与 `git` 在 PATH。
 3. 沙箱：默认 `workspace-write`（可写仓库根与临时目录）即可跑全部工作流；脚本若需写仓库外路径（如 `--out` 外部目录），需更高权限并说明理由。
 4. 初始化自检：`python scripts/validate_repo.py .`、`python scripts/run_tests.py`。
@@ -73,13 +73,13 @@ plugins:
 
 或使用 Codex 桥（`@deepseek-ai/dsh-hooks-codex`，事件：SessionStart/UserPromptSubmit/PreToolUse/PostToolUse/Stop；仅同步命令钩子）。钩子经 shell 执行，JSON 载荷在 stdin；退出码 0=放行、2=阻断。`guard_frozen.py` 支持 `--check` 自测（`python plugins/mathmodeling-skills/hooks/guard_frozen.py --check`）。**默认不启用**：零配置即可用完整工作流。
 
-> 边界：PreToolUse 守卫只拦截**写**工具；没有跨平台的"读拦截"钩子。闭卷训练（`training-solver`）的隔离依赖 `training_config` 双声明 + 人工监督（见 `docs/training.md` §七），不依赖本钩子。
+> 边界：PreToolUse 守卫只拦截**写**工具；没有跨平台的“读拦截”钩子。训练模式已删除，resource-library/ 作为重要参考，不依赖本钩子。
 
 ## 六、DSH 冒烟清单
 
-1. 用 DSH 打开仓库根目录 → 会话技能目录应出现 32 个技能（含 `work-logger`）。
+1. 用 DSH 打开仓库根目录 → 会话技能目录应出现 29 个技能（含 `work-logger`）。
 2. `python scripts/validate_repo.py .` → `status: PASS`。
-3. `python scripts/run_tests.py` → 281 用例全绿。
+3. `python scripts/run_tests.py` → 266 用例全绿。
 4. `python scripts/work_record.py init .`、`log "smoke" . --runtime dsh`、`check .` → 记录树可用；`log` 不带 `--runtime` 时应自动探测为 `dsh`。
 5. 打开一个决策点（或任意问答）后检查：若启用了 hooks 补丁，SessionStart 横幅与 PreToolUse 守卫按预期工作。
 6. 沙箱确认：默认 `workspace-write` 下可写仓库；尝试写仓库外路径应被拒绝并提示升级权限。
@@ -91,7 +91,7 @@ python scripts/validate_repo.py .                 # 仓库级总检（含 4 树�
 python scripts/sync_plugin.py . --check           # 4 树哈希一致性
 python scripts/validate_skill_trees.py .          # 4 树 + manifest 版本 + marketplace
 python scripts/work_record.py check .             # 记录树一致性
-python scripts/run_tests.py                       # 281 用例
+python scripts/run_tests.py                       # 266 用例
 ```
 
 ## 八、边界与保留项

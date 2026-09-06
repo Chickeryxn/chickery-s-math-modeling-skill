@@ -6,7 +6,7 @@ whenToUse: When the parsed problem needs task-type classification and framing am
 ---
 ## 参考来源（Reference Sources）
 
-`modeling`（非训练/正式建模）模式下，本次生成前**必须先查阅**以下参考来源（总清单：`references/reference-sources.md`；政策：AGENTS.md "Reference Consultation"）。`training`（闭卷）模式为禁用项。
+正式建模（modeling）模式下，本次生成前**必须先查阅**以下参考来源（总清单：`references/reference-sources.md`；政策：AGENTS.md "Reference Consultation"）。`training`（闭卷）模式为禁用项。
 
 1. **resource-library 全部条目**：先读 `resource-library/index.json`，再在当前子问题相关分类（papers/ideas/figures/formulas/tables/assets）各对照至少一个条目 README。分类前可先查阅 resource-library 的 ideas/ 与 papers/ 中同类题型的解题思路与任务类型表述，核对分类依据；不得照抄。
 2. **历届国赛获奖论文**：`references/award-papers/`（2019–2024 获奖论文 .md + 原始 .pdf + 2019–2025 赛题）。对照其**内容安排、论文格式、论文容量**（每节篇幅、配图/表数量、摘要与正文页数）。award-papers 中同题型论文的题目侧重与任务划分可作参照。
