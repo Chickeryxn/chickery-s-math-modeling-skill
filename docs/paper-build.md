@@ -38,6 +38,14 @@ python scripts/latex_assembly.py . --template <你本地的 cumcmthesis 主文�
 
 > 模板获取属**构建期外部依赖**：请核对固定 commit（如 `38d1f21`）与许可证状态后再使用；本仓库不托管其代码。
 
+## 论文必须包含比赛要求的全部内容，并产出一份由 LaTeX 编译的 PDF
+
+- **内容齐全**：论文须覆盖国赛/美赛全部栏目（摘要、问题重述、模型假设、符号说明、问题分析、模型构建、模型求解、结果分析、稳健性/误差、结论、参考文献、AI 使用声明、附录/支撑材料清单）。摘要逐问有数字；正文每问有结论。
+- **有图有表**：结果分析、稳健性等小节须配**足够且必要的图与表**（Type 2–4 图进入论文、Type 1 诊断图永不进论文；进入论文的图须通过 `scripts/figure_render_audit.py .` 渲染校验）。图表规划见 `figure-table-planner` 与 `math-figure-generator`。
+- **容量与格式**：以 `references/award-papers/` 的获奖论文为**容量/格式标杆**（正文 ≤ 30 页、摘要 ≤ 1 页、每篇配图/表数量适中）；由 `scripts/section_structure_check.py` 核对骨架齐全与顺序。
+- **产出 PDF**：`python scripts/latex_assembly.py .` 生成 `paper/main.tex` 后，在 `paper/` 下 `xelatex main.tex`（至少两遍以解析交叉引用）编译出 **`paper/main.pdf`**。提交时以该 PDF 为最终版；`preflight.py` 会核验页数、裸数字、图表一致性与骨架。
+- **图/表/附录文件**：`paper/figures/` 与 `paper/sections/*.tex` 一并作为交付物，保证 PDF、图、表、源代码可复核。
+
 ## 机械校验（提交前）
 
 - 正文页数 ≤ 30、摘要 ≤ 1 页、电子版 PDF ≤ 20 MB（2026 修订稿）；用 LaTeX 构建日志与 PDF 元数据核对。

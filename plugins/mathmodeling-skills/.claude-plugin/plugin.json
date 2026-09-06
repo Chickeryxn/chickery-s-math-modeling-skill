@@ -16,6 +16,13 @@
     "reproducibility",
     "auditing"
   ],
+  "upstreamSources": [
+    {"id":"nature-skills","repo":"Yuan1z0825/nature-skills","url":"https://github.com/Yuan1z0825/nature-skills","license":"Apache-2.0","localAssets":["references/upstream/nature-figure","references/upstream/nature-writing"],"mode":"vendored"},
+    {"id":"sci-box","repo":"jihe520/sci-box","url":"https://github.com/jihe520/sci-box","license":null,"mode":"conceptual-url"},
+    {"id":"lupynow-math-modeling-skills","repo":"Lupynow/math-modeling-skills","url":"https://github.com/Lupynow/math-modeling-skills","license":"MIT","localAssets":["references/upstream/lupynow-writing","references/upstream/lupynow-cookbook"],"mode":"vendored"},
+    {"id":"latexstudio-cumcmthesis","repo":"latexstudio/CUMCMThesis","url":"https://github.com/latexstudio/CUMCMThesis","license":null,"mode":"build-time-template"},
+    {"id":"xiaomacoltai-math-modeling-skill","repo":"XiaoMaColtAI/math-modeling-skill","url":"https://github.com/XiaoMaColtAI/math-modeling-skill","license":null,"mode":"conceptual-index"}
+  ],
   "skills": "./skills/",
   "hooks": "./hooks/hooks.json"
 }

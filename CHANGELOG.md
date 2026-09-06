@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- **参考来源重构（modeling 模式重要参考）**：新增 `references/reference-sources.md`（resource-library 全部条目 + `references/award-papers/` + 已配置上游链接的总清单），并在 AGENTS.md「Problem-Start Mode Gate / Reference Consultation」明确建模模式**每次生成都要**先读 `resource-library/index.json` 并在相关分类各对照一个条目、写论文前对照获奖论文的内容安排/格式/容量、必点 nature-skills 与 sci-box 上游。
+- **历届国赛获奖论文全量入库**：从 https://github.com/Chickeryxn/paper 完整拷贝 2019–2024 获奖论文（`.md` + `.pdf`）与 2019–2025 赛题到 `references/award-papers/`（224 文件，约 300 MB）；与 resource-library 的蒸馏条目互补。
+- **上游链接直接配置**：在 `plugins/mathmodeling-skills/.codex-plugin|.claude-plugin/plugin.json` 与 `.agents/plugins/marketplace.json` 新增 `upstreamSources`，登记 Yuan1z0825/nature-skills、jihe520/sci-box、Lupynow、CUMCMThesis、XiaoMaColtAI 五个上游；`references/upstream/README.md` 增补「已配置可直接引用的上游链接」表（sci-box 仅 URL 理念参考，不 vendor）。
+- **论文完整性与 PDF**：`docs/paper-build.md` 明确论文须包含比赛全部栏目、有图有表（Type 2–4 进论文 + 渲染校验），并 `xelatex main.tex` 产出 `paper/main.pdf`；`references/paper-skeleton.md` 增补 award-papers 容量对照。
+- **生成类技能统一参考**：`problem-classifier`、`problem-parser`、`related-paper-analyzer`、`method-selector`、`figure-table-planner`、`math-figure-generator`、`result-report-generator`、`solution-package-builder`、`paper-section-writer`、`paper-polisher`、`workflow-orchestrator` 增加「参考来源」一节，并在四棵技能树（.codex/.claude/.agents/plugin 分发）同步。
+
 ## 0.10.0 — 2026-09-05
 
 Resource-library knowledge-base expansion: added distilled entries for all 18 CUMCM problems from 2019–2024 (A/B/C, 64 winning papers), **126 entries total** across papers/ideas/formulas/tables, each following its category template — abstract core first, a small concrete example, a papers double-entry (multi-paper consensus + paper-structure reflection), and transferability broadened to both "same method / same problem family" and "same idea, different solution". `resource-library/index.json` regenerated (schema_version 2).

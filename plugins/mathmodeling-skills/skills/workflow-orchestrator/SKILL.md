@@ -22,6 +22,8 @@ Before orchestration in a new workspace:
 - resolve the Problem-Start Mode for the active problem: `planning/framing_decisions.jsonl` `mode_choice` (else `session_config.run_mode`); if none exists, route to the problem-parser mode gate and do not proceed to parse;
 - enforce the library policy by mode: `training` -> never open `resource-library/`; `modeling` -> treat `resource-library/` as an important reference and allow consented contributions (AGENTS.md Problem-Start Mode Gate).
 
+  - in `modeling`, before routing a generation skill, confirm the full reference set is available: `resource-library/` (all categories via its index.json), `references/award-papers/`, and the configured upstream links (Yuan1z0825/nature-skills, jihe520/sci-box); see `references/reference-sources.md`.
+
 Report warnings concisely. Do not create the full project skeleton unless the user is initializing a project.
 
 # State Sources

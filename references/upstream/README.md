@@ -2,6 +2,20 @@
 
 本目录是**经审核的上游知识资产层**，供各技能按需引用。定位与 `references/` 一致：**advisory 参考，不是自动要求**；不改变本仓库治理契约（AGENTS.md / schemas / scripts）。
 
+## 已配置可直接引用的上游链接（Configured upstream links）
+
+技能在 `modeling` 模式下可把下列**上游项目**当作重要参考（详见 `references/reference-sources.md`）。`nature-skills` 的内容已 vendor（Apache-2.0）；`sci-box` 无许可证，**只能通过 URL 参考其理念**，不 vendor、不复制其代码/模板。
+
+| 上游项目 | URL | 许可证 | 在本仓库的形态 | 用法 |
+|---|---|---|---|---|
+| Yuan1z0825/nature-skills | https://github.com/Yuan1z0825/nature-skills | Apache-2.0 | `nature-figure/`、`nature-writing/`（逐字引入） | 期刊级图契约/QA、写作质控，按需引用 |
+| jihe520/sci-box | https://github.com/jihe520/sci-box | 无（不复制） | 仅链接参考 | 只读"常规图/示意图"构图与配色理念 |
+| Lupynow/math-modeling-skills | https://github.com/Lupynow/math-modeling-skills | MIT | `lupynow-writing/`、`lupynow-cookbook/`（逐字引入） | 去 AI 味、四轮自审、算法 cookbook |
+| latexstudio/CUMCMThesis | https://github.com/latexstudio/CUMCMThesis | 无（模板不 vendor） | 构建期外部依赖 | 官方 LaTeX 模板（承诺书/编号页/2026 格式），见 `docs/paper-build.md` |
+| XiaoMaColtAI/math-modeling-skill | https://github.com/XiaoMaColtAI/math-modeling-skill | 无（不复制） | `method-index/`（自写 IDEAS 索引） | 方法家族与门禁映射 |
+
+> 生成类技能（`problem-classifier`、`method-selector`、`math-figure-generator`、`paper-section-writer`、`paper-polisher` 等）启动时应在"References / 参考来源"一节里点名这些上游来源；`sci-box` 与 `nature-skills` 是必点的两个。
+
 ## 来源与许可证总表
 
 | 子目录 | 来源仓库 | 固定 commit | 许可证 | 引入内容 | 状态 |

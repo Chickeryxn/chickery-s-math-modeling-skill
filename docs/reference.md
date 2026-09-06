@@ -126,7 +126,7 @@
 ├── workspace/                     # problem.txt、data_raw/（只读）、data_clean/、papers/
 ├── resource-library/              # 训练模式示范资源库（papers/ideas/figures/formulas/tables/assets）
 ├── records/                       # 工作记录树（sessions/subjects/gates/decisions/retros，advisory）
-├── references/                    # 上游知识库（历史决策，advisory，非强制）
+├── references/                    # 上游知识库（历史决策，advisory）+ award-papers/（历届国赛获奖论文）+ reference-sources.md（建模模式参考总清单）
 ├── schemas/                       # 领域无关契约（4 个 schema + 说明）
 ├── scripts/                       # 32 个纯标准库脚本（含 1 个 bash 兼容包装）
 ├── docs/                          # 手册（索引/学习/训练/记录/复盘/DSH/论文/参考）
@@ -194,6 +194,15 @@
 | [archify](https://github.com/tt-a1i/archify)（MIT） | 流程图生成 | 外部工具 + 已提交生成物（`docs/diagrams/archify/`） |
 
 引入纪律：Apache-2.0 / MIT 内容保留声明与许可文本；无许可证或专有内容（如 XiaoMaColtAI 的 `tools/docx|pdf|xlsx`）一律不复制；网络执行（检索/MCP）与第三方运行时（Node/TeX/Pandoc/LibreOffice）不入核心。校验命令：`python scripts/validate_upstream_assets.py .`。来源与许可证明细见 [`references/upstream/README.md`](../references/upstream/README.md)、`LICENSES/` 与 `NOTICE.md`。
+
+### 建模模式参考来源（重要）
+
+`modeling`（非训练/正式建模）模式下，生成内容（解析/分类/方法筛选/图表/论文写作）**必须**把下列三组来源当作重要参考（总清单：`references/reference-sources.md`）：
+1. **resource-library 全部条目**——先读 `resource-library/index.json`，并在相关分类各对照至少一个条目；
+2. **历届国赛获奖论文**——`references/award-papers/`（源自 https://github.com/Chickeryxn/paper ），写作前对照其内容安排/论文格式/论文容量；
+3. **已配置上游链接**——Yuan1z0825/nature-skills 与 jihe520/sci-box（必点），及其余 Lupynow/CUMCMThesis/XiaoMaColtAI。
+
+`training`（闭卷）模式禁读前两类，直到建模者同意开卷对照。详见 AGENTS.md「Reference Consultation」。
 
 ## 限制与边界
 

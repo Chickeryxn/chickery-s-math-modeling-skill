@@ -158,6 +158,16 @@ cd chickery-s-math-modeling-skill
 - **Codex / Claude / DSH 三套技能怎么维护？** 契约只改 `.codex/skills/` 编辑源，再 `python scripts/sync_plugin.py .` 同步 `.claude/.agents/插件分发` 三份副本并校验四树一致（DSH 经 `.agents/skills/` 自动发现）。
 - **`frozen_numbers.json` 能手改吗？** 不能——改数必须“解冻 → 改源头 → 重跑 → 重冻结”并写入 `freeze_change_log.md`。
 - **改上游/脚本/README 要注意什么？** 上游内容受 SHA-256 哈希保护（`validate_upstream_assets.py`）；`hooks` 为 advisory 且存在平台差异（见 `docs/dsh-compatibility.md`）；发布前跑 CI 矩阵与 `python scripts/validate_repo.py .`；改动 README 计数或图册时，记得同步 `docs/review/` 与 `test_doc_claims` 守卫。
+
+## 建模模式参考来源（modeling 模式重要参考）
+
+`modeling`（非训练/正式建模）模式下，生成内容（解析、分类、方法筛选、图表、论文写作）**必须把以下三组来源当作重要参考**（总清单：`references/reference-sources.md`）：
+
+1. **resource-library 全部条目**——每次生成前先读 `resource-library/index.json`，并在相关分类（papers/ideas/figures/formulas/tables/assets）各对照至少一个条目；
+2. **历届国赛获奖论文**——`references/award-papers/`（源自 https://github.com/Chickeryxn/paper ，2019–2024 获奖论文 + 2019–2025 赛题），写论文前对照其**内容安排、论文格式、论文容量**，并保证论文含比赛要求的**图、表等全部内容**且产出**由 LaTeX 编译的 PDF**；
+3. **已配置上游链接**——[Yuan1z0825/nature-skills](https://github.com/Yuan1z0825/nature-skills)、[jihe520/sci-box](https://github.com/jihe520/sci-box)（及 Lupynow/CUMCMThesis/XiaoMaColtAI），nature-skills 与 sci-box 必点。
+
+`training`（闭卷）模式全程禁读第 1、2 类，直到建模者明确同意开卷对照。详见 `references/reference-sources.md` 与 `references/award-papers/README.md`。
 ## 许可与致谢
 
 [MIT License](LICENSE)。融合借鉴了 [XiaoMaColtAI/math-modeling-skill](https://github.com/XiaoMaColtAI/math-modeling-skill)、[latexstudio/CUMCMThesis](https://github.com/latexstudio/CUMCMThesis)、[Lupynow/math-modeling-skills](https://github.com/Lupynow/math-modeling-skills)、[Yuan1z0825/nature-skills](https://github.com/Yuan1z0825/nature-skills)、[jihe520/sci-box](https://github.com/jihe520/sci-box) 等上游项目；流程图由 [tt-a1i/archify](https://github.com/tt-a1i/archify) 生成。详细合并决策见 [references/README.md](references/README.md) 与 [NOTICE.md](NOTICE.md)。
