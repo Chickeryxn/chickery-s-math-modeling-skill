@@ -12,7 +12,7 @@ try:
 except Exception:
     pass
 STATUSES={"SUGGESTED","PENDING","DECIDED","SUPERSEDED","STALE"}
-DECIDED_TYPES={"framing","method_choice","fallback_activation","result_verdict","stability_verdict","assumption_necessity","claim_scope","package_signoff","submission_authorization"}
+DECIDED_TYPES={"framing","framing_caliber","method_choice","fallback_activation","result_verdict","stability_verdict","assumption_necessity","claim_scope","package_signoff","submission_authorization"}
 DATE_PREFIX=re.compile(r'^\d{4}-\d{2}-\d{2}')
 
 def valid_iso_date(ts:str)->bool:

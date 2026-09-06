@@ -126,7 +126,7 @@
 ├── workspace/                     # problem.txt、data_raw/（只读）、data_clean/、papers/
 ├── resource-library/              # 训练模式示范资源库（papers/ideas/figures/formulas/tables/assets）
 ├── records/                       # 工作记录树（sessions/subjects/gates/decisions/retros，advisory）
-├── references/                    # 上游知识库（历史决策，advisory）+ award-papers/（历届国赛获奖论文）+ reference-sources.md（建模模式参考总清单）
+├── references/                    # 上游知识库（历史决策，advisory）+ award-papers/（历届国赛获奖论文）+ reference-sources.md（建模模式参考总清单）+ framing-caliber.md（G1 口径正交化确认）
 ├── schemas/                       # 领域无关契约（4 个 schema + 说明）
 ├── scripts/                       # 32 个纯标准库脚本（含 1 个 bash 兼容包装）
 ├── docs/                          # 手册（索引/学习/训练/记录/复盘/DSH/论文/参考）

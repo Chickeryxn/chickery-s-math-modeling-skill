@@ -77,7 +77,7 @@ Evaluate each Qx independently.
 
 ## G1 — PROBLEM_FRAMED
 
-Pass when parse, classification, data inventory, success criteria, and human framing exist. A placeholder in a human-owned field blocks the gate.
+Pass when parse, classification, data inventory, success criteria, human framing, and the **口径正交化确认** (caliber orthogonalization) exist — the three orthogonal axes 判据粒度 / 服务关系 / 总指标 each confirmed and recorded (`decision_type: framing_caliber`, options in `references/framing-caliber.md`). A placeholder in a human-owned field blocks the gate.
 
 ## G2 — METHOD_SCREENED
 
@@ -146,6 +146,7 @@ Evaluate only in `submission`. Require passing consistency, completeness, and QA
 Choose one primary next action:
 
 - missing framing → parser/classifier or human framing card;
+- caliber unconfirmed (judgment granularity / service relationship / overall indicator ambiguous) → `decision-prompt-builder` 口径正交化 card (`references/framing-caliber.md`), before proceeding to method screening;
 - missing data profile → `data-auditor-cleaner`;
 - missing method card/probe → `method-selector`;
 - missing human method choice → `decision-prompt-builder`;

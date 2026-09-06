@@ -3,6 +3,7 @@
 ## Unreleased
 
 - **参考来源重构（modeling 模式重要参考）**：新增 `references/reference-sources.md`（resource-library 全部条目 + `references/award-papers/` + 已配置上游链接的总清单），并在 AGENTS.md「Problem-Start Mode Gate / Reference Consultation」明确建模模式**每次生成都要**先读 `resource-library/index.json` 并在相关分类各对照一个条目、写论文前对照获奖论文的内容安排/格式/容量、必点 nature-skills 与 sci-box 上游。
+- **G1 口径正交化确认**：新增 `references/framing-caliber.md`——把题目易产生“口径问题”的定义拆成**判据粒度 / 服务关系 / 总指标**三根正交轴，每根列尽可能多的选项并逐轴由建模者确认（`decision_type: framing_caliber`，写入 framing/子问题账本），并写入 `problem_parse.json` 的 `caliber` 字段；另附“其他可能出现的题目分析问题”排查清单（单位/时间/数据/对象边界/指标歧义/多目标/软硬约束/尺度/因果/比例/基线/口径漂移/退化/采样/标准/输出可比较性）。已接入 AGENTS.md（G1 门禁 + 选择卡）、`problem-parser`、`problem-classifier`、`method-selector`、`decision-prompt-builder`、`workflow-orchestrator`，并同步四棵技能树；`validate_decisions.py` 的 `DECIDED_TYPES` 增加 `framing_caliber`。
 - **历届国赛获奖论文全量入库**：从 https://github.com/Chickeryxn/paper 完整拷贝 2019–2024 获奖论文（`.md` + `.pdf`）与 2019–2025 赛题到 `references/award-papers/`（224 文件，约 300 MB）；与 resource-library 的蒸馏条目互补。
 - **上游链接直接配置**：在 `plugins/mathmodeling-skills/.codex-plugin|.claude-plugin/plugin.json` 与 `.agents/plugins/marketplace.json` 新增 `upstreamSources`，登记 Yuan1z0825/nature-skills、jihe520/sci-box、Lupynow、CUMCMThesis、XiaoMaColtAI 五个上游；`references/upstream/README.md` 增补「已配置可直接引用的上游链接」表（sci-box 仅 URL 理念参考，不 vendor）。
 - **论文完整性与 PDF**：`docs/paper-build.md` 明确论文须包含比赛全部栏目、有图有表（Type 2–4 进论文 + 渲染校验），并 `xelatex main.tex` 产出 `paper/main.pdf`；`references/paper-skeleton.md` 增补 award-papers 容量对照。

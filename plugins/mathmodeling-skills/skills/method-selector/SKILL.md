@@ -47,6 +47,7 @@ If these are missing, return to the producer skill rather than guessing.
 
 2. **Derive method requirements.**
    - Start from required output, hard constraints, data characteristics, validation criteria, explanation burden, and experiment budget.
+   - **用已确认的口径**（判据粒度 / 服务关系 / 总指标，`decision_type: framing_caliber`，见 `references/framing-caliber.md`）来定验证/评价设计：风险探针与后续评价的粒度、服务关系假设、总指标加总方式必须与 G1 确认口径一致，不得另起口径。若口径未确认，回到 `problem-parser` / `decision-prompt-builder`（G1）补齐。
    - Identify the failure modes that would make a method unusable.
 
 3. **Create a role-based shortlist.**

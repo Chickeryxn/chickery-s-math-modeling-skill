@@ -64,6 +64,38 @@ Example:
 - D. 都不合适 / 补充约束。
 ```
 
+## 口径正交化确认（G1 framing; caliber orthogonalization）
+
+Run at G1 framing (first parse, before method screening) when the problem has a **caliber/definition** dimension that is ambiguous. Confirms the three **orthogonal** axes and records each independently through `modeler-decision-logger` as `decision_type: framing_caliber` (into `planning/framing_decisions.jsonl` or the subquestion ledger).
+
+Full option list + consequences + rationale: `references/framing-caliber.md`. Present **as many options as feasible** per axis, each with its practical consequence, plus `都不合适 / 补充约束`. Do **not** conflate the axes into one question; each is chosen and recorded separately. Example card:
+
+```markdown
+请确认题目口径（三根轴互相正交，请各自独立选择）：
+
+【口径1 · 判据粒度】按什么粒度套用/计数判据？
+- A. 逐子问题
+- B. 逐对象/逐实体   - C. 逐类别/逐类型   - D. 逐时段/逐阶段
+- E. 逐方案/逐策略   - F. 整体(汇总)       - G. 分层(先子后汇)
+- H. 极值/最劣        - I. 分布/概率        - J. 阈值/达标
+- K. 波动/灵敏度      - L. 可加总 vs 不可加总 - M. 综合评分
+- N. 占比/人均        - O. 都不合适/补充约束
+
+【口径2 · 服务关系】服务/指派/覆盖的实体关系是？
+- A. 一对一(1:1)  - B. 一对多(1:N)  - C. 多对一(N:1)  - D. 多对多(N:M)
+- E. 全覆盖/无遗漏 - F. 部分覆盖/可拒绝 - G. 顺序/排队   - H. 分层/级联
+- I. 共享/竞争     - J. 可替换/多源   - K. 优先/加权     - L. 双向/互惠
+- M. 离散 vs 连续强度 - N. 时间窗/时段 - O. 不适用       - P. 都不合适/补充约束
+
+【口径3 · 总指标】多值合并成总指标时如何加总？
+- A. 求和   - B. 加权和   - C. 平均     - D. 加权平均   - E. 最大值
+- F. 最小值/最劣 - G. 极差/波动 - H. 排序/名次 - I. 达标率/覆盖率
+- J. 效用/多目标 - K. 期望/风险  - L. 比率/效率  - M. 增长/变化率
+- N. 罚函数/正则 - O. 归一化后汇总 - P. 综合评分   - Q. 都不合适/补充约束
+```
+
+Rules: each axis is a fully-human framing judgment (no AI recommendation in `learning` mode); the three axes are independent; record one `framing_caliber` record per axis; do not turn a mechanically determinable caliber into a user question.
+
 ## G4 result judgment (after the meaningful experiments and the robustness checks)
 
 Run this round in BOTH `lean` and `submission`: the gate engine requires the

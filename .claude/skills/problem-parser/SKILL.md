@@ -73,13 +73,27 @@ Produce a model-neutral problem contract. Do not start from favorite algorithms 
       "success_criteria": [],
       "dependencies": [],
       "proposed_relationships": [],
-      "ambiguities": []
+      "ambiguities": [],
+      "caliber": {
+        "criterion_granularity": "",
+        "service_relationship": "",
+        "overall_indicator": ""
+      }
     }
   ],
   "missing_material": [],
   "human_decisions_needed": []
 }
 ```
+
+## 口径正交化确认（G1）
+
+第一遍解析后、方法筛选前，若题目在判据 / 服务 / 总指标上存在口径歧义，调用一张“口径正交化”选择卡（标准卡见 `decision-prompt-builder`；**全选项与后果见 `references/framing-caliber.md`**）。
+
+- 三根**正交**轴：**判据粒度 / 服务关系 / 总指标**，**分别**列出尽可能多的选项供选择（判据粒度：逐子问题/逐对象/逐类别/逐时段/逐方案/整体/分层/极值/分布/阈值/波动/可加总/综合评分/占比；服务关系：一对一/一对多/多对一/多对多/全覆盖/部分覆盖-可拒绝/顺序-排队/分层-级联/共享-竞争/可替换/优先-加权/双向/离散-连续强度/时间窗/不适用；总指标：求和/加权和/均值/加权平均/最大值/最小值/极差/排序/达标覆盖/效用-多目标/期望-风险/比率-效率/增长/罚函数-正则/归一化/综合评分）。
+- 每根轴**独立确认**，禁止混成一题；每根轴都给出“都不合适 / 补充约束”。
+- 答案经 `modeler-decision-logger` 原话记为 `decision_type: framing_caliber`（写入 `planning/framing_decisions.jsonl`（全局）或 `methods/Qx/qx_decisions.jsonl`（子问题级）），并写入本 parse 每条子问题的 `caliber` 字段。
+- **同时按“其他可能出现的题目分析问题”清单逐项标记**（单位/量纲、时间口径、数据口径、对象边界、指标歧义、多目标、软硬约束、尺度、因果、比例、基线、口径漂移、退化、采样、标准、输出可比较性），记入 `ambiguities` / `risks`，不得遗留未标记的明显歧义。
 
 # Rules
 

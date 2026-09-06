@@ -164,6 +164,14 @@ subquestion:
 
 Do not ask users to decide mechanically checkable matters.
 
+The G1 framing stage adds one **口径正交化确认（caliber orthogonalization）** card before method screening — see `references/framing-caliber.md`. It confirms the three **orthogonal** caliber axes and records each independently:
+
+- **判据粒度 (criterion granularity)** — the granularity at which the criterion applies (per subquestion / per object / per category / per period / per scheme / overall / hierarchical / extreme / distribution / threshold / variation / additive-vs-nonadditive / composite / ratio).
+- **服务关系 (service relationship)** — how service/assignment/coverage entities relate (1:1 / 1:N / N:1 / N:M / full coverage / partial-rejectable / sequential-queue / hierarchical-cascade / shared-competitive / substitutable / priority-weighted / bidirectional / discrete-vs-continuous intensity / time-windowed / not applicable).
+- **总指标 (overall indicator)** — how multiple values aggregate into the overall figure (sum / weighted sum / mean / weighted mean / max / min / range / rank / attainment-coverage / utility-multi-objective / expectation-risk / ratio-efficiency / growth / penalty-regularized / normalized-aggregate / composite score).
+
+Each axis is a fully-human framing judgment: AI lists as many feasible options plus each consequence, and must not pre-select or fill the rationale. The three axes are independent — do not conflate them into one question. Record the answer per axis via `modeler-decision-logger` as `decision_type: framing_caliber` in `planning/framing_decisions.jsonl` (global) or `methods/Qx/qx_decisions.jsonl` (subquestion-specific).
+
 Human decision types at the freeze point are `package_signoff` (required before
 `frozen_numbers` may be produced, G4) and `submission_authorization` (consumed
 by `latex_assembly.py` for the AI-use declaration). Both are elicited by
@@ -190,6 +198,7 @@ The gate engine (`python scripts/workflow_guard.py <repo-root> derive Qx [--prof
 ## G1 — PROBLEM_FRAMED
 
 - Parse, classification, data inventory, success criteria, and human framing exist.
+- **口径正交化确认**：判据粒度 / 服务关系 / 总指标 三根**正交**轴分别经人确认（`decision_type: framing_caliber`，选项与后果见 `references/framing-caliber.md`），并把确认后的口径写入 `planning/parse/problem_parse.json`（success_criteria / ambiguities）供下游统一沿用，避免口径漂移。
 - Note: the gate engine derives G1 from the mechanical files and their structural depth: a parse declaring `subquestions` must give each a `goal` and a non-empty `required_outputs`; a classification declaring `subquestions` must give each a `primary_type`. When the parse lists `human_decisions_needed`, a verifiable human `framing` record (`planning/framing_decisions.jsonl` or the Qx ledger) is required before screening. Success-criteria review remains a human step at this stage.
 
 ## G2 — METHOD_SCREENED

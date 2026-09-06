@@ -76,6 +76,7 @@ Detailed cues are in `references/task-type-guide.md`.
 - A subquestion may be mixed, but avoid listing many types without prioritization.
 - Human framing is required when alternative classifications lead to materially different outputs or claims.
 - Do not create a long taxonomy report when the JSON record is sufficient.
+- Use the **confirmed caliber** from the parse (判据粒度 / 服务关系 / 总指标，`decision_type: framing_caliber`，见 `references/framing-caliber.md`）。Do NOT re-define or silently change it here; if a caliber axis is ambiguous and unconfirmed, return to `problem-parser` / `decision-prompt-builder` (G1) before classifying rather than assuming.
 
 # Verification
 
@@ -88,3 +89,4 @@ Detailed cues are in `references/task-type-guide.md`.
 # Reference
 
 - `references/task-type-guide.md`
+- `references/framing-caliber.md` (confirmed caliber axes: 判据粒度 / 服务关系 / 总指标)
